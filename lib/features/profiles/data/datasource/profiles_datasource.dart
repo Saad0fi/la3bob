@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:la3bob/features/profiles/data/models/child_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -16,6 +17,7 @@ abstract class ProfilesDatasource {
   Future<ChildModel> updateChild(ChildModel child);
 }
 
+@Injectable(as: ProfilesDatasource)
 class ApiProfileDatasource implements ProfilesDatasource {
   final SupabaseClient _supabaseClient;
 

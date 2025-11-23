@@ -1,9 +1,11 @@
+import 'package:injectable/injectable.dart';
 import 'package:la3bob/features/profiles/data/datasource/profiles_datasource.dart';
 import 'package:la3bob/features/profiles/data/models/child_model.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/repositories/profiles_repository.dart';
 import 'package:result_dart/result_dart.dart';
 
+@Injectable(as: ProfilesRepository)
 class ProfilesRepositoryData implements ProfilesRepository {
   final ProfilesDatasource _datasource;
 
