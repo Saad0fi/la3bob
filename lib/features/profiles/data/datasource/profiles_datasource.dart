@@ -7,7 +7,7 @@ abstract class ProfilesDatasource {
   Future<ChildModel> addChild(
     String parentId,
     String name,
-    String age,
+    int age,
     List<String> interests,
   );
 
@@ -21,31 +21,43 @@ class ApiProfileDatasource implements ProfilesDatasource {
 
   ApiProfileDatasource(this._supabaseClient);
   @override
+  Future<List<ChildModel>> getChildern(String parentId) async {
+    final data = await _supabaseClient
+        .from('children')
+        .select()
+        .eq('parent_id', parentId);
+    return data.map((e) => ChildModelMapper.fromMap(e)).toList();
+  }
+
+  @override
   Future<ChildModel> addChild(
     String parentId,
     String name,
-    String age,
+    int age,
     List<String> interests,
-  ) {
-    // TODO: implement addChild
-    throw UnimplementedError();
+  ) async {
+    final data = await _supabaseClient.from('children').insert({
+      'parent_id': parentId,
+      'name': name,
+      'age': age,
+      'interests': interests,
+    });
+
+    return ChildModelMapper.fromMap(data);
   }
 
   @override
-  Future<void> deleteChild(String childId) {
-    // TODO: implement deleteChild
-    throw UnimplementedError();
+  Future<void> deleteChild(String childId) async {
+    await _supabaseClient.from('children').delete().eq('id', childId);
   }
 
   @override
-  Future<List<ChildModel>> getChildern(String parentId) {
-    // TODO: implement getChildern
-    throw UnimplementedError();
-  }
+  Future<ChildModel> updateChild(ChildModel child) async {
+    final data = await _supabaseClient
+        .from('children')
+        .update(child.toMap())
+        .eq('id', child.id);
 
-  @override
-  Future<ChildModel> updateChild(ChildModel child) {
-    // TODO: implement updateChild
-    throw UnimplementedError();
+    return ChildModelMapper.fromMap(data);
   }
 }
