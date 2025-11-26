@@ -38,7 +38,6 @@ class ChildModelMapper extends ClassMapperBase<ChildModel> {
     'intersets',
     _$intersets,
   );
-
   @override
   final MappableFields<ChildModel> fields = const {
     #id: _f$id,

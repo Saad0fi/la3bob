@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:la3bob/core/setup.dart';
+import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
-import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 
-class AddChildScreen extends StatelessWidget {
-  const AddChildScreen({super.key});
+class UpdateChildScreen extends StatelessWidget {
+  final ChildEntity child;
+
+  const UpdateChildScreen({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
 
     return BlocProvider(
-      create: (context) => PorfileBloc(getIt<ProfileUsecase>()),
+      create: (_) =>
+          PorfileBloc(getIt<ProfileUsecase>())..add(PopulateChildForm(child)),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('إضافة طفل'),
-        ),
+        appBar: AppBar(title: const Text('تعديل بيانات الطفل')),
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
             if (state is PorfileSuccess) {
@@ -27,11 +28,7 @@ class AddChildScreen extends StatelessWidget {
                   backgroundColor: Colors.green,
                 ),
               );
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (_) => const ProfileScreen(),
-                ),
-              );
+              Navigator.of(context).pop(true);
             } else if (state is PorfileError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -44,12 +41,9 @@ class AddChildScreen extends StatelessWidget {
           child: BlocBuilder<PorfileBloc, PorfileState>(
             builder: (context, state) {
               final bloc = context.read<PorfileBloc>();
-              final isLoading = state is PorfileLoading;
 
-              if (isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+              if (state is PorfileLoading) {
+                return const Center(child: CircularProgressIndicator());
               }
 
               return SingleChildScrollView(
@@ -62,12 +56,11 @@ class AddChildScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: bloc.nameController,
-                        enabled: !isLoading,
+                        enabled: state is! PorfileLoading,
                         decoration: const InputDecoration(
                           labelText: 'اسم الطفل',
-                          hintText: 'أدخل اسم الطفل',
                           border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person),
+                          prefixIcon: Icon(Icons.person_outline),
                         ),
                         textDirection: TextDirection.rtl,
                         validator: (value) {
@@ -80,12 +73,11 @@ class AddChildScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: bloc.ageController,
-                        enabled: !isLoading,
+                        enabled: state is! PorfileLoading,
                         decoration: const InputDecoration(
                           labelText: 'عمر الطفل',
-                          hintText: 'أدخل عمر الطفل',
                           border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.cake),
+                          prefixIcon: Icon(Icons.cake_outlined),
                         ),
                         keyboardType: TextInputType.number,
                         textDirection: TextDirection.rtl,
@@ -103,12 +95,11 @@ class AddChildScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: bloc.intersetsController,
-                        enabled: !isLoading,
+                        enabled: state is! PorfileLoading,
                         decoration: const InputDecoration(
                           labelText: 'اهتمامات الطفل',
-                          hintText: 'أدخل اهتمامات الطفل (مثل: الرسم، القراءة، الرياضة...)',
                           border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.favorite),
+                          prefixIcon: Icon(Icons.favorite_outline),
                           alignLabelWithHint: true,
                         ),
                         maxLines: 4,
@@ -122,16 +113,22 @@ class AddChildScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 30),
                       ElevatedButton(
-                        onPressed: isLoading
+                        onPressed: state is PorfileLoading
                             ? null
                             : () {
                                 if (formKey.currentState!.validate()) {
-                                  bloc.add(SubmitChildForm(
-                                    childName: bloc.nameController.text.trim(),
-                                    childAge: bloc.ageController.text.trim(),
-                                    childIntersets:
-                                        bloc.intersetsController.text.trim(),
-                                  ));
+                                  bloc.add(
+                                    UpdateChildForm(
+                                      childId: child.id,
+                                      childName: bloc.nameController.text
+                                          .trim(),
+                                      childAge: bloc.ageController.text.trim(),
+                                      childIntersets: bloc
+                                          .intersetsController
+                                          .text
+                                          .trim(),
+                                    ),
+                                  );
                                 }
                               },
                         style: ElevatedButton.styleFrom(
@@ -140,16 +137,10 @@ class AddChildScreen extends StatelessWidget {
                             borderRadius: .circular(8),
                           ),
                         ),
-                        child: isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              )
-                            : const Text(
-                                'إضافة الطفل',
-                                style: TextStyle(fontSize: 18),
-                              ),
+                        child: const Text(
+                          'حفظ التعديلات',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
                     ],
                   ),

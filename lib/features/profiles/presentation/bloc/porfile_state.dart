@@ -5,6 +5,14 @@ sealed class PorfileState {}
 
 final class PorfileInitial extends PorfileState {}
 
+final class PorfileChildrenLoading extends PorfileState {}
+
+final class PorfileChildrenLoaded extends PorfileState {
+  final List<ChildEntity> children;
+
+  PorfileChildrenLoaded(this.children);
+}
+
 final class PorfileForm extends PorfileState {
   final String childName;
   final String childAge;
