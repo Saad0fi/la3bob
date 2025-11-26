@@ -28,6 +28,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: NavigationBarScreen());
+    return MaterialApp(home: AddChildScreen());
   }
 }

@@ -13,24 +13,24 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   final ageController = TextEditingController();
   final interestsController = TextEditingController();
 
-  PorfileBloc(this._profileUsecase) : super(const PorfileInitial()) {
+  PorfileBloc(this._profileUsecase) : super(PorfileInitial()) {
     on<SubmitChildForm>((event, emit) async {
       if (event.childName.isEmpty ||
           event.childAge.isEmpty ||
           event.childInterests.isEmpty) {
-        emit(const PorfileError('الرجاء ملء جميع الحقول'));
+        emit(PorfileError('الرجاء ملء جميع الحقول'));
         return;
       }
 
       final parentId = Supabase.instance.client.auth.currentUser?.id;
       if (parentId == null) {
-        emit(const PorfileError('الرجاء تسجيل الدخول أولاً'));
+        emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
         return;
       }
 
       final age = int.tryParse(event.childAge);
       if (age == null || age < 1 || age > 18) {
-        emit(const PorfileError('الرجاء إدخال عمر صحيح (من 1 إلى 18)'));
+        emit(PorfileError('الرجاء إدخال عمر صحيح (من 1 إلى 18)'));
         return;
       }
 
@@ -41,11 +41,11 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
           .toList();
 
       if (interests.isEmpty) {
-        emit(const PorfileError('الرجاء إدخال اهتمامات صحيحة'));
+        emit(PorfileError('الرجاء إدخال اهتمامات صحيحة'));
         return;
       }
 
-      emit(const PorfileLoading());
+      emit(PorfileLoading());
 
       final result = await _profileUsecase.addChild(
         parentId,
@@ -54,21 +54,21 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         interests,
       );
 
-      result.when(
-        success: (data) {
-          emit(const PorfileSuccess('تم إضافة الطفل بنجاح'));
-        },
-        failure: (error) {
+      if (result.isSuccess()) {
+        emit(PorfileSuccess('تم إضافة الطفل بنجاح'));
+      } else {
+        final error = result.exceptionOrNull();
+        if (error != null) {
           emit(PorfileError(error.toString()));
-        },
-      );
+        }
+      }
     });
 
     on<ResetForm>((event, emit) {
       nameController.clear();
       ageController.clear();
       interestsController.clear();
-      emit(const PorfileInitial());
+      emit(PorfileInitial());
     });
   }
 
