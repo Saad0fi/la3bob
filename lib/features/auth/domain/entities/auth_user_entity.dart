@@ -13,8 +13,4 @@ class AuthUserEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, name, email];
-
-  AuthUserEntity copyWith({String? name}) {
-    return AuthUserEntity(id: id, name: name ?? this.name, email: email);
-  }
 }
