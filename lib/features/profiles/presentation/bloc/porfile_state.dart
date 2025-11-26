@@ -8,12 +8,12 @@ final class PorfileInitial extends PorfileState {}
 final class PorfileForm extends PorfileState {
   final String childName;
   final String childAge;
-  final String childInterests;
+  final String childIntersets;
 
   PorfileForm({
     this.childName = '',
     this.childAge = '',
-    this.childInterests = '',
+    this.childIntersets = '',
   });
 }
 

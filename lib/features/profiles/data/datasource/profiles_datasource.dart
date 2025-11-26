@@ -5,11 +5,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class ProfilesDatasource {
   Future<List<ChildModel>> getChildern(String parentId);
 
-  Future<ChildModel> addChild(
+  Future<void> addChild(
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   );
 
   Future<void> deleteChild(String childId);
@@ -36,7 +36,7 @@ class ApiProfileDatasource implements ProfilesDatasource {
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   ) async {
     await _supabaseClient
         .from('children')
@@ -44,7 +44,7 @@ class ApiProfileDatasource implements ProfilesDatasource {
           'parent_id': parentId,
           'name': name,
           'age': age,
-          'intersets': interests,
+          'intersets': intersets,
         });
   }
 

@@ -8,7 +8,7 @@ abstract class ProfilesRepository {
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   );
 
   Future<Result<void>> deleteChild(String childId);

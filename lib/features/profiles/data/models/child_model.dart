@@ -12,6 +12,6 @@ class ChildModel extends ChildEntity with ChildModelMappable {
     required super.name,
     required super.age,
     required super.parentId,
-    required super.interests,
+    required super.intersets,
   });
 }

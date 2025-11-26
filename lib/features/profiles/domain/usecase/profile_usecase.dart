@@ -17,9 +17,9 @@ class ProfileUsecase {
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   ) {
-    return _repository.addChild(parentId, name, age, interests);
+    return _repository.addChild(parentId, name, age, intersets);
   }
 
   Future<Result<void>> deleteChild(String childId) {

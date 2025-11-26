@@ -5,16 +5,16 @@ class ChildEntity extends Equatable {
   final String name;
   final int age;
   final String parentId;
-  final List<String> interests;
+  final List<String> intersets;
 
   const ChildEntity({
     required this.id,
     required this.name,
     required this.age,
     required this.parentId,
-    required this.interests,
+    required this.intersets,
   });
 
   @override
-  List<Object?> get props => [id, name, age, parentId, interests];
+  List<Object?> get props => [id, name, age, parentId, intersets];
 }

@@ -10,16 +10,16 @@ sealed class PorfileEvent extends Equatable {
 class SubmitChildForm extends PorfileEvent {
   final String childName;
   final String childAge;
-  final String childInterests;
+  final String childIntersets;
 
   const SubmitChildForm({
     required this.childName,
     required this.childAge,
-    required this.childInterests,
+    required this.childIntersets,
   });
 
   @override
-  List<Object> get props => [childName, childAge, childInterests];
+  List<Object> get props => [childName, childAge, childIntersets];
 }
 
 class ResetForm extends PorfileEvent {

@@ -13,13 +13,13 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   final ProfileUsecase _profileUsecase;
   final nameController = TextEditingController();
   final ageController = TextEditingController();
-  final interestsController = TextEditingController();
+  final intersetsController = TextEditingController();
 
   PorfileBloc(this._profileUsecase) : super(PorfileInitial()) {
     on<SubmitChildForm>((event, emit) async {
       if (event.childName.isEmpty ||
           event.childAge.isEmpty ||
-          event.childInterests.isEmpty) {
+          event.childIntersets.isEmpty) {
         emit(PorfileError('الرجاء ملء جميع الحقول'));
         return;
       }
@@ -36,13 +36,13 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         return;
       }
 
-      final interests = event.childInterests
+      final intersets = event.childIntersets
           .split(',')
           .map((e) => e.trim())
           .where((e) => e.isNotEmpty)
           .toList();
 
-      if (interests.isEmpty) {
+      if (intersets.isEmpty) {
         emit(PorfileError('الرجاء إدخال اهتمامات صحيحة'));
         return;
       }
@@ -53,7 +53,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         parentId,
         event.childName,
         age,
-        interests,
+        intersets,
       );
 
       if (result.isSuccess()) {
@@ -69,7 +69,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     on<ResetForm>((event, emit) {
       nameController.clear();
       ageController.clear();
-      interestsController.clear();
+      intersetsController.clear();
       emit(PorfileInitial());
     });
   }
@@ -78,7 +78,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   Future<void> close() {
     nameController.dispose();
     ageController.dispose();
-    interestsController.dispose();
+    intersetsController.dispose();
     return super.close();
   }
 }

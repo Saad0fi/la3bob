@@ -33,10 +33,10 @@ class ChildModelMapper extends ClassMapperBase<ChildModel> {
     _$parentId,
     key: r'parent_id',
   );
-  static List<String> _$interests(ChildModel v) => v.interests;
-  static const Field<ChildModel, List<String>> _f$interests = Field(
-    'interests',
-    _$interests,
+  static List<String> _$intersets(ChildModel v) => v.intersets;
+  static const Field<ChildModel, List<String>> _f$intersets = Field(
+    'intersets',
+    _$intersets,
   );
 
   @override
@@ -45,7 +45,7 @@ class ChildModelMapper extends ClassMapperBase<ChildModel> {
     #name: _f$name,
     #age: _f$age,
     #parentId: _f$parentId,
-    #interests: _f$interests,
+    #intersets: _f$intersets,
   };
 
   static ChildModel _instantiate(DecodingData data) {
@@ -54,7 +54,7 @@ class ChildModelMapper extends ClassMapperBase<ChildModel> {
       name: data.dec(_f$name),
       age: data.dec(_f$age),
       parentId: data.dec(_f$parentId),
-      interests: data.dec(_f$interests),
+      intersets: data.dec(_f$intersets),
     );
   }
 
@@ -118,13 +118,13 @@ extension ChildModelValueCopy<$R, $Out>
 
 abstract class ChildModelCopyWith<$R, $In extends ChildModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get interests;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get intersets;
   $R call({
     String? id,
     String? name,
     int? age,
     String? parentId,
-    List<String>? interests,
+    List<String>? intersets,
   });
   ChildModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -138,11 +138,11 @@ class _ChildModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ChildModel> $mapper =
       ChildModelMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get interests =>
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get intersets =>
       ListCopyWith(
-        $value.interests,
+        $value.intersets,
         (v, t) => ObjectCopyWith(v, $identity, t),
-        (v) => call(interests: v),
+        (v) => call(intersets: v),
       );
   @override
   $R call({
@@ -150,14 +150,14 @@ class _ChildModelCopyWithImpl<$R, $Out>
     String? name,
     int? age,
     String? parentId,
-    List<String>? interests,
+    List<String>? intersets,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
       if (name != null) #name: name,
       if (age != null) #age: age,
       if (parentId != null) #parentId: parentId,
-      if (interests != null) #interests: interests,
+      if (intersets != null) #intersets: intersets,
     }),
   );
   @override
@@ -166,7 +166,7 @@ class _ChildModelCopyWithImpl<$R, $Out>
     name: data.get(#name, or: $value.name),
     age: data.get(#age, or: $value.age),
     parentId: data.get(#parentId, or: $value.parentId),
-    interests: data.get(#interests, or: $value.interests),
+    intersets: data.get(#intersets, or: $value.intersets),
   );
 
   @override

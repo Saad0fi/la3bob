@@ -96,7 +96,7 @@ class AddChildScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        controller: bloc.interestsController,
+                        controller: bloc.intersetsController,
                         enabled: !isLoading,
                         decoration: const InputDecoration(
                           labelText: 'اهتمامات الطفل',
@@ -123,7 +123,8 @@ class AddChildScreen extends StatelessWidget {
                                   bloc.add(SubmitChildForm(
                                     childName: bloc.nameController.text.trim(),
                                     childAge: bloc.ageController.text.trim(),
-                                    childInterests: bloc.interestsController.text.trim(),
+                                    childIntersets:
+                                        bloc.intersetsController.text.trim(),
                                   ));
                                 }
                               },

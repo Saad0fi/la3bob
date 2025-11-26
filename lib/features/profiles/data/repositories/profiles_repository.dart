@@ -26,10 +26,10 @@ class ProfilesRepositoryData implements ProfilesRepository {
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   ) async {
     try {
-      await _datasource.addChild(parentId, name, age, interests);
+      await _datasource.addChild(parentId, name, age, intersets);
       return const Success(unit);
     } catch (e) {
       return Failure(Exception(e.toString()));
@@ -55,7 +55,7 @@ class ProfilesRepositoryData implements ProfilesRepository {
           name: child.name,
           age: child.age,
           parentId: child.parentId,
-          interests: child.interests,
+          intersets: child.intersets,
         ),
       );
       return Success(model);
