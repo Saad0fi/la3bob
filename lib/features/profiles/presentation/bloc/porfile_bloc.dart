@@ -3,11 +3,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 part 'porfile_event.dart';
 part 'porfile_state.dart';
 
 class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
+  var uuid = Uuid();
   final ProfileUsecase _profileUsecase;
   final nameController = TextEditingController();
   final ageController = TextEditingController();
@@ -22,7 +24,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         return;
       }
 
-      final parentId = Supabase.instance.client.auth.currentUser?.id;
+      final parentId = uuid.v4();
       if (parentId == null) {
         emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
         return;

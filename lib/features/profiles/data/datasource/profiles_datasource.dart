@@ -42,7 +42,7 @@ class ApiProfileDatasource implements ProfilesDatasource {
       'parent_id': parentId,
       'name': name,
       'age': age,
-      'interests': interests,
+      'intersets': interests,
     });
 
     return ChildModelMapper.fromMap(data);
