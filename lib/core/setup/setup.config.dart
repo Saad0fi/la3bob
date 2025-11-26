@@ -13,6 +13,8 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
+import '../../features/auth/domain/repositories/auth_repository.dart' as _i787;
+import '../../features/auth/domain/usecases/auth_use_cases.dart' as _i544;
 import 'setup.dart' as _i450;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -24,6 +26,9 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
     gh.lazySingleton<_i454.SupabaseClient>(() => registerModule.supabaseClient);
+    gh.lazySingleton<_i544.AuthUseCases>(
+      () => _i544.AuthUseCases(gh<_i787.AuthRepositoryDomain>()),
+    );
     return this;
   }
 }
