@@ -22,15 +22,15 @@ class ProfilesRepositoryData implements ProfilesRepository {
   }
 
   @override
-  Future<Result<ChildEntity>> addChild(
+  Future<Result<void>> addChild(
     String parentId,
     String name,
     int age,
     List<String> interests,
   ) async {
     try {
-      final model = await _datasource.addChild(parentId, name, age, interests);
-      return Success(model);
+      await _datasource.addChild(parentId, name, age, interests);
+      return const Success(unit);
     } catch (e) {
       return Failure(Exception(e.toString()));
     }

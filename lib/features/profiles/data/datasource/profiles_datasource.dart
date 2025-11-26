@@ -32,20 +32,20 @@ class ApiProfileDatasource implements ProfilesDatasource {
   }
 
   @override
-  Future<ChildModel> addChild(
+  Future<void> addChild(
     String parentId,
     String name,
     int age,
     List<String> interests,
   ) async {
-    final data = await _supabaseClient.from('children').insert({
-      'parent_id': parentId,
-      'name': name,
-      'age': age,
-      'intersets': interests,
-    });
-
-    return ChildModelMapper.fromMap(data);
+    await _supabaseClient
+        .from('children')
+        .insert({
+          'parent_id': parentId,
+          'name': name,
+          'age': age,
+          'intersets': interests,
+        });
   }
 
   @override
