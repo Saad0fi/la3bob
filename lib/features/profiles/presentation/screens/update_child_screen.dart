@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:la3bob/core/setup.dart';
+import 'package:la3bob/core/setup/setup.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
