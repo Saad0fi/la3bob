@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:la3bob/core/setup/setup.dart';
+import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
@@ -13,26 +14,27 @@ class AddChildScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return BlocProvider(
-      create: (context) => PorfileBloc(getIt<ProfileUsecase>()),
+      create: (context) => PorfileBloc(
+            getIt<ProfileUsecase>(),
+            getIt<AuthUseCases>(),
+          ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('إضافة طفل'),
         ),
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
-            if (state is PorfileSuccess) {
+            if (state is PorfileLoading) {
+              Navigator.of(context).pop(true);
+            } else if (state is PorfileSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
                   backgroundColor: Colors.green,
                 ),
               );
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (_) => const ProfileScreen(),
-                ),
-              );
             } else if (state is PorfileError) {
+              Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.error),

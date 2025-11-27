@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:la3bob/core/setup/setup.dart';
+import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
+import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
@@ -13,8 +15,10 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          PorfileBloc(getIt<ProfileUsecase>())..add(const LoadChildren()),
+      create: (_) => PorfileBloc(
+            getIt<ProfileUsecase>(),
+            getIt<AuthUseCases>(),
+          )..add(const LoadChildren()),
       child: Builder(
         builder: (context) {
           final bloc = context.read<PorfileBloc>();
@@ -24,18 +28,32 @@ class ProfileScreen extends StatelessWidget {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.of(context).push(
+                  onPressed: () async {
+                    final result = await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const AddChildScreen(),
                       ),
                     );
+                    if (result == true) {
+                      bloc.add(const LoadChildren());
+                    }
                   },
                 ),
               ],
             ),
-            body: BlocBuilder<PorfileBloc, PorfileState>(
-              builder: (context, state) {
+            body: BlocListener<PorfileBloc, PorfileState>(
+              listener: (context, state) {
+                if (state is PorfileSuccess && state.message == 'تم تسجيل الخروج بنجاح') {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (_) => const LoginScreen(),
+                    ),
+                    (route) => false,
+                  );
+                }
+              },
+              child: BlocBuilder<PorfileBloc, PorfileState>(
+                builder: (context, state) {
                 if (state is PorfileLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -147,7 +165,8 @@ class ProfileScreen extends StatelessWidget {
                 }
 
                 return const SizedBox.shrink();
-              },
+                },
+              ),
             ),
           );
         },

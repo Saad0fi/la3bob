@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:la3bob/core/setup/setup.dart';
+import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
@@ -15,8 +16,10 @@ class UpdateChildScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return BlocProvider(
-      create: (_) =>
-          PorfileBloc(getIt<ProfileUsecase>())..add(PopulateChildForm(child)),
+      create: (_) => PorfileBloc(
+            getIt<ProfileUsecase>(),
+            getIt<AuthUseCases>(),
+          )..add(PopulateChildForm(child)),
       child: Scaffold(
         appBar: AppBar(title: const Text('تعديل بيانات الطفل')),
         body: BlocListener<PorfileBloc, PorfileState>(

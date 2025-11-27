@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,11 +13,12 @@ part 'porfile_state.dart';
 class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   var uuid = Uuid();
   final ProfileUsecase _profileUsecase;
+  final AuthUseCases _authUseCases;
   final nameController = TextEditingController();
   final ageController = TextEditingController();
   final intersetsController = TextEditingController();
 
-  PorfileBloc(this._profileUsecase) : super(PorfileInitial()) {
+  PorfileBloc(this._profileUsecase, this._authUseCases) : super(PorfileInitial()) {
     on<SubmitChildForm>((event, emit) async {
       if (event.childName.isEmpty ||
           event.childAge.isEmpty ||
@@ -25,7 +27,12 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         return;
       }
 
-      final parentId = "14f1c938-f4ed-435a-b9cd-080e02ef5808";
+      final userResult = await _authUseCases.getSignedInUser();
+      String? parentId;
+      userResult.when(
+        (user) => parentId = user?.id,
+        (failure) => parentId = null,
+      );
       if (parentId == null) {
         emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
         return;
@@ -51,7 +58,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       emit(PorfileLoading());
 
       final result = await _profileUsecase.addChild(
-        parentId,
+        parentId!,
         event.childName,
         age,
         intersets,
@@ -75,7 +82,12 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         return;
       }
 
-      final parentId = "14f1c938-f4ed-435a-b9cd-080e02ef5808";
+      final userResult = await _authUseCases.getSignedInUser();
+      String? parentId;
+      userResult.when(
+        (user) => parentId = user?.id,
+        (failure) => parentId = null,
+      );
       if (parentId == null) {
         emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
         return;
@@ -105,7 +117,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
           id: event.childId,
           name: event.childName,
           age: age,
-          parentId: parentId,
+          parentId: parentId!,
           intersets: intersets,
         ),
       );
@@ -121,15 +133,20 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     });
 
     on<LoadChildren>((event, emit) async {
-      emit(PorfileChildrenLoading());
+      emit(PorfileLoading());
 
-      final parentId = "14f1c938-f4ed-435a-b9cd-080e02ef5808";
+      final userResult = await _authUseCases.getSignedInUser();
+      String? parentId;
+      userResult.when(
+        (user) => parentId = user?.id,
+        (failure) => parentId = null,
+      );
       if (parentId == null) {
         emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
         return;
       }
 
-      final result = await _profileUsecase.getChildern(parentId);
+      final result = await _profileUsecase.getChildern(parentId!);
 
       result.fold(
         (children) => emit(PorfileChildrenLoaded(children)),
@@ -149,8 +166,12 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     });
 
     on<LogoutRequested>((event, emit) async {
-      await Supabase.instance.client.auth.signOut();
-      emit(PorfileSuccess('تم تسجيل الخروج بنجاح'));
+      emit(PorfileLoading());
+      final result = await _authUseCases.signOut();
+      result.when(
+        (_) => emit(PorfileSuccess('تم تسجيل الخروج بنجاح')),
+        (failure) => emit(PorfileError(failure.message)),
+      );
     });
 
     on<PopulateChildForm>((event, emit) {
