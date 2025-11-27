@@ -13,7 +13,8 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
-import '../../features/auth/domain/repositories/auth_repository.dart' as _i787;
+import '../../features/auth/domain/repositories/auth_repository_domain.dart'
+    as _i787;
 import '../../features/auth/domain/usecases/auth_use_cases.dart' as _i544;
 import 'setup.dart' as _i450;
 

@@ -1,6 +1,6 @@
 import 'package:la3bob/core/erors/failures/auth_failures.dart';
 import 'package:multiple_result/multiple_result.dart';
-import '../repositories/auth_repository.dart';
+import '../repositories/auth_repository_domain.dart';
 import '../entities/auth_user_entity.dart';
 import 'package:injectable/injectable.dart';
 
