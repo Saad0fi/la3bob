@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/setup.dart';
-import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
-import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
+import 'package:la3bob/features/auth/presentation/pages/signup_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: '.env');
-
   await GetStorage.init();
 
   final url = dotenv.env['URL'];
@@ -28,6 +26,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: AddChildScreen());
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SignupScreen(),
+    );
   }
 }
