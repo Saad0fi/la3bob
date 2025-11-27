@@ -9,7 +9,7 @@ part 'navigation_bar_state.dart';
 
 class NavigationBarBloc extends Bloc<NavigationBarEvent, NavigationBarState> {
   int currentIndex = 0;
-  List<Widget> screens = [HomeScreen(), SettingScreen()];
+  List<Widget> screens = [SettingScreen(), HomeScreen()];
   NavigationBarBloc() : super(NavigationBarInitial()) {
     on<NavigationBarEvent>((event, emit) {
       // TODO: implement event handler

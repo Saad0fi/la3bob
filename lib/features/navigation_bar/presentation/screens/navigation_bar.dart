@@ -9,8 +9,8 @@ class NavigationBarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => NavigationBarBloc(),
-      child: Builder(
-        builder: (context) {
+      child: BlocBuilder<NavigationBarBloc, NavigationBarState>(
+        builder: (context, state) {
           final bloc = context.read<NavigationBarBloc>();
           return Scaffold(
             body: bloc.screens[bloc.currentIndex],

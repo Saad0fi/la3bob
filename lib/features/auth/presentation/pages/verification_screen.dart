@@ -5,6 +5,8 @@ import 'package:la3bob/core/comon/helper_function/error_snackbar.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_state.dart';
+import 'package:la3bob/features/navigation_bar/presentation/bloc/navigation_bar_bloc.dart';
+import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 import 'package:pinput/pinput.dart';
 
 final GlobalKey<FormState> _otpFormKey = GlobalKey<FormState>();
@@ -51,11 +53,9 @@ class VerificationScreen extends StatelessWidget {
           listener: (context, state) {
             // الاستماع لحالات المصادقة
             if (state is Authenticated) {
-              //  نجاح: انتقال للشاشة الرئيسية
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const Scaffold(body: Center(child: Text("Home Screen"))),
+                  builder: (_) => const NavigationBarScreen(),
                 ),
                 (route) => false,
               );
