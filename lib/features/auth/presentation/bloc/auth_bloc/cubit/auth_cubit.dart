@@ -1,11 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:la3bob/core/erors/failures/auth_failures.dart';
 import 'package:la3bob/features/auth/domain/entities/auth_user_entity.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 
 part 'auth_state.dart';
 
+@injectable
 class AuthCubit extends Cubit<AuthState> {
   final AuthUseCases _authUseCases;
   AuthCubit(this._authUseCases) : super(AuthInitial());
@@ -35,6 +37,19 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await _authUseCases.signUp(email: email, name: name);
     result.when(
       (_) => emit(const OtpSent()),
+      (failure) => emit(AuthFailureState(failure: failure)),
+    );
+  }
+
+  // دالة تسجيل الدخول (Sign In)
+  Future<void> signIn({required String email}) async {
+    emit(const AuthLoading());
+
+    final result = await _authUseCases.signIn(email: email);
+
+    result.when(
+      (_) => emit(const OtpSent()),
+
       (failure) => emit(AuthFailureState(failure: failure)),
     );
   }
