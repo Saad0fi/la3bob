@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:la3bob/core/utils/helper_function/error_snackbar.dart';
+import 'package:la3bob/core/comon/helper_function/error_snackbar.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_state.dart';
