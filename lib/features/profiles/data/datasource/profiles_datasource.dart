@@ -1,14 +1,15 @@
+import 'package:injectable/injectable.dart';
 import 'package:la3bob/features/profiles/data/models/child_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class ProfilesDatasource {
   Future<List<ChildModel>> getChildern(String parentId);
 
-  Future<ChildModel> addChild(
+  Future<void> addChild(
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   );
 
   Future<void> deleteChild(String childId);
@@ -16,6 +17,7 @@ abstract class ProfilesDatasource {
   Future<ChildModel> updateChild(ChildModel child);
 }
 
+@Injectable(as: ProfilesDatasource)
 class ApiProfileDatasource implements ProfilesDatasource {
   final SupabaseClient _supabaseClient;
 
@@ -30,20 +32,20 @@ class ApiProfileDatasource implements ProfilesDatasource {
   }
 
   @override
-  Future<ChildModel> addChild(
+  Future<void> addChild(
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   ) async {
-    final data = await _supabaseClient.from('children').insert({
-      'parent_id': parentId,
-      'name': name,
-      'age': age,
-      'interests': interests,
-    });
-
-    return ChildModelMapper.fromMap(data);
+    await _supabaseClient
+        .from('children')
+        .insert({
+          'parent_id': parentId,
+          'name': name,
+          'age': age,
+          'intersets': intersets,
+        });
   }
 
   @override

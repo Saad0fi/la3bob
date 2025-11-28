@@ -1,9 +1,11 @@
+import 'package:injectable/injectable.dart';
 import 'package:la3bob/features/profiles/data/datasource/profiles_datasource.dart';
 import 'package:la3bob/features/profiles/data/models/child_model.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/repositories/profiles_repository.dart';
 import 'package:result_dart/result_dart.dart';
 
+@Injectable(as: ProfilesRepository)
 class ProfilesRepositoryData implements ProfilesRepository {
   final ProfilesDatasource _datasource;
 
@@ -20,15 +22,15 @@ class ProfilesRepositoryData implements ProfilesRepository {
   }
 
   @override
-  Future<Result<ChildEntity>> addChild(
+  Future<Result<void>> addChild(
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   ) async {
     try {
-      final model = await _datasource.addChild(parentId, name, age, interests);
-      return Success(model);
+      await _datasource.addChild(parentId, name, age, intersets);
+      return const Success(unit);
     } catch (e) {
       return Failure(Exception(e.toString()));
     }
@@ -53,7 +55,7 @@ class ProfilesRepositoryData implements ProfilesRepository {
           name: child.name,
           age: child.age,
           parentId: child.parentId,
-          interests: child.interests,
+          intersets: child.intersets,
         ),
       );
       return Success(model);

@@ -4,11 +4,11 @@ import 'package:result_dart/result_dart.dart';
 abstract class ProfilesRepository {
   Future<Result<List<ChildEntity>>> getChildern(String parentId);
 
-  Future<Result<ChildEntity>> addChild(
+  Future<Result<void>> addChild(
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   );
 
   Future<Result<void>> deleteChild(String childId);

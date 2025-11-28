@@ -1,7 +1,9 @@
+import 'package:injectable/injectable.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/repositories/profiles_repository.dart';
 import 'package:result_dart/result_dart.dart';
 
+@injectable
 class ProfileUsecase {
   final ProfilesRepository _repository;
 
@@ -11,13 +13,13 @@ class ProfileUsecase {
     return _repository.getChildern(parentId);
   }
 
-  Future<Result<ChildEntity>> addChild(
+  Future<Result<void>> addChild(
     String parentId,
     String name,
     int age,
-    List<String> interests,
+    List<String> intersets,
   ) {
-    return _repository.addChild(parentId, name, age, interests);
+    return _repository.addChild(parentId, name, age, intersets);
   }
 
   Future<Result<void>> deleteChild(String childId) {
