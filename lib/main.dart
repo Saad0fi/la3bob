@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/setup/setup.dart';
 import 'package:la3bob/features/auth/presentation/pages/signup_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,15 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      locale: const Locale('ar'),
+      supportedLocales: const [Locale('ar', 'SA'), Locale('en', 'US')],
+
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
       debugShowCheckedModeBanner: false,
       home: SignupScreen(),
     );
