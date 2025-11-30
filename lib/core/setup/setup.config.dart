@@ -32,6 +32,13 @@ import '../../features/profiles/data/repositories/profiles_repository.dart'
 import '../../features/profiles/domain/repositories/profiles_repository.dart'
     as _i141;
 import '../../features/profiles/domain/usecase/profile_usecase.dart' as _i1022;
+import '../../features/videos/data/datasource/videos_datasource.dart' as _i889;
+import '../../features/videos/data/repositories/videos_repository.dart'
+    as _i622;
+import '../../features/videos/domain/repositories/videos_repository.dart'
+    as _i836;
+import '../../features/videos/domain/usecase/videos_usecase.dart' as _i362;
+import '../../features/videos/presentation/bloc/videos_bloc.dart' as _i135;
 import 'setup.dart' as _i450;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -55,6 +62,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i544.AuthUseCases>(
       () => _i544.AuthUseCases(gh<_i998.AuthRepositoryDomain>()),
     );
+    gh.factory<_i889.VideosDatasource>(
+      () => _i889.ApiVideosDatasource(gh<_i454.SupabaseClient>()),
+    );
     gh.factory<_i452.ProfilesDatasource>(
       () => _i452.ApiProfileDatasource(gh<_i454.SupabaseClient>()),
     );
@@ -64,8 +74,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i141.ProfilesRepository>(
       () => _i282.ProfilesRepositoryData(gh<_i452.ProfilesDatasource>()),
     );
+    gh.factory<_i836.VideosRepository>(
+      () => _i622.VideosRepositoryData(gh<_i889.VideosDatasource>()),
+    );
     gh.factory<_i1022.ProfileUsecase>(
       () => _i1022.ProfileUsecase(gh<_i141.ProfilesRepository>()),
+    );
+    gh.factory<_i362.VideosUsecase>(
+      () => _i362.VideosUsecase(gh<_i836.VideosRepository>()),
+    );
+    gh.factory<_i135.VideosBloc>(
+      () => _i135.VideosBloc(gh<_i362.VideosUsecase>()),
     );
     return this;
   }
