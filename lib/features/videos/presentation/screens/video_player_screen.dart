@@ -5,10 +5,7 @@ import '../../domain/entities/video_entity.dart';
 class VideoPlayerScreen extends StatelessWidget {
   final VideoEntity video;
 
-  const VideoPlayerScreen({
-    super.key,
-    required this.video,
-  });
+  const VideoPlayerScreen({super.key, required this.video});
 
   String _extractVideoId(String url) {
     final regex = RegExp(
@@ -23,16 +20,11 @@ class VideoPlayerScreen extends StatelessWidget {
     final videoId = _extractVideoId(video.link);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          video.title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: Text(video.title, maxLines: 1, overflow: TextOverflow.ellipsis),
       ),
       body: _YoutubePlayerWidget(videoId: videoId),
     );
   }
-
 }
 
 class _YoutubePlayerWidget extends StatefulWidget {
@@ -54,25 +46,15 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
     try {
       _controller = YoutubePlayerController(
         initialVideoId: widget.videoId,
-        flags: const YoutubePlayerFlags(
-          autoPlay: true,
-          mute: true,
-        ),
+        flags: const YoutubePlayerFlags(autoPlay: true, mute: false),
       );
-      _controller?.addListener(_listener);
     } catch (e) {
       _hasError = true;
     }
   }
 
-  void _listener() {
-    if (_controller?.value.isReady ?? false) {
-}
-  }
-
   @override
   void dispose() {
-    _controller?.removeListener(_listener);
     _controller?.dispose();
     super.dispose();
   }
@@ -84,11 +66,7 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 48,
-            ),
+            const Icon(Icons.error_outline, color: Colors.red, size: 48),
             const SizedBox(height: 16),
             Text(
               'خطأ في تحميل الفيديو',
@@ -108,12 +86,7 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
           playedColor: Colors.amber,
           handleColor: Colors.amberAccent,
         ),
-        onReady: () {
-          _controller?.addListener(_listener);
-        },
       ),
     );
   }
 }
-
-
