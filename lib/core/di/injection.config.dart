@@ -32,7 +32,7 @@ import '../../features/profiles/data/repositories/profiles_repository.dart'
 import '../../features/profiles/domain/repositories/profiles_repository.dart'
     as _i141;
 import '../../features/profiles/domain/usecase/profile_usecase.dart' as _i1022;
-import 'setup.dart' as _i450;
+import 'injection.dart' as _i450;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt

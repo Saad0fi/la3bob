@@ -3,7 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'setup.config.dart';
+import 'injection.config.dart';
 
 @module
 abstract class ThirdPartyModule {
