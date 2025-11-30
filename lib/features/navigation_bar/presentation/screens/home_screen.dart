@@ -20,9 +20,7 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.settings),
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const ProfileScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
                 );
               },
             ),
@@ -62,9 +60,7 @@ class HomeScreen extends StatelessWidget {
 
             if (state is VideosLoaded) {
               if (state.videos.isEmpty) {
-                return const Center(
-                  child: Text('لا توجد فيديوهات متاحة'),
-                );
+                return const Center(child: Text('لا توجد فيديوهات متاحة'));
               }
 
               return ListView.builder(
@@ -83,15 +79,7 @@ class HomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(
-                        video.link,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () {
                         Navigator.of(context).push(

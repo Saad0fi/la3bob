@@ -10,8 +10,17 @@ class VideoPlayerScreen extends StatelessWidget {
     required this.video,
   });
 
+  String _extractVideoId(String url) {
+    final regex = RegExp(
+      r'(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})',
+    );
+    final match = regex.firstMatch(url);
+    return match?.group(1) ?? url;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final videoId = _extractVideoId(video.link);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -20,7 +29,7 @@ class VideoPlayerScreen extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      body: _YoutubePlayerWidget(videoId: video.link),
+      body: _YoutubePlayerWidget(videoId: videoId),
     );
   }
 
@@ -47,16 +56,23 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
         initialVideoId: widget.videoId,
         flags: const YoutubePlayerFlags(
           autoPlay: true,
-          mute: false,
+          mute: true,
         ),
       );
+      _controller?.addListener(_listener);
     } catch (e) {
       _hasError = true;
     }
   }
 
+  void _listener() {
+    if (_controller?.value.isReady ?? false) {
+}
+  }
+
   @override
   void dispose() {
+    _controller?.removeListener(_listener);
     _controller?.dispose();
     super.dispose();
   }
@@ -87,7 +103,14 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
       child: YoutubePlayer(
         controller: _controller!,
         showVideoProgressIndicator: true,
-        progressIndicatorColor: Colors.blueAccent,
+        progressIndicatorColor: Colors.amber,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.amber,
+          handleColor: Colors.amberAccent,
+        ),
+        onReady: () {
+          _controller?.addListener(_listener);
+        },
       ),
     );
   }
