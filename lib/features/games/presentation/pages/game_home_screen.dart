@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 
-class SettingScreen extends StatelessWidget {
-  const SettingScreen({super.key});
+class GameHomeScreen extends StatelessWidget {
+  const GameHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +13,9 @@ class SettingScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const ProfileScreen(),
-                ),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const ProfileScreen()));
             },
           ),
         ],
