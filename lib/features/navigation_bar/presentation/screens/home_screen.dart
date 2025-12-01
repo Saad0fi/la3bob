@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:la3bob/core/setup/setup.dart';
+import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
 import 'package:la3bob/features/videos/presentation/screens/video_player_screen.dart';

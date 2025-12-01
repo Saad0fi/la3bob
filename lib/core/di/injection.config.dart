@@ -39,7 +39,7 @@ import '../../features/videos/domain/repositories/videos_repository.dart'
     as _i836;
 import '../../features/videos/domain/usecase/videos_usecase.dart' as _i362;
 import '../../features/videos/presentation/bloc/videos_bloc.dart' as _i135;
-import 'setup.dart' as _i450;
+import 'injection.dart' as _i450;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
