@@ -5,8 +5,8 @@ import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dar
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
 import 'package:la3bob/features/videos/presentation/screens/video_player_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class VideoHomeScreen extends StatelessWidget {
+  const VideoHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

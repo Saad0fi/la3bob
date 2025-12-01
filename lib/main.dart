@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:la3bob/core/config/setup.dart';
-import 'package:la3bob/features/auth/presentation/pages/signup_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
+import 'package:la3bob/features/videos/presentation/screens/video_home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class MainApp extends StatelessWidget {
       ],
 
       debugShowCheckedModeBanner: false,
-      home: SignupScreen(),
+      home: NavigationBarScreen(),
     );
   }
 }
