@@ -90,7 +90,7 @@ class AddChildScreen extends StatelessWidget {
                             return 'الرجاء إدخال عمر الطفل';
                           }
                           final age = int.tryParse(value);
-                          if (age == null || age < 1 || age > 18) {
+                          if (age == null || age < 1 || age > 13) {
                             return 'الرجاء إدخال عمر صحيح (من 1 إلى 18)';
                           }
                           return null;
