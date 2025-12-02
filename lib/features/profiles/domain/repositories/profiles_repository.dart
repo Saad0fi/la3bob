@@ -13,5 +13,5 @@ abstract class ProfilesRepository {
 
   Future<Result<void>> deleteChild(String childId);
 
-  Future<Result<ChildEntity>> updateChild(ChildEntity child);
+  Future<Result<void>> updateChild(ChildEntity child);
 }

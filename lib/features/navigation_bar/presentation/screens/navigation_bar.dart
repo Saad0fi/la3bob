@@ -23,7 +23,7 @@ class NavigationBarScreen extends StatelessWidget {
                   label: "فيديوهات",
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.games),
+                  icon: Icon(Icons.gamepad_sharp),
                   label: "ألعاب",
                 ),
               ],

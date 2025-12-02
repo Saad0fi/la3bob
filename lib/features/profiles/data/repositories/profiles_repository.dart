@@ -47,7 +47,7 @@ class ProfilesRepositoryData implements ProfilesRepository {
   }
 
   @override
-  Future<Result<ChildEntity>> updateChild(ChildEntity child) async {
+  Future<Result<void>> updateChild(ChildEntity child) async {
     try {
       final model = await _datasource.updateChild(
         ChildModel(
@@ -58,7 +58,7 @@ class ProfilesRepositoryData implements ProfilesRepository {
           intersets: child.intersets,
         ),
       );
-      return Success(model);
+      return Success(unit);
     } catch (e) {
       return Failure(Exception(e.toString()));
     }

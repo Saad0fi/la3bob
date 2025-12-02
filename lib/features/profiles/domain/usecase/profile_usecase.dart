@@ -26,7 +26,7 @@ class ProfileUsecase {
     return _repository.deleteChild(childId);
   }
 
-  Future<Result<ChildEntity>> updateChild(ChildEntity child) {
+  Future<Result<void>> updateChild(ChildEntity child) {
     return _repository.updateChild(child);
   }
 }

@@ -27,6 +27,7 @@ dependencies:
   youtube_player_flutter: ^9.0.0
   flutter_localizations:
     sdk: flutter
+  babstrap_settings_screen: ^0.1.7
 
 dev_dependencies:
   flutter_test:

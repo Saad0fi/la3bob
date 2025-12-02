@@ -14,7 +14,7 @@ abstract class ProfilesDatasource {
 
   Future<void> deleteChild(String childId);
 
-  Future<ChildModel> updateChild(ChildModel child);
+  Future<void> updateChild(ChildModel child);
 }
 
 @Injectable(as: ProfilesDatasource)
@@ -38,14 +38,12 @@ class ApiProfileDatasource implements ProfilesDatasource {
     int age,
     List<String> intersets,
   ) async {
-    await _supabaseClient
-        .from('children')
-        .insert({
-          'parent_id': parentId,
-          'name': name,
-          'age': age,
-          'intersets': intersets,
-        });
+    await _supabaseClient.from('children').insert({
+      'parent_id': parentId,
+      'name': name,
+      'age': age,
+      'intersets': intersets,
+    });
   }
 
   @override
@@ -54,12 +52,10 @@ class ApiProfileDatasource implements ProfilesDatasource {
   }
 
   @override
-  Future<ChildModel> updateChild(ChildModel child) async {
+  Future<void> updateChild(ChildModel child) async {
     final data = await _supabaseClient
         .from('children')
         .update(child.toMap())
         .eq('id', child.id);
-
-    return ChildModelMapper.fromMap(data);
   }
 }

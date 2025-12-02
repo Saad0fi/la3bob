@@ -8,7 +8,7 @@ part 'navigation_bar_state.dart';
 
 class NavigationBarBloc extends Bloc<NavigationBarEvent, NavigationBarState> {
   int currentIndex = 0;
-  List<Widget> screens = [GameHomeScreen(), VideoHomeScreen()];
+  List<Widget> screens = [VideoHomeScreen(), GameHomeScreen()];
   NavigationBarBloc() : super(NavigationBarInitial()) {
     on<NavigationBarEvent>((event, emit) {});
     on<NavigationBarTapEvent>((event, emit) {

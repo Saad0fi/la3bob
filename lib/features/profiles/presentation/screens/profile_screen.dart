@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
-import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/update_child_screen.dart';
+import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
+import 'package:flutter/cupertino.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,19 +25,7 @@ class ProfileScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: const Text('الملف الشخصي'),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () async {
-                    final result = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const AddChildScreen()),
-                    );
-                    if (result == true) {
-                      bloc.add(const LoadChildren());
-                    }
-                  },
-                ),
-              ],
+              actions: const [],
             ),
             body: BlocListener<PorfileBloc, PorfileState>(
               listener: (context, state) {
@@ -47,6 +36,12 @@ class ProfileScreen extends StatelessWidget {
                     (route) => false,
                   );
                 }
+                if (state is PorfileSuccess &&
+                    state.message != 'تم تسجيل الخروج بنجاح') {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                }
               },
               child: BlocBuilder<PorfileBloc, PorfileState>(
                 builder: (context, state) {
@@ -54,92 +49,10 @@ class ProfileScreen extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  if (state is PorfileChildrenLoaded) {
-                    if (state.children.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisSize: .min,
-                          children: [
-                            const Text('لا يوجد أطفال مسجلين بعد'),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const AddChildScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text('إضافة طفل'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    final children = state.children;
-                    final data = children.map((child) {
-                      return ListTile(
-                        title: Text(
-                          child.name,
-                          textDirection: TextDirection.rtl,
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: .start,
-                          children: [
-                            Text(
-                              'العمر: ${child.age}',
-                              textDirection: TextDirection.rtl,
-                            ),
-                            Text(
-                              'الاهتمامات: ${child.intersets.join('، ')}',
-                              textDirection: TextDirection.rtl,
-                            ),
-                            const Text(
-                              'مدة المشاهدة: 0 دقيقة',
-                              textDirection: TextDirection.rtl,
-                            ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.manage_accounts),
-                          onPressed: () async {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => UpdateChildScreen(child: child),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    }).toList();
-
-                    data.add(
-                      ListTile(
-                        leading: const Icon(Icons.logout),
-                        title: const Text('تسجيل الخروج'),
-                        onTap: () => bloc.add(const LogoutRequested()),
-                      ),
-                    );
-
-                    return ListView.builder(
-                      padding: const .only(top: 8, bottom: 8),
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            data[index],
-                            if (index < data.length - 1)
-                              const Divider(height: 1),
-                          ],
-                        );
-                      },
-                    );
-                  }
-
                   if (state is PorfileError) {
                     return Center(
                       child: Column(
-                        mainAxisSize: .min,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(state.error, textAlign: TextAlign.center),
                           const SizedBox(height: 12),
@@ -152,15 +65,155 @@ class ProfileScreen extends StatelessWidget {
                     );
                   }
 
-                  if (state is PorfileSuccess) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
-                    });
-                  }
+                  final children = state is PorfileChildrenLoaded
+                      ? state.children
+                      : [];
+                  final isLoaded = state is PorfileChildrenLoaded;
 
-                  return const SizedBox.shrink();
+                  const String parentName = "ولي الأمر";
+
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ListView(
+                      children: [
+                        BigUserCard(
+                          backgroundColor: Colors.blueAccent.shade700,
+                          userName: parentName,
+                          userProfilePic: const NetworkImage(
+                            "https://i.pravatar.cc/150?img=3",
+                          ),
+                          cardActionWidget: SettingsItem(
+                            icons: Icons.edit,
+                            iconStyle: IconStyle(
+                              iconsColor: Colors.black,
+                              withBackground: true,
+                              borderRadius: 50,
+                              backgroundColor: Colors.white, // لون خلفية الزر
+                            ),
+                            title: "تعديل البيانات",
+                            subtitle: "اضغط لتغيير بياناتك",
+                            onTap: () {
+                              print("الانتقال لتعديل ملف الوالدين");
+                            },
+                          ),
+                        ),
+
+                        // 2.  قسم أدوات التحكم الأبوي
+                        SettingsGroup(
+                          settingsGroupTitle: "أدوات الرقابة الأبوية",
+                          items: [
+                            //  زر حماية الإعدادات (بوابة الوالدين)
+                            SettingsItem(
+                              onTap: () {
+                                print("استدعاء بوابة التحقق من الرمز السري...");
+                              },
+                              icons: CupertinoIcons.lock_shield_fill,
+                              iconStyle: IconStyle(
+                                iconsColor: Colors.white,
+                                backgroundColor: Colors.orange,
+                              ),
+                              title: "حماية الإعدادات",
+                              subtitle: "تفعيل رمز سري لدخول هذه الصفحة",
+                            ),
+
+                            //  زر وضع الطفل (Kiosk Mode)
+                            SettingsItem(
+                              onTap: () {
+                                print("تبديل وضع قفل التطبيق...");
+                              },
+                              icons: CupertinoIcons.lock_open_fill,
+                              iconStyle: IconStyle(
+                                iconsColor: Colors.white,
+                                backgroundColor: Colors.red,
+                              ),
+                              title: "تفعيل وضع القفل (وضع الطفل)",
+                              subtitle: "تثبيت التطبيق على الشاشة لمنع الخروج",
+                              trailing: Switch.adaptive(
+                                value: false,
+                                onChanged: (value) {
+                                  print("تبديل وضع الطفل: $value");
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        //   قسم إدارة ملفات الأطفال
+                        if (isLoaded)
+                          SettingsGroup(
+                            settingsGroupTitle:
+                                "ملفات الأطفال (${children.length})",
+                            // trailing: IconButton(
+                            //   icon: const Icon(Icons.add, color: Colors.blue),
+                            //   onPressed: () async {
+                            //     final result = await Navigator.of(context).push(
+                            //       MaterialPageRoute(
+                            //         builder: (_) => const AddChildScreen(),
+                            //       ),
+                            //     );
+                            //     if (result == true) {
+                            //       bloc.add(const LoadChildren());
+                            //     }
+                            //   },
+                            // ),
+                            items: children.isEmpty
+                                ? [
+                                    SettingsItem(
+                                      title: "لا يوجد أطفال مسجلون.",
+                                      subtitle:
+                                          "اضغط على زر الإضافة أعلاه لإضافة طفل جديد.",
+                                      icons: Icons.info_outline,
+                                      iconStyle: IconStyle(
+                                        backgroundColor: Colors.grey.shade300,
+                                        iconsColor: Colors.black54,
+                                      ),
+                                      onTap: () {},
+                                    ),
+                                  ]
+                                : children.map((child) {
+                                    return SettingsItem(
+                                      onTap: () async {
+                                        await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                UpdateChildScreen(child: child),
+                                          ),
+                                        );
+                                        bloc.add(const LoadChildren());
+                                      },
+                                      icons:
+                                          CupertinoIcons.person_alt_circle_fill,
+                                      title: child.name,
+                                      subtitle: "العمر: ${child.age}",
+                                      iconStyle: IconStyle(
+                                        iconsColor: Colors.white,
+                                        backgroundColor: Colors.green,
+                                      ),
+                                      trailing: const Icon(
+                                        Icons.edit,
+                                        size: 20,
+                                      ),
+                                    );
+                                  }).toList(),
+                          ),
+
+                        // 4. 🚪 زر تسجيل الخروج
+                        SettingsGroup(
+                          items: [
+                            SettingsItem(
+                              onTap: () => bloc.add(const LogoutRequested()),
+                              icons: Icons.exit_to_app_rounded,
+                              title: "تسجيل الخروج",
+                              titleStyle: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ),
