@@ -18,7 +18,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   final ageController = TextEditingController();
   final intersetsController = TextEditingController();
 
-  PorfileBloc(this._profileUsecase, this._authUseCases) : super(PorfileInitial()) {
+  PorfileBloc(this._profileUsecase, this._authUseCases)
+    : super(PorfileInitial()) {
     on<SubmitChildForm>((event, emit) async {
       if (event.childName.isEmpty ||
           event.childAge.isEmpty ||
@@ -39,8 +40,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       }
 
       final age = int.tryParse(event.childAge);
-      if (age == null || age < 1 || age > 18) {
-        emit(PorfileError('الرجاء إدخال عمر صحيح (من 1 إلى 18)'));
+      if (age == null || age < 1 || age > 12) {
+        emit(PorfileError('الرجاء إدخال عمر صحيح (من 1 إلى 12)'));
         return;
       }
 

@@ -9,8 +9,20 @@ final class PorfileChildrenLoading extends PorfileState {}
 
 final class PorfileChildrenLoaded extends PorfileState {
   final List<ChildEntity> children;
+  final bool isChildLockModeActive;
 
-  PorfileChildrenLoaded(this.children);
+  PorfileChildrenLoaded(this.children, {this.isChildLockModeActive = false});
+
+  PorfileChildrenLoaded copyWith({
+    List<ChildEntity>? children,
+    bool? isChildLockModeActive,
+  }) {
+    return PorfileChildrenLoaded(
+      children ?? this.children,
+      isChildLockModeActive:
+          isChildLockModeActive ?? this.isChildLockModeActive,
+    );
+  }
 }
 
 final class PorfileForm extends PorfileState {
@@ -27,17 +39,12 @@ final class PorfileForm extends PorfileState {
 
 final class PorfileLoading extends PorfileState {}
 
-
 final class PorfileSuccess extends PorfileState {
   final String message;
   PorfileSuccess(this.message);
 }
 
-
 final class PorfileError extends PorfileState {
   final String error;
   PorfileError(this.error);
 }
-
-
-
