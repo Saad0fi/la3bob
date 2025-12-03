@@ -68,3 +68,8 @@ class PopulateChildForm extends PorfileEvent {
 class ResetForm extends PorfileEvent {
   const ResetForm();
 }
+
+final class ToggleChildLockMode extends PorfileEvent {
+  final bool isActive;
+  const ToggleChildLockMode(this.isActive);
+}
