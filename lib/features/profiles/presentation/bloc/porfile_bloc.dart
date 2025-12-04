@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/erors/failures/profiles_failures.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
@@ -235,18 +236,36 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       return;
     }
 
-    final result = await _profileUsecase.getChildern(parentId!);
+    final kioskModeStatusResult = await _profileUsecase.getKioskModeStatus();
 
-    // ملاحظة: نحتاج للتأكد من أننا نمرر قيمة isChildLockModeActive في هذه الحالة
-    // إذا كنت تخزن حالة المفتاح في قاعدة بيانات، يجب استردادها هنا أيضاً.
-    // 💡 تم استبدال .fold() بـ .when()
-    result.when(
-      (children) => emit(PorfileChildrenLoaded(children)),
-      (ProfilesFailure failure) => emit(PorfileError(failure)),
+    final childrenResult = await _profileUsecase.getChildern(parentId!);
+
+    bool isKioskModeActive = false;
+
+    kioskModeStatusResult.when(
+      (mode) {
+        isKioskModeActive = (mode == KioskMode.enabled);
+      },
+      (failure) {
+        print('Failed to get Kiosk Mode status: ${failure.message}');
+      },
     );
-  }
 
-  //  معالج حدث حذف الطفل
+    childrenResult.when(
+      (children) {
+        emit(
+          PorfileChildrenLoaded(
+            children,
+            isChildLockModeActive: isKioskModeActive,
+          ),
+        );
+      },
+      (ProfilesFailure failure) {
+        emit(PorfileError(failure));
+      },
+    );
+  } //  معالج حدث حذف الطفل
+
   Future<void> _onDeleteChild(
     DeleteChild event,
     Emitter<PorfileState> emit,

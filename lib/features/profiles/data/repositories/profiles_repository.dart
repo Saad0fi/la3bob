@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/erors/failures/profiles_failures.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:la3bob/features/profiles/data/datasource/profiles_datasource.dart';
@@ -51,7 +52,6 @@ class ProfilesRepositoryData implements ProfilesRepository {
       await _datasource.deleteChild(childId);
       return const Success(null);
     } catch (e) {
-      // 💡 تغليف الخطأ بـ DatabaseFailure
       return Error(DatabaseFailure(message: "فشل حذف الطفل: ${e.toString()}"));
     }
   }
@@ -71,9 +71,9 @@ class ProfilesRepositoryData implements ProfilesRepository {
   }
 
   @override
-  Future<Result<void, ProfilesFailure>> startKioskMode() async {
+  Future<Result<void, ProfilesFailure>> startKioskmode() async {
     try {
-      await _datasource.startKioskMode();
+      await _datasource.startKioskmode();
       return const Success(null);
     } catch (e) {
       return Error(
@@ -83,13 +83,25 @@ class ProfilesRepositoryData implements ProfilesRepository {
   }
 
   @override
-  Future<Result<void, ProfilesFailure>> stopKioskMode() async {
+  Future<Result<void, ProfilesFailure>> stopKioskmode() async {
     try {
-      await _datasource.stopKioskMode();
+      await _datasource.stopKioskmode();
       return const Success(null);
     } catch (e) {
       return Error(
         KioskModeFailure(message: "فشل إلغاء وضع القفل: ${e.toString()}"),
+      );
+    }
+  }
+
+  @override
+  Future<Result<KioskMode, ProfilesFailure>> getKioskModeStatus() async {
+    try {
+      final mode = await _datasource.getKioskModeStatus();
+      return Success(mode);
+    } catch (e) {
+      return Error(
+        KioskModeFailure(message: "فشل قراءة حالة وضع القفل: ${e.toString()}"),
       );
     }
   }
