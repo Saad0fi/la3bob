@@ -1,12 +1,10 @@
-// lib/core/widgets/error_snackbar.dart
-
 import 'package:flutter/material.dart';
 
 void showErrorSnackbar(BuildContext context, String message) {
-  // 1. إخفاء أي SnackBar مفتوح حالياً
+  //  إخفاء أي SnackBar مفتوح حالياً
   ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-  // 2. عرض SnackBar جديد
+  //  عرض SnackBar جديد
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(

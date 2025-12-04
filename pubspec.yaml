@@ -27,6 +27,8 @@ dependencies:
   youtube_player_flutter: ^9.0.0
   flutter_localizations:
     sdk: flutter
+  babstrap_settings_screen: ^0.1.7
+  kiosk_mode: ^0.7.0+1
 
 dev_dependencies:
   flutter_test:
@@ -40,3 +42,4 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+    - assets/images/

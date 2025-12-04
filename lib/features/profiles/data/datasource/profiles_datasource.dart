@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/features/profiles/data/models/child_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,7 +15,13 @@ abstract class ProfilesDatasource {
 
   Future<void> deleteChild(String childId);
 
-  Future<ChildModel> updateChild(ChildModel child);
+  Future<void> updateChild(ChildModel child);
+
+  Future<void> startKioskmode();
+
+  Future<void> stopKioskmode();
+
+  Future<KioskMode> getKioskModeStatus();
 }
 
 @Injectable(as: ProfilesDatasource)
@@ -38,14 +45,12 @@ class ApiProfileDatasource implements ProfilesDatasource {
     int age,
     List<String> intersets,
   ) async {
-    await _supabaseClient
-        .from('children')
-        .insert({
-          'parent_id': parentId,
-          'name': name,
-          'age': age,
-          'intersets': intersets,
-        });
+    await _supabaseClient.from('children').insert({
+      'parent_id': parentId,
+      'name': name,
+      'age': age,
+      'intersets': intersets,
+    });
   }
 
   @override
@@ -54,12 +59,25 @@ class ApiProfileDatasource implements ProfilesDatasource {
   }
 
   @override
-  Future<ChildModel> updateChild(ChildModel child) async {
+  Future<void> updateChild(ChildModel child) async {
     final data = await _supabaseClient
         .from('children')
         .update(child.toMap())
         .eq('id', child.id);
+  }
 
-    return ChildModelMapper.fromMap(data);
+  @override
+  Future<void> startKioskmode() async {
+    await startKioskMode();
+  }
+
+  @override
+  Future<void> stopKioskmode() async {
+    await stopKioskMode();
+  }
+
+  @override
+  Future<KioskMode> getKioskModeStatus() async {
+    return await getKioskMode();
   }
 }

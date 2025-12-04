@@ -14,4 +14,18 @@ class ChildModel extends ChildEntity with ChildModelMappable {
     required super.parentId,
     required super.intersets,
   });
+
+  factory ChildModel.fromEntity(ChildEntity entity) {
+    return ChildModel(
+      id: entity.id,
+      name: entity.name,
+      age: entity.age,
+      parentId: entity.parentId,
+      intersets: entity.intersets,
+    );
+  }
+
+  ChildEntity toEntity() {
+    return this;
+  }
 }

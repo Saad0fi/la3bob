@@ -4,7 +4,6 @@ import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
-import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 
 class AddChildScreen extends StatelessWidget {
   const AddChildScreen({super.key});
@@ -33,7 +32,7 @@ class AddChildScreen extends StatelessWidget {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.error),
+                  content: Text(state.failure.message),
                   backgroundColor: Colors.red,
                 ),
               );

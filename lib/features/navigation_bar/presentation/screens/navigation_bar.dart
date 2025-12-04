@@ -19,12 +19,12 @@ class NavigationBarScreen extends StatelessWidget {
               onTap: (index) => bloc.add(NavigationBarTapEvent(index)),
               items: [
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.games),
-                  label: "ألعاب",
-                ),
-                BottomNavigationBarItem(
                   icon: Icon(Icons.videocam_sharp),
                   label: "فيديوهات",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.gamepad_sharp),
+                  label: "ألعاب",
                 ),
               ],
             ),
