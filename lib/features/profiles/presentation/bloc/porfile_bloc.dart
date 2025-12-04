@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:la3bob/core/erors/failures/profiles_failures.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
@@ -30,19 +31,31 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   }
 
   // ----------------------------------------------------------------------
-  //    handller method  اللوجيك هنا
+  //    handller method  اللوجيك هنا
 
-  //  معالج حدث تبديل وضع القفل
+  //  معالج حدث تبديل وضع القفل
   void _onToggleChildLockMode(
     ToggleChildLockMode event,
     Emitter<PorfileState> emit,
-  ) {
+  ) async {
     if (state is PorfileChildrenLoaded) {
       final currentState = state as PorfileChildrenLoaded;
 
-      emit(currentState.copyWith(isChildLockModeActive: event.isActive));
+      final result = await _profileUsecase.toggleChildLockMode(
+        shouldBeActive: event.isActive,
+      );
+
+      result.when(
+        (_) {
+          emit(currentState.copyWith(isChildLockModeActive: event.isActive));
+        },
+        (ProfilesFailure failure) {
+          emit(PorfileError(failure));
+
+          emit(currentState.copyWith(isChildLockModeActive: !event.isActive));
+        },
+      );
     }
-    // ملاحظة: إذا كنت تريد حفظ هذه القيمة في قاعدة البيانات، يجب إضافة UseCase هنا.
   }
 
   // معالج حدث إرسال نموذج طفل جديد
@@ -53,7 +66,9 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     if (event.childName.isEmpty ||
         event.childAge.isEmpty ||
         event.childIntersets.isEmpty) {
-      emit(PorfileError('الرجاء ملء جميع الحقول'));
+      emit(
+        PorfileError(InputValidationFailure(message: 'الرجاء ملء جميع الحقول')),
+      );
       return;
     }
 
@@ -64,13 +79,23 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       (failure) => parentId = null,
     );
     if (parentId == null) {
-      emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
+      emit(
+        PorfileError(
+          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
+        ),
+      );
       return;
     }
 
     final age = int.tryParse(event.childAge);
     if (age == null || age < 1 || age > 12) {
-      emit(PorfileError('الرجاء إدخال عمر صحيح (من 1 إلى 12)'));
+      emit(
+        PorfileError(
+          InputValidationFailure(
+            message: 'الرجاء إدخال عمر صحيح (من 1 إلى 12)',
+          ),
+        ),
+      );
       return;
     }
 
@@ -81,7 +106,11 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         .toList();
 
     if (intersets.isEmpty) {
-      emit(PorfileError('الرجاء إدخال اهتمامات صحيحة'));
+      emit(
+        PorfileError(
+          InputValidationFailure(message: 'الرجاء إدخال اهتمامات صحيحة'),
+        ),
+      );
       return;
     }
 
@@ -94,17 +123,18 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       intersets,
     );
 
-    if (result.isSuccess()) {
-      emit(PorfileSuccess('تم إضافة الطفل بنجاح'));
-    } else {
-      final error = result.exceptionOrNull();
-      if (error != null) {
-        emit(PorfileError(error.toString()));
-      }
-    }
+    result.when(
+      (_) {
+        emit(PorfileSuccess('تم إضافة الطفل بنجاح'));
+        add(const LoadChildren());
+      },
+      (ProfilesFailure failure) {
+        emit(PorfileError(failure));
+      },
+    );
   }
 
-  //  معالج حدث تحديث بيانات الطفل
+  //  معالج حدث تحديث بيانات الطفل
   Future<void> _onUpdateChildForm(
     UpdateChildForm event,
     Emitter<PorfileState> emit,
@@ -112,7 +142,9 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     if (event.childName.isEmpty ||
         event.childAge.isEmpty ||
         event.childIntersets.isEmpty) {
-      emit(PorfileError('الرجاء ملء جميع الحقول'));
+      emit(
+        PorfileError(InputValidationFailure(message: 'الرجاء ملء جميع الحقول')),
+      );
       return;
     }
 
@@ -123,13 +155,23 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       (failure) => parentId = null,
     );
     if (parentId == null) {
-      emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
+      emit(
+        PorfileError(
+          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
+        ),
+      );
       return;
     }
 
     final age = int.tryParse(event.childAge);
-    if (age == null || age < 1 || age > 18) {
-      emit(PorfileError('الرجاء إدخال عمر صحيح (من 1 إلى 18)'));
+    if (age == null || age < 1 || age > 12) {
+      emit(
+        PorfileError(
+          InputValidationFailure(
+            message: 'الرجاء إدخال عمر صحيح (من 1 إلى 12)',
+          ),
+        ),
+      );
       return;
     }
 
@@ -140,7 +182,11 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         .toList();
 
     if (intersets.isEmpty) {
-      emit(PorfileError('الرجاء إدخال اهتمامات صحيحة'));
+      emit(
+        PorfileError(
+          InputValidationFailure(message: 'الرجاء إدخال اهتمامات صحيحة'),
+        ),
+      );
       return;
     }
 
@@ -156,17 +202,18 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       ),
     );
 
-    if (result.isSuccess()) {
-      emit(PorfileSuccess('تم تحديث بيانات الطفل بنجاح'));
-    } else {
-      final error = result.exceptionOrNull();
-      if (error != null) {
-        emit(PorfileError(error.toString()));
-      }
-    }
+    result.when(
+      (_) {
+        emit(PorfileSuccess('تم تحديث بيانات الطفل بنجاح'));
+        add(const LoadChildren());
+      },
+      (ProfilesFailure failure) {
+        emit(PorfileError(failure));
+      },
+    );
   }
 
-  //  معالج حدث تحميل الأطفال
+  //  معالج حدث تحميل الأطفال
   Future<void> _onLoadChildren(
     LoadChildren event,
     Emitter<PorfileState> emit,
@@ -180,7 +227,11 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       (failure) => parentId = null,
     );
     if (parentId == null) {
-      emit(PorfileError('الرجاء تسجيل الدخول أولاً'));
+      emit(
+        PorfileError(
+          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
+        ),
+      );
       return;
     }
 
@@ -188,13 +239,14 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
 
     // ملاحظة: نحتاج للتأكد من أننا نمرر قيمة isChildLockModeActive في هذه الحالة
     // إذا كنت تخزن حالة المفتاح في قاعدة بيانات، يجب استردادها هنا أيضاً.
-    result.fold(
+    // 💡 تم استبدال .fold() بـ .when()
+    result.when(
       (children) => emit(PorfileChildrenLoaded(children)),
-      (error) => emit(PorfileError(error.toString())),
+      (ProfilesFailure failure) => emit(PorfileError(failure)),
     );
   }
 
-  //  معالج حدث حذف الطفل
+  //  معالج حدث حذف الطفل
   Future<void> _onDeleteChild(
     DeleteChild event,
     Emitter<PorfileState> emit,
@@ -203,13 +255,13 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
 
     final result = await _profileUsecase.deleteChild(event.childId);
 
-    result.fold((_) {
+    result.when((_) {
       emit(PorfileSuccess('تم حذف الطفل بنجاح'));
       add(const LoadChildren());
-    }, (error) => emit(PorfileError(error.toString())));
+    }, (ProfilesFailure failure) => emit(PorfileError(failure)));
   }
 
-  //  معالج حدث طلب تسجيل الخروج
+  //  معالج حدث طلب تسجيل الخروج
   Future<void> _onLogoutRequested(
     LogoutRequested event,
     Emitter<PorfileState> emit,
@@ -218,11 +270,15 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     final result = await _authUseCases.signOut();
     result.when(
       (_) => emit(PorfileSuccess('تم تسجيل الخروج بنجاح')),
-      (failure) => emit(PorfileError(failure.message)),
+      (failure) => emit(
+        PorfileError(
+          DatabaseFailure(message: 'فشل تسجيل الخروج: ${failure.message}'),
+        ),
+      ),
     );
   }
 
-  //  معالج حدث ملء نموذج الطفل (من أجل التحديث)
+  //  معالج حدث ملء نموذج الطفل (من أجل التحديث)
   void _onPopulateChildForm(
     PopulateChildForm event,
     Emitter<PorfileState> emit,
@@ -239,7 +295,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     );
   }
 
-  //  معالج حدث إعادة تعيين النموذج
+  //  معالج حدث إعادة تعيين النموذج
   void _onResetForm(ResetForm event, Emitter<PorfileState> emit) {
     nameController.clear();
     ageController.clear();

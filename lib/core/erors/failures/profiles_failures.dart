@@ -27,3 +27,8 @@ class ChildNotFoundFailure extends ProfilesFailure {
 class ProfilesServerFailure extends ProfilesFailure {
   const ProfilesServerFailure({required super.message});
 }
+
+// التحقق من البيانات المدخلة  validation
+class InputValidationFailure extends ProfilesFailure {
+  const InputValidationFailure({required super.message});
+}
