@@ -15,61 +15,51 @@ class LettersGameScreen extends StatelessWidget {
     {
       'word': 'تفاحة',
       'letter': 'ت',
-      'image': Icons.apple,
       'options': ['ت', 'ب', 'ر', 'س'],
     },
     {
       'word': 'بطة',
       'letter': 'ب',
-      'image': Icons.pets,
       'options': ['ب', 'ت', 'ج', 'د'],
     },
     {
       'word': 'جمل',
       'letter': 'ج',
-      'image': Icons.emoji_nature,
       'options': ['ج', 'ح', 'خ', 'د'],
     },
     {
       'word': 'دب',
       'letter': 'د',
-      'image': Icons.forest,
       'options': ['د', 'ذ', 'ر', 'ز'],
     },
     {
       'word': 'رمان',
       'letter': 'ر',
-      'image': Icons.local_dining,
       'options': ['ر', 'ز', 'س', 'ش'],
     },
     {
       'word': 'سمكة',
       'letter': 'س',
-      'image': Icons.water_drop,
       'options': ['س', 'ش', 'ص', 'ض'],
     },
     {
       'word': 'شمس',
       'letter': 'ش',
-      'image': Icons.wb_sunny,
       'options': ['ش', 'ص', 'ض', 'ط'],
     },
     {
       'word': 'طائرة',
       'letter': 'ط',
-      'image': Icons.flight,
       'options': ['ط', 'ظ', 'ع', 'غ'],
     },
     {
       'word': 'عصفور',
       'letter': 'ع',
-      'image': Icons.air,
       'options': ['ع', 'غ', 'ف', 'ق'],
     },
     {
       'word': 'فيل',
       'letter': 'ف',
-      'image': Icons.eco,
       'options': ['ف', 'ق', 'ك', 'ل'],
     },
   ];
@@ -94,17 +84,16 @@ class LettersGameScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.purple.shade100,
-              Colors.pink.shade100,
-            ],
+            colors: [Colors.purple.shade100, Colors.pink.shade100],
           ),
         ),
         child: SafeArea(
           child: StatefulBuilder(
             builder: (context, setState) {
               if (_cachedShuffledQuestions == null) {
-                _cachedShuffledQuestions = questions.map((q) => Map<String, dynamic>.from(q)).toList();
+                _cachedShuffledQuestions = questions
+                    .map((q) => Map<String, dynamic>.from(q))
+                    .toList();
                 _shuffleOptions(_cachedShuffledQuestions!);
                 _currentQuestionIndex = 0;
                 _score = 0;
@@ -158,7 +147,9 @@ class LettersGameScreen extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(dialogContext).pop();
-                                _cachedShuffledQuestions = questions.map((q) => Map<String, dynamic>.from(q)).toList();
+                                _cachedShuffledQuestions = questions
+                                    .map((q) => Map<String, dynamic>.from(q))
+                                    .toList();
                                 _shuffleOptions(_cachedShuffledQuestions!);
                                 setState(() {
                                   _currentQuestionIndex = 0;
@@ -178,7 +169,8 @@ class LettersGameScreen extends StatelessWidget {
               }
 
               final question = shuffledQuestions[_currentQuestionIndex];
-              final progress = (_currentQuestionIndex + 1) / shuffledQuestions.length;
+              final progress =
+                  (_currentQuestionIndex + 1) / shuffledQuestions.length;
 
               return Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -214,27 +206,7 @@ class LettersGameScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 40),
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.purple.withOpacity(0.3),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        question['image'] as IconData,
-                        size: 80,
-                        color: Colors.purple.shade400,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
+
                     Text(
                       question['word'] as String,
                       style: const TextStyle(
@@ -254,15 +226,17 @@ class LettersGameScreen extends StatelessWidget {
                     const SizedBox(height: 40),
                     Expanded(
                       child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 15,
-                          mainAxisSpacing: 15,
-                          childAspectRatio: 1.5,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 15,
+                              mainAxisSpacing: 15,
+                              childAspectRatio: 1.5,
+                            ),
                         itemCount: (question['options'] as List).length,
                         itemBuilder: (context, index) {
-                          final letter = (question['options'] as List)[index] as String;
+                          final letter =
+                              (question['options'] as List)[index] as String;
                           final isSelected = _selectedLetter == letter;
                           Color? backgroundColor;
 
@@ -288,7 +262,7 @@ class LettersGameScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black26,
                                     blurRadius: 10,
                                     spreadRadius: 2,
                                   ),
@@ -300,7 +274,9 @@ class LettersGameScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 48,
                                     fontWeight: FontWeight.bold,
-                                    color: _showResult && letter == question['letter']
+                                    color:
+                                        _showResult &&
+                                            letter == question['letter']
                                         ? Colors.white
                                         : Colors.purple.shade700,
                                   ),
@@ -316,15 +292,21 @@ class LettersGameScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(15),
                         margin: const EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
-                          color: _isCorrect ? Colors.green.shade100 : Colors.red.shade100,
+                          color: _isCorrect
+                              ? Colors.green.shade100
+                              : Colors.red.shade100,
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Text(
-                          _isCorrect ? '🎉 ممتاز! إجابة صحيحة' : '😔 حاول مرة أخرى',
+                          _isCorrect
+                              ? '🎉 ممتاز! إجابة صحيحة'
+                              : '😔 حاول مرة أخرى',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: _isCorrect ? Colors.green.shade800 : Colors.red.shade800,
+                            color: _isCorrect
+                                ? Colors.green.shade800
+                                : Colors.red.shade800,
                           ),
                           textAlign: TextAlign.center,
                         ),

@@ -61,20 +61,6 @@ class GameHomeScreen extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.purple.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.text_fields,
-                            size: 50,
-                            color: Colors.purple,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,20 +117,6 @@ class GameHomeScreen extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.numbers,
-                            size: 50,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
