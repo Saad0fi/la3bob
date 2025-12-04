@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/erors/failures/profiles_failures.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/repositories/profiles_repository.dart';
@@ -37,9 +38,13 @@ class ProfileUsecase {
     required bool shouldBeActive,
   }) {
     if (shouldBeActive) {
-      return _repository.startKioskMode();
+      return _repository.startKioskmode();
     } else {
-      return _repository.stopKioskMode();
+      return _repository.stopKioskmode();
     }
+  }
+
+  Future<Result<KioskMode, ProfilesFailure>> getKioskModeStatus() async {
+    return await _repository.getKioskModeStatus();
   }
 }

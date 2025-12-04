@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/features/profiles/data/models/child_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -16,8 +17,11 @@ abstract class ProfilesDatasource {
 
   Future<void> updateChild(ChildModel child);
 
-  Future<void> startKioskMode();
-  Future<void> stopKioskMode();
+  Future<void> startKioskmode();
+
+  Future<void> stopKioskmode();
+
+  Future<KioskMode> getKioskModeStatus();
 }
 
 @Injectable(as: ProfilesDatasource)
@@ -63,12 +67,17 @@ class ApiProfileDatasource implements ProfilesDatasource {
   }
 
   @override
-  Future<void> startKioskMode() async {
+  Future<void> startKioskmode() async {
     await startKioskMode();
   }
 
   @override
-  Future<void> stopKioskMode() async {
+  Future<void> stopKioskmode() async {
     await stopKioskMode();
+  }
+
+  @override
+  Future<KioskMode> getKioskModeStatus() async {
+    return await getKioskMode();
   }
 }

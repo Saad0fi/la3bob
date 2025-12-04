@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
@@ -54,7 +53,10 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(state.error, textAlign: TextAlign.center),
+                          Text(
+                            state.failure.message,
+                            textAlign: TextAlign.center,
+                          ),
                           const SizedBox(height: 12),
                           ElevatedButton(
                             onPressed: () => bloc.add(const LoadChildren()),
@@ -82,8 +84,8 @@ class ProfileScreen extends StatelessWidget {
                         BigUserCard(
                           backgroundColor: Colors.blueAccent.shade700,
                           userName: parentName,
-                          userProfilePic: const NetworkImage(
-                            "https://i.pravatar.cc/150?img=3",
+                          userProfilePic: const AssetImage(
+                            "assets/images/image8.png",
                           ),
                           cardActionWidget: SettingsItem(
                             icons: Icons.edit,
@@ -91,7 +93,7 @@ class ProfileScreen extends StatelessWidget {
                               iconsColor: Colors.black,
                               withBackground: true,
                               borderRadius: 50,
-                              backgroundColor: Colors.white, // لون خلفية الزر
+                              backgroundColor: Colors.white,
                             ),
                             title: "تعديل البيانات",
                             subtitle: "اضغط لتغيير بياناتك",
@@ -101,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
 
-                        // 2.  قسم أدوات التحكم الأبوي
+                        //   قسم أدوات التحكم الأبوي
                         SettingsGroup(
                           settingsGroupTitle: "أدوات الرقابة الأبوية",
                           items: [
@@ -136,14 +138,6 @@ class ProfileScreen extends StatelessWidget {
                                 onChanged: (newvlue) async {
                                   bloc.add(ToggleChildLockMode(newvlue));
                                   print("تبديل وضع الطفل: $newvlue");
-
-                                  if (newvlue) {
-                                    await startKioskMode();
-                                    print("Kiosk Mode: تم التفعيل بنجاح.");
-                                  } else {
-                                    await stopKioskMode();
-                                    print("Kiosk Mode: تم الإلغاء.");
-                                  }
                                 },
                               ),
                             ),
@@ -209,7 +203,7 @@ class ProfileScreen extends StatelessWidget {
                                   }).toList(),
                           ),
 
-                        // 4. 🚪 زر تسجيل الخروج
+                        //   زر تسجيل الخروج
                         SettingsGroup(
                           items: [
                             SettingsItem(
