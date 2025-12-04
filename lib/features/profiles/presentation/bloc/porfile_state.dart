@@ -45,6 +45,6 @@ final class PorfileSuccess extends PorfileState {
 }
 
 final class PorfileError extends PorfileState {
-  final String error;
-  PorfileError(this.error);
+  final ProfilesFailure failure;
+  PorfileError(this.failure);
 }

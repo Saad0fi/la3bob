@@ -15,6 +15,9 @@ abstract class ProfilesDatasource {
   Future<void> deleteChild(String childId);
 
   Future<void> updateChild(ChildModel child);
+
+  Future<void> startKioskMode();
+  Future<void> stopKioskMode();
 }
 
 @Injectable(as: ProfilesDatasource)
@@ -57,5 +60,15 @@ class ApiProfileDatasource implements ProfilesDatasource {
         .from('children')
         .update(child.toMap())
         .eq('id', child.id);
+  }
+
+  @override
+  Future<void> startKioskMode() async {
+    await startKioskMode();
+  }
+
+  @override
+  Future<void> stopKioskMode() async {
+    await stopKioskMode();
   }
 }
