@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
-import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/update_child_screen.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,6 +69,9 @@ class ProfileScreen extends StatelessWidget {
                       ? state.children
                       : [];
                   final isLoaded = state is PorfileChildrenLoaded;
+                  final isLockActive = state is PorfileChildrenLoaded
+                      ? state.isChildLockModeActive
+                      : false;
 
                   const String parentName = "ولي الأمر";
 
@@ -129,9 +132,18 @@ class ProfileScreen extends StatelessWidget {
                               title: "تفعيل وضع القفل (وضع الطفل)",
                               subtitle: "تثبيت التطبيق على الشاشة لمنع الخروج",
                               trailing: Switch.adaptive(
-                                value: false,
-                                onChanged: (value) {
-                                  print("تبديل وضع الطفل: $value");
+                                value: isLockActive,
+                                onChanged: (newvlue) async {
+                                  bloc.add(ToggleChildLockMode(newvlue));
+                                  print("تبديل وضع الطفل: $newvlue");
+
+                                  if (newvlue) {
+                                    await startKioskMode();
+                                    print("Kiosk Mode: تم التفعيل بنجاح.");
+                                  } else {
+                                    await stopKioskMode();
+                                    print("Kiosk Mode: تم الإلغاء.");
+                                  }
                                 },
                               ),
                             ),
