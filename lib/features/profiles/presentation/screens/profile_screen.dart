@@ -54,7 +54,10 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(state.error, textAlign: TextAlign.center),
+                          Text(
+                            state.failure.message,
+                            textAlign: TextAlign.center,
+                          ),
                           const SizedBox(height: 12),
                           ElevatedButton(
                             onPressed: () => bloc.add(const LoadChildren()),

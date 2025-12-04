@@ -32,7 +32,7 @@ class AddChildScreen extends StatelessWidget {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.error),
+                  content: Text(state.failure.message),
                   backgroundColor: Colors.red,
                 ),
               );

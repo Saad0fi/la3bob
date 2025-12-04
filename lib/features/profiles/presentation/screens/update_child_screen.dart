@@ -34,7 +34,7 @@ class UpdateChildScreen extends StatelessWidget {
             } else if (state is PorfileError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.error),
+                  content: Text(state.failure.message),
                   backgroundColor: Colors.red,
                 ),
               );
