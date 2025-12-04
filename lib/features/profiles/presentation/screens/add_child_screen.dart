@@ -19,17 +19,15 @@ class AddChildScreen extends StatelessWidget {
         appBar: AppBar(title: const Text('إضافة طفل')),
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
-            if (state is PorfileLoading) {
-              Navigator.of(context).pop(true);
-            } else if (state is PorfileSuccess) {
+            if (state is PorfileSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
                   backgroundColor: Colors.green,
                 ),
               );
+              Navigator.of(context).pop(true);
             } else if (state is PorfileError) {
-              Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.failure.message),
@@ -48,11 +46,11 @@ class AddChildScreen extends StatelessWidget {
               }
 
               return SingleChildScrollView(
-                padding: const .all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Form(
                   key: formKey,
                   child: Column(
-                    crossAxisAlignment: .stretch,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 20),
                       TextFormField(
@@ -89,8 +87,8 @@ class AddChildScreen extends StatelessWidget {
                             return 'الرجاء إدخال عمر الطفل';
                           }
                           final age = int.tryParse(value);
-                          if (age == null || age < 1 || age > 13) {
-                            return 'الرجاء إدخال عمر صحيح (من 1 إلى 18)';
+                          if (age == null || age < 3 || age > 12) {
+                            return 'الرجاء إدخال عمر صحيح (من 3 إلى 12)';
                           }
                           return null;
                         },
@@ -136,9 +134,9 @@ class AddChildScreen extends StatelessWidget {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          padding: const .only(top: 16, bottom: 16),
+                          padding: const EdgeInsets.only(top: 16, bottom: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: .circular(8),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                         child: isLoading

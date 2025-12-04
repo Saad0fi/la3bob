@@ -29,7 +29,7 @@ class AuthRepositoryImpl implements AuthRepositoryDomain {
         );
       }
       // لأي خطأ مصادقة آخر غير معروف
-      return ServerFailure(message: 'خطأ في المصادقة: ${error.message}');
+      return ServerFailure(message: 'خطأ في المصادقة: ');
     }
     // لأي خطأ عام آخر (مثل مشاكل الشبكة)
     return ServerFailure(message: 'حدث خطأ غير متوقع: $error');
