@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
@@ -13,8 +14,10 @@ class AddChildScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return BlocProvider(
-      create: (context) =>
-          PorfileBloc(getIt<ProfileUsecase>(), getIt<AuthUseCases>()),
+      create: (context) => PorfileBloc(
+            getIt<ProfileUsecase>(),
+            getIt<AuthUseCases>(),
+          ),
       child: Scaffold(
         appBar: AppBar(title: const Text('إضافة طفل')),
         body: BlocListener<PorfileBloc, PorfileState>(

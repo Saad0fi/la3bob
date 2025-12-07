@@ -10,17 +10,24 @@ final class PorfileChildrenLoading extends PorfileState {}
 final class PorfileChildrenLoaded extends PorfileState {
   final List<ChildEntity> children;
   final bool isChildLockModeActive;
+  final String? selectedChildId;
 
-  PorfileChildrenLoaded(this.children, {this.isChildLockModeActive = false});
+  PorfileChildrenLoaded(
+    this.children, {
+    this.isChildLockModeActive = false,
+    this.selectedChildId,
+  });
 
   PorfileChildrenLoaded copyWith({
     List<ChildEntity>? children,
     bool? isChildLockModeActive,
+    String? selectedChildId,
   }) {
     return PorfileChildrenLoaded(
       children ?? this.children,
       isChildLockModeActive:
           isChildLockModeActive ?? this.isChildLockModeActive,
+      selectedChildId: selectedChildId ?? this.selectedChildId,
     );
   }
 }
@@ -47,4 +54,9 @@ final class PorfileSuccess extends PorfileState {
 final class PorfileError extends PorfileState {
   final ProfilesFailure failure;
   PorfileError(this.failure);
+}
+
+final class PorfileChildSelected extends PorfileState {
+  final ChildEntity selectedChild;
+  PorfileChildSelected(this.selectedChild);
 }

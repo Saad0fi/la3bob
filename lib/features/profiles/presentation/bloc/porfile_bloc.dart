@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/erors/failures/profiles_failures.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
@@ -19,8 +20,10 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   final ageController = TextEditingController();
   final intersetsController = TextEditingController();
 
-  PorfileBloc(this._profileUsecase, this._authUseCases)
-    : super(PorfileInitial()) {
+  PorfileBloc(
+    this._profileUsecase,
+    this._authUseCases,
+  ) : super(PorfileInitial()) {
     on<SubmitChildForm>(_onSubmitChildForm);
     on<UpdateChildForm>(_onUpdateChildForm);
     on<LoadChildren>(_onLoadChildren);
@@ -29,6 +32,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     on<PopulateChildForm>(_onPopulateChildForm);
     on<ResetForm>(_onResetForm);
     on<ToggleChildLockMode>(_onToggleChildLockMode);
+    on<SelectChild>(_onSelectChild);
   }
 
   // ----------------------------------------------------------------------
@@ -253,10 +257,12 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
 
     childrenResult.when(
       (children) {
+        final selectedChildId = GetStorage().read<String>('selected_child_id');
         emit(
           PorfileChildrenLoaded(
             children,
             isChildLockModeActive: isKioskModeActive,
+            selectedChildId: selectedChildId,
           ),
         );
       },
@@ -320,6 +326,22 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     ageController.clear();
     intersetsController.clear();
     emit(PorfileInitial());
+  }
+
+  Future<void> _onSelectChild(
+    SelectChild event,
+    Emitter<PorfileState> emit,
+  ) async {
+    await GetStorage().write('selected_child_id', event.child.id);
+    
+    if (state is PorfileChildrenLoaded) {
+      final currentState = state as PorfileChildrenLoaded;
+      emit(
+        currentState.copyWith(selectedChildId: event.child.id),
+      );
+    } else {
+      emit(PorfileChildSelected(event.child));
+    }
   }
 
   @override

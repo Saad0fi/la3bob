@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
@@ -17,30 +18,38 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          PorfileBloc(getIt<ProfileUsecase>(), getIt<AuthUseCases>())
-            ..add(const LoadChildren()),
+          PorfileBloc(
+            getIt<ProfileUsecase>(),
+            getIt<AuthUseCases>(),
+          )..add(const LoadChildren()),
       child: Builder(
         builder: (context) {
           final bloc = context.read<PorfileBloc>();
           return Scaffold(
             appBar: AppBar(
               title: const Text('الملف الشخصي'),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.add, color: Colors.blue),
-                  onPressed: () async {
-                    final result = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const AddChildScreen()),
-                    );
+                  IconButton(
+                    icon: const Icon(Icons.add, color: Colors.blue),
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const AddChildScreen()),
+                      );
 
-                    if (result == true) {
-                      bloc.add(const LoadChildren());
-                    }
-                  },
-                ),
-              ],
-            ),
-            body: BlocListener<PorfileBloc, PorfileState>(
+                      if (result == true) {
+                        bloc.add(const LoadChildren());
+                      }
+                    },
+                  ),
+                ],
+              ),
+              body: BlocListener<PorfileBloc, PorfileState>(
               listener: (context, state) {
                 if (state is PorfileSuccess &&
                     state.message == 'تم تسجيل الخروج بنجاح') {
@@ -64,6 +73,11 @@ class ProfileScreen extends StatelessWidget {
                       backgroundColor: Colors.red,
                     ),
                   );
+                }
+
+                if (state is PorfileChildSelected) {
+                  // عند اختيار طفل، ارجع true لإعادة تحميل الفيديوهات
+                  Navigator.of(context).pop(true);
                 }
               },
               child: BlocBuilder<PorfileBloc, PorfileState>(
@@ -100,6 +114,9 @@ class ProfileScreen extends StatelessWidget {
                   final isLockActive = state is PorfileChildrenLoaded
                       ? state.isChildLockModeActive
                       : false;
+                  final selectedChildId = state is PorfileChildrenLoaded
+                      ? state.selectedChildId
+                      : null;
                   const String parentName = "ولي الأمر";
 
                   return Padding(
@@ -211,37 +228,56 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ]
                                   : children.map((child) {
+                                      final isSelected =
+                                          child.id == selectedChildId;
                                       return SettingsItem(
-                                        onTap: () async {
-                                          final result =
-                                              await Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      UpdateChildScreen(
-                                                        child: child,
-                                                      ),
-                                                ),
-                                              );
-
-                                          if (result == true) {
-                                            bloc.add(const LoadChildren());
-                                          }
-                                          print(
-                                            "تعديل بيانات الطفل: ${child.name}",
+                                        onTap: () {
+                                          bloc.add(SelectChild(child));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'تم اختيار ${child.name} لعرض الفيديوهات'),
+                                              backgroundColor: Colors.green,
+                                            ),
                                           );
                                         },
                                         icons: CupertinoIcons
                                             .person_alt_circle_fill,
                                         title: child.name ?? 'طفل غير مسمى',
-                                        subtitle: "العمر: ${child.age}",
+                                        subtitle: isSelected
+                                            ? "العمر: ${child.age} -  مختار"
+                                            : "العمر: ${child.age}",
                                         iconStyle: IconStyle(
                                           iconsColor: Colors.white,
-                                          backgroundColor: Colors.green,
+                                          backgroundColor: isSelected
+                                              ? Colors.blue
+                                              : Colors.green,
                                         ),
-                                        trailing: const Icon(
-                                          Icons.edit,
-                                          size: 20,
-                                        ),
+                                        trailing: isSelected
+                                            ? const Icon(Icons.check_circle,
+                                                color: Colors.blue, size: 24)
+                                            : IconButton(
+                                                icon: const Icon(Icons.edit,
+                                                    size: 20),
+                                                onPressed: () async {
+                                                  final result =
+                                                      await Navigator.of(context)
+                                                          .push(
+                                                    MaterialPageRoute(
+                                                      builder: (_) =>
+                                                          UpdateChildScreen(
+                                                        child: child,
+                                                      ),
+                                                    ),
+                                                  );
+
+                                                  if (result == true) {
+                                                    bloc.add(
+                                                        const LoadChildren());
+                                                  }
+                                                },
+                                              ),
                                       );
                                     }).toList(),
                             ),

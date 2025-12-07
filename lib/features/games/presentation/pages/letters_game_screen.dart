@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math';
+
+import 'package:la3bob/audio/audio_controller.dart';
+import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
 
 class LettersGameScreen extends StatelessWidget {
   const LettersGameScreen({super.key});
-
   static List<Map<String, dynamic>>? _cachedShuffledQuestions;
   static int _currentQuestionIndex = 0;
   static int _score = 0;
@@ -74,6 +77,9 @@ class LettersGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final bloc = context.read<GamesBloc>();
+    // bloc.initAudio();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('لعبة الحروف'),
@@ -255,7 +261,12 @@ class LettersGameScreen extends StatelessWidget {
                           }
 
                           return GestureDetector(
-                            onTap: () => selectLetter(letter),
+                            onTap: () {
+                              selectLetter(letter);
+                              // bloc.audioController.playSound(
+                              //   'assets/images/test.mp3',
+                              // );
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
