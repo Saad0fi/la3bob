@@ -11,3 +11,7 @@ class LoadVideos extends VideosEvent {
   const LoadVideos();
 }
 
+class RefreshVideos extends VideosEvent {
+  const RefreshVideos();
+}
+

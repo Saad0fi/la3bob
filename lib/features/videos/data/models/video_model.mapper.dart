@@ -27,12 +27,18 @@ class VideoModelMapper extends ClassMapperBase<VideoModel> {
   static const Field<VideoModel, String> _f$title = Field('title', _$title);
   static String _$link(VideoModel v) => v.link;
   static const Field<VideoModel, String> _f$link = Field('link', _$link);
+  static String _$category(VideoModel v) => v.category;
+  static const Field<VideoModel, String> _f$category = Field(
+    'category',
+    _$category,
+  );
 
   @override
   final MappableFields<VideoModel> fields = const {
     #id: _f$id,
     #title: _f$title,
     #link: _f$link,
+    #category: _f$category,
   };
 
   static VideoModel _instantiate(DecodingData data) {
@@ -40,6 +46,7 @@ class VideoModelMapper extends ClassMapperBase<VideoModel> {
       id: data.dec(_f$id),
       title: data.dec(_f$title),
       link: data.dec(_f$link),
+      category: data.dec(_f$category),
     );
   }
 
@@ -103,7 +110,7 @@ extension VideoModelValueCopy<$R, $Out>
 
 abstract class VideoModelCopyWith<$R, $In extends VideoModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? id, String? title, String? link});
+  $R call({String? id, String? title, String? link, String? category});
   VideoModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -116,18 +123,21 @@ class _VideoModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<VideoModel> $mapper =
       VideoModelMapper.ensureInitialized();
   @override
-  $R call({String? id, String? title, String? link}) => $apply(
-    FieldCopyWithData({
-      if (id != null) #id: id,
-      if (title != null) #title: title,
-      if (link != null) #link: link,
-    }),
-  );
+  $R call({String? id, String? title, String? link, String? category}) =>
+      $apply(
+        FieldCopyWithData({
+          if (id != null) #id: id,
+          if (title != null) #title: title,
+          if (link != null) #link: link,
+          if (category != null) #category: category,
+        }),
+      );
   @override
   VideoModel $make(CopyWithData data) => VideoModel(
     id: data.get(#id, or: $value.id),
     title: data.get(#title, or: $value.title),
     link: data.get(#link, or: $value.link),
+    category: data.get(#category, or: $value.category),
   );
 
   @override

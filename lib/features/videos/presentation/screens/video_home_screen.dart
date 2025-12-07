@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
@@ -19,9 +20,17 @@ class VideoHomeScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                );
+                Navigator.of(context)
+                    .push(
+                      MaterialPageRoute(
+                        builder: (_) => const ProfileScreen(),
+                      ),
+                    )
+                    .then((_) {
+                  if (context.mounted) {
+                    context.read<VideosBloc>().add(const RefreshVideos());
+                  }
+                });
               },
             ),
           ],
@@ -60,7 +69,33 @@ class VideoHomeScreen extends StatelessWidget {
 
             if (state is VideosLoaded) {
               if (state.videos.isEmpty) {
-                return const Center(child: Text('لا توجد فيديوهات متاحة'));
+                final selectedChildId = getIt<GetStorage>()
+                    .read<String>('selected_child_id');
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.video_library_outlined,
+                          size: 64, color: Colors.grey),
+                      const SizedBox(height: 16),
+                      Text(
+                        selectedChildId != null
+                            ? 'لا توجد فيديوهات متاحة لاهتمامات الطفل المختار'
+                            : 'لا توجد فيديوهات متاحة',
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      if (selectedChildId != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          'يمكنك اختيار طفل آخر من الإعدادات',
+                          style: Theme.of(context).textTheme.bodySmall,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ],
+                  ),
+                );
               }
 
               return ListView.builder(

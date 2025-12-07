@@ -39,7 +39,7 @@ import '../../features/videos/domain/repositories/videos_repository.dart'
     as _i836;
 import '../../features/videos/domain/usecase/videos_usecase.dart' as _i362;
 import '../../features/videos/presentation/bloc/videos_bloc.dart' as _i135;
-import 'injection.dart' as _i450;
+import 'injection.dart' as _i464;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -84,10 +84,14 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i362.VideosUsecase(gh<_i836.VideosRepository>()),
     );
     gh.factory<_i135.VideosBloc>(
-      () => _i135.VideosBloc(gh<_i362.VideosUsecase>()),
+      () => _i135.VideosBloc(
+        gh<_i362.VideosUsecase>(),
+        gh<_i1022.ProfileUsecase>(),
+        gh<_i544.AuthUseCases>(),
+      ),
     );
     return this;
   }
 }
 
-class _$ThirdPartyModule extends _i450.ThirdPartyModule {}
+class _$ThirdPartyModule extends _i464.ThirdPartyModule {}
