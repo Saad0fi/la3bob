@@ -28,22 +28,28 @@ class ProfileScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: const Text('الملف الشخصي'),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.add, color: Colors.blue),
-                  onPressed: () async {
-                    final result = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const AddChildScreen()),
-                    );
+                  IconButton(
+                    icon: const Icon(Icons.add, color: Colors.blue),
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const AddChildScreen()),
+                      );
 
-                    if (result == true) {
-                      bloc.add(const LoadChildren());
-                    }
-                  },
-                ),
-              ],
-            ),
-            body: BlocListener<PorfileBloc, PorfileState>(
+                      if (result == true) {
+                        bloc.add(const LoadChildren());
+                      }
+                    },
+                  ),
+                ],
+              ),
+              body: BlocListener<PorfileBloc, PorfileState>(
               listener: (context, state) {
                 if (state is PorfileSuccess &&
                     state.message == 'تم تسجيل الخروج بنجاح') {
@@ -69,6 +75,10 @@ class ProfileScreen extends StatelessWidget {
                   );
                 }
 
+                if (state is PorfileChildSelected) {
+                  // عند اختيار طفل، ارجع true لإعادة تحميل الفيديوهات
+                  Navigator.of(context).pop(true);
+                }
               },
               child: BlocBuilder<PorfileBloc, PorfileState>(
                 builder: (context, state) {

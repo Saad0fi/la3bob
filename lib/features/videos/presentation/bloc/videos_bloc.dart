@@ -27,13 +27,14 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
 
       final result = await _videosUsecase.getVideos();
 
-      result.fold(
-        (videos) async {
-          final filteredVideos = await _filterVideosBySelectedChild(videos);
-          emit(VideosLoaded(filteredVideos));
-        },
-        (error) => emit(VideosError(error.toString())),
-      );
+      if (result.isSuccess()) {
+        final videos = result.getOrNull() ?? [];
+        final filteredVideos = await _filterVideosBySelectedChild(videos);
+        emit(VideosLoaded(filteredVideos));
+      } else {
+        final error = result.exceptionOrNull();
+        emit(VideosError(error?.toString() ?? 'خطأ غير معروف'));
+      }
     });
 
     on<RefreshVideos>((event, emit) async {
@@ -41,13 +42,14 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
 
       final result = await _videosUsecase.getVideos();
 
-      result.fold(
-        (videos) async {
-          final filteredVideos = await _filterVideosBySelectedChild(videos);
-          emit(VideosLoaded(filteredVideos));
-        },
-        (error) => emit(VideosError(error.toString())),
-      );
+      if (result.isSuccess()) {
+        final videos = result.getOrNull() ?? [];
+        final filteredVideos = await _filterVideosBySelectedChild(videos);
+        emit(VideosLoaded(filteredVideos));
+      } else {
+        final error = result.exceptionOrNull();
+        emit(VideosError(error?.toString() ?? 'خطأ غير معروف'));
+      }
     });
   }
 
@@ -84,13 +86,23 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
           return videos;
         }
 
-        return videos.where((video) {
+        if (selectedChild.intersets.isEmpty) {
+          return videos;
+        }
+
+        final filteredVideos = videos.where((video) {
           return selectedChild.intersets.any(
             (interest) =>
                 interest.toLowerCase().trim() ==
                 video.category.toLowerCase().trim(),
           );
         }).toList();
+
+        if (filteredVideos.isEmpty) {
+          return videos;
+        }
+
+        return filteredVideos;
       },
       (error) => videos,
     );

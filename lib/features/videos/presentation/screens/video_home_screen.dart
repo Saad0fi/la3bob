@@ -17,20 +17,22 @@ class VideoHomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Center(child: Text("فيديوهات")),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(
+            BlocBuilder<VideosBloc, VideosState>(
+              builder: (context, state) {
+                return IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () async {
+                    final videosBloc = context.read<VideosBloc>();
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const ProfileScreen(),
                       ),
-                    )
-                    .then((_) {
-                  if (context.mounted) {
-                    context.read<VideosBloc>().add(const RefreshVideos());
-                  }
-                });
+                    );
+                    if (!videosBloc.isClosed) {
+                      videosBloc.add(const RefreshVideos());
+                    }
+                  },
+                );
               },
             ),
           ],
