@@ -13,7 +13,22 @@ class GameHomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text("ألعاب")),
-        actions: [],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(50),
+              onLongPress: () async {
+                await BiometricHelper.goToProfilePage(context);
+              },
+              onTap: () {},
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.settings),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         child: SafeArea(
