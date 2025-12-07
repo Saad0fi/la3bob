@@ -13,13 +13,13 @@ class VideoHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<VideosBloc>()..add(const LoadVideos()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Center(child: Text("فيديوهات")),
-          actions: [
-            BlocBuilder<VideosBloc, VideosState>(
-              builder: (context, state) {
-                return IconButton(
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Center(child: Text("فيديوهات")),
+              actions: [
+                IconButton(
                   icon: const Icon(Icons.settings),
                   onPressed: () async {
                     final videosBloc = context.read<VideosBloc>();
@@ -32,11 +32,9 @@ class VideoHomeScreen extends StatelessWidget {
                       videosBloc.add(const RefreshVideos());
                     }
                   },
-                );
-              },
+                ),
+              ],
             ),
-          ],
-        ),
         body: BlocBuilder<VideosBloc, VideosState>(
           builder: (context, state) {
             if (state is VideosLoading) {
@@ -134,6 +132,8 @@ class VideoHomeScreen extends StatelessWidget {
             return const Center(child: Text("فيديوهات"));
           },
         ),
+          );
+        },
       ),
     );
   }

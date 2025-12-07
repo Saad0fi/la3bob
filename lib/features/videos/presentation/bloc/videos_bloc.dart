@@ -98,10 +98,6 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
           );
         }).toList();
 
-        if (filteredVideos.isEmpty) {
-          return videos;
-        }
-
         return filteredVideos;
       },
       (error) => videos,
