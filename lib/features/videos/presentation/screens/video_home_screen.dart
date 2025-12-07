@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:la3bob/core/comon/helper_function/biometric_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
-import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
 import 'package:la3bob/features/videos/presentation/screens/video_player_screen.dart';
 
@@ -15,16 +15,7 @@ class VideoHomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Center(child: Text("فيديوهات")),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                );
-              },
-            ),
-          ],
+          actions: [],
         ),
         body: BlocBuilder<VideosBloc, VideosState>(
           builder: (context, state) {

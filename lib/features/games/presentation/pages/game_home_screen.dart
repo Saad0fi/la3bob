@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:la3bob/core/comon/helper_function/biometric_helper.dart';
 import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
@@ -11,16 +13,7 @@ class GameHomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text("ألعاب")),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const ProfileScreen()));
-            },
-          ),
-        ],
+        actions: [],
       ),
       body: Container(
         child: SafeArea(
