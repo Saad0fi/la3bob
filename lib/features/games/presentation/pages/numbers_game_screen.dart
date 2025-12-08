@@ -93,17 +93,16 @@ class NumbersGameScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.blue.shade100,
-              Colors.cyan.shade100,
-            ],
+            colors: [Colors.blue.shade100, Colors.cyan.shade100],
           ),
         ),
         child: SafeArea(
           child: StatefulBuilder(
             builder: (context, setState) {
               if (_cachedShuffledQuestions == null) {
-                _cachedShuffledQuestions = questions.map((q) => Map<String, dynamic>.from(q)).toList();
+                _cachedShuffledQuestions = questions
+                    .map((q) => Map<String, dynamic>.from(q))
+                    .toList();
                 _shuffleOptions(_cachedShuffledQuestions!);
                 _currentQuestionIndex = 0;
                 _score = 0;
@@ -157,7 +156,9 @@ class NumbersGameScreen extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(dialogContext).pop();
-                                _cachedShuffledQuestions = questions.map((q) => Map<String, dynamic>.from(q)).toList();
+                                _cachedShuffledQuestions = questions
+                                    .map((q) => Map<String, dynamic>.from(q))
+                                    .toList();
                                 _shuffleOptions(_cachedShuffledQuestions!);
                                 setState(() {
                                   _currentQuestionIndex = 0;
@@ -178,7 +179,8 @@ class NumbersGameScreen extends StatelessWidget {
 
               final question = shuffledQuestions[_currentQuestionIndex];
               final count = question['count'] as int;
-              final progress = (_currentQuestionIndex + 1) / shuffledQuestions.length;
+              final progress =
+                  (_currentQuestionIndex + 1) / shuffledQuestions.length;
 
               return Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -221,7 +223,7 @@ class NumbersGameScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.blue.withOpacity(0.3),
+                            color: Colors.blue.withValues(alpha: 0.3),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -260,15 +262,17 @@ class NumbersGameScreen extends StatelessWidget {
                     const SizedBox(height: 40),
                     Expanded(
                       child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 15,
-                          mainAxisSpacing: 15,
-                          childAspectRatio: 1.5,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 15,
+                              mainAxisSpacing: 15,
+                              childAspectRatio: 1.5,
+                            ),
                         itemCount: (question['options'] as List).length,
                         itemBuilder: (context, index) {
-                          final number = (question['options'] as List)[index] as int;
+                          final number =
+                              (question['options'] as List)[index] as int;
                           final isSelected = _selectedNumber == number;
                           Color? backgroundColor;
 
@@ -336,15 +340,21 @@ class NumbersGameScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(15),
                         margin: const EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
-                          color: _isCorrect ? Colors.green.shade100 : Colors.red.shade100,
+                          color: _isCorrect
+                              ? Colors.green.shade100
+                              : Colors.red.shade100,
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Text(
-                          _isCorrect ? '🎉 ممتاز! إجابة صحيحة' : '😔 حاول مرة أخرى',
+                          _isCorrect
+                              ? '🎉 ممتاز! إجابة صحيحة'
+                              : '😔 حاول مرة أخرى',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: _isCorrect ? Colors.green.shade800 : Colors.red.shade800,
+                            color: _isCorrect
+                                ? Colors.green.shade800
+                                : Colors.red.shade800,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -359,4 +369,3 @@ class NumbersGameScreen extends StatelessWidget {
     );
   }
 }
-

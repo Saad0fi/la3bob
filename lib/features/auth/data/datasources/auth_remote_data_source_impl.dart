@@ -1,4 +1,3 @@
-import 'package:gotrue/src/types/user.dart';
 import 'package:injectable/injectable.dart';
 import 'package:la3bob/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:la3bob/features/auth/data/models/auth_user_model.dart';

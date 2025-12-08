@@ -20,10 +20,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   final ageController = TextEditingController();
   final intersetsController = TextEditingController();
 
-  PorfileBloc(
-    this._profileUsecase,
-    this._authUseCases,
-  ) : super(PorfileInitial()) {
+  PorfileBloc(this._profileUsecase, this._authUseCases)
+    : super(PorfileInitial()) {
     on<SubmitChildForm>(_onSubmitChildForm);
     on<UpdateChildForm>(_onUpdateChildForm);
     on<LoadChildren>(_onLoadChildren);
@@ -246,14 +244,9 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
 
     bool isKioskModeActive = false;
 
-    kioskModeStatusResult.when(
-      (mode) {
-        isKioskModeActive = (mode == KioskMode.enabled);
-      },
-      (failure) {
-        print('Failed to get Kiosk Mode status: ${failure.message}');
-      },
-    );
+    kioskModeStatusResult.when((mode) {
+      isKioskModeActive = (mode == KioskMode.enabled);
+    }, (failure) {});
 
     childrenResult.when(
       (children) {
@@ -333,12 +326,10 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     Emitter<PorfileState> emit,
   ) async {
     await GetStorage().write('selected_child_id', event.child.id);
-    
+
     if (state is PorfileChildrenLoaded) {
       final currentState = state as PorfileChildrenLoaded;
-      emit(
-        currentState.copyWith(selectedChildId: event.child.id),
-      );
+      emit(currentState.copyWith(selectedChildId: event.child.id));
     } else {
       emit(PorfileChildSelected(event.child));
     }
