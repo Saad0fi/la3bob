@@ -60,7 +60,7 @@ class ApiProfileDatasource implements ProfilesDatasource {
 
   @override
   Future<void> updateChild(ChildModel child) async {
-    final data = await _supabaseClient
+    await _supabaseClient
         .from('children')
         .update(child.toMap())
         .eq('id', child.id);
