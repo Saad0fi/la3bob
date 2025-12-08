@@ -30,11 +30,32 @@ class BiometricHelper {
         biometricOnly: false,
       );
       return didAuthenticate;
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg:
-            "فشل التحقق! الرجاء إعداد قفل للشاشة (رمز مرور، بصمة، أو وجه) للمتابعة.",
-      );
+    } on LocalAuthException catch (e) {
+      print(e);
+      //  حالات الإلغاء
+      if (e.code == LocalAuthExceptionCode.userCanceled ||
+          e.code == LocalAuthExceptionCode.systemCanceled ||
+          e.code == LocalAuthExceptionCode.timeout ||
+          e.code == LocalAuthExceptionCode.userRequestedFallback) {
+        Fluttertoast.showToast(msg: "تم إلغاء عملية التحقق");
+
+        // حالات الفشل الأمني والتقني تتطلب تدخل المستخدم
+      } else if (e.code == LocalAuthExceptionCode.noCredentialsSet ||
+          e.code == LocalAuthExceptionCode.noBiometricsEnrolled ||
+          e.code == LocalAuthExceptionCode.noBiometricHardware ||
+          e.code == LocalAuthExceptionCode.temporaryLockout ||
+          e.code == LocalAuthExceptionCode.biometricLockout) {
+        Fluttertoast.showToast(
+          msg:
+              "فشل التحقق! الرجاء إعداد قفل للشاشة (رمز مرور، بصمة، أو وجه) للمتابعة.",
+        );
+
+        // 3. أي خطأ غير معروف أو خطأ في الجهاز
+      } else {
+        Fluttertoast.showToast(
+          msg: "فشل التحقق بسبب مشكلة فنية حاول مرة أخرى.",
+        );
+      }
       return false;
     }
   }
