@@ -72,10 +72,6 @@ class ProfileScreen extends StatelessWidget {
                   );
                 }
 
-                if (state is PorfileChildSelected) {
-                  // عند اختيار طفل، ارجع true لإعادة تحميل الفيديوهات
-                  Navigator.of(context).pop(true);
-                }
               },
               child: BlocBuilder<PorfileBloc, PorfileState>(
                 builder: (context, state) {
@@ -138,9 +134,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               title: "تعديل البيانات",
                               subtitle: "اضغط لتغيير بياناتك",
-                              onTap: () {
-                                print("الانتقال لتعديل ملف الوالدين");
-                              },
+                              onTap: () {},
                             ),
                           ),
                         ),
@@ -155,11 +149,7 @@ class ProfileScreen extends StatelessWidget {
                             items: [
                               // زر حماية الإعدادات
                               SettingsItem(
-                                onTap: () {
-                                  print(
-                                    "استدعاء بوابة التحقق من الرمز السري...",
-                                  );
-                                },
+                                onTap: () {},
                                 icons: CupertinoIcons.lock_shield_fill,
                                 iconStyle: IconStyle(
                                   iconsColor: Colors.white,
@@ -171,9 +161,7 @@ class ProfileScreen extends StatelessWidget {
 
                               // زر وضع الطفل (Kiosk Mode)
                               SettingsItem(
-                                onTap: () {
-                                  print("تبديل وضع قفل التطبيق...");
-                                },
+                                onTap: () {},
                                 icons: isLockActive
                                     ? CupertinoIcons.lock_fill
                                     : CupertinoIcons.lock_open_fill,
@@ -192,7 +180,6 @@ class ProfileScreen extends StatelessWidget {
                                   value: isLockActive,
                                   onChanged: (newvlue) async {
                                     bloc.add(ToggleChildLockMode(newvlue));
-                                    print("تبديل وضع الطفل: $newvlue");
                                   },
                                 ),
                               ),
@@ -299,18 +286,14 @@ class ProfileScreen extends StatelessWidget {
                             items: [
                               // زر تغيير البريد الإلكتروني
                               SettingsItem(
-                                onTap: () {
-                                  print("تغيير البريد الإلكتروني");
-                                },
+                                onTap: () {},
                                 icons: Icons.email_rounded,
                                 title: "تغيير البريد الإلكتروني",
                               ),
 
                               // زر حذف الحساب
                               SettingsItem(
-                                onTap: () {
-                                  print("حذف الحساب");
-                                },
+                                onTap: () {},
                                 icons: Icons.delete_forever,
                                 title: "حذف الحساب",
                                 titleStyle: const TextStyle(color: Colors.red),
@@ -320,7 +303,6 @@ class ProfileScreen extends StatelessWidget {
                               SettingsItem(
                                 onTap: () {
                                   bloc.add(const LogoutRequested());
-                                  print("تسجيل الخروج");
                                 },
                                 icons: Icons.exit_to_app_rounded,
                                 title: "تسجيل الخروج",

@@ -4,7 +4,7 @@ import 'package:la3bob/features/auth/data/datasources/auth_remote_data_source.da
 import 'package:la3bob/features/auth/data/models/auth_user_model.dart';
 import 'package:la3bob/features/auth/domain/entities/auth_user_entity.dart';
 import 'package:la3bob/features/auth/domain/repositories/auth_repository_domain.dart';
-import 'package:multiple_result/src/result.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 @LazySingleton(as: AuthRepositoryDomain)
