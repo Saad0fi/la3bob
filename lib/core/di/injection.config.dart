@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:get_storage/get_storage.dart' as _i792;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:local_auth/local_auth.dart' as _i152;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart'
@@ -27,6 +28,8 @@ import '../../features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart'
     as _i157;
 import '../../features/profiles/data/datasource/profiles_datasource.dart'
     as _i452;
+import '../../features/profiles/data/datasource/profiles_utility_datasource.dart'
+    as _i382;
 import '../../features/profiles/data/repositories/profiles_repository.dart'
     as _i282;
 import '../../features/profiles/domain/repositories/profiles_repository.dart'
@@ -55,6 +58,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i107.AuthRemoteDataSource>(
       () => _i123.AuthRemoteDataSourceImpl(gh<_i454.SupabaseClient>()),
+    );
+    gh.factory<_i382.ProfilesUtilityDataSource>(
+      () => _i382.ProfilesUtilityDataSourceImpl(
+        gh<_i792.GetStorage>(),
+        gh<_i152.LocalAuthentication>(),
+      ),
     );
     gh.lazySingleton<_i998.AuthRepositoryDomain>(
       () => _i596.AuthRepositoryImpl(gh<_i107.AuthRemoteDataSource>()),

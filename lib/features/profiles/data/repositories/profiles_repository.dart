@@ -105,4 +105,24 @@ class ProfilesRepositoryData implements ProfilesRepository {
       );
     }
   }
+
+  @override
+  Future<Result<bool, ProfilesFailure>> authenticateBiometrics() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<bool, ProfilesFailure>> getSettingsProtection(String parentId) {
+    // TODO: implement getSettingsProtection
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<void, ProfilesFailure>> saveSettingsProtection(
+    String parentId,
+    bool isProtected,
+  ) {
+    // TODO: implement saveSettingsProtection
+    throw UnimplementedError();
+  }
 }
