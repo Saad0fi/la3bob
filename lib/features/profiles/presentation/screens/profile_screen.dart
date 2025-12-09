@@ -72,10 +72,6 @@ class ProfileScreen extends StatelessWidget {
                   );
                 }
 
-                if (state is PorfileChildSelected) {
-                  // عند اختيار طفل، ارجع true لإعادة تحميل الفيديوهات
-                  Navigator.of(context).pop(true);
-                }
               },
               child: BlocBuilder<PorfileBloc, PorfileState>(
                 builder: (context, state) {
