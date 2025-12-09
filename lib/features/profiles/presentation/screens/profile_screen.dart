@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
@@ -18,10 +17,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          PorfileBloc(
-            getIt<ProfileUsecase>(),
-            getIt<AuthUseCases>(),
-          )..add(const LoadChildren()),
+          PorfileBloc(getIt<ProfileUsecase>(), getIt<AuthUseCases>())
+            ..add(const LoadChildren()),
       child: Builder(
         builder: (context) {
           final bloc = context.read<PorfileBloc>();
@@ -35,21 +32,21 @@ class ProfileScreen extends StatelessWidget {
                 },
               ),
               actions: [
-                  IconButton(
-                    icon: const Icon(Icons.add, color: Colors.blue),
-                    onPressed: () async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const AddChildScreen()),
-                      );
+                IconButton(
+                  icon: const Icon(Icons.add, color: Colors.blue),
+                  onPressed: () async {
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const AddChildScreen()),
+                    );
 
-                      if (result == true) {
-                        bloc.add(const LoadChildren());
-                      }
-                    },
-                  ),
-                ],
-              ),
-              body: BlocListener<PorfileBloc, PorfileState>(
+                    if (result == true) {
+                      bloc.add(const LoadChildren());
+                    }
+                  },
+                ),
+              ],
+            ),
+            body: BlocListener<PorfileBloc, PorfileState>(
               listener: (context, state) {
                 if (state is PorfileSuccess &&
                     state.message == 'تم تسجيل الخروج بنجاح') {
@@ -141,9 +138,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               title: "تعديل البيانات",
                               subtitle: "اضغط لتغيير بياناتك",
-                              onTap: () {
-                                print("الانتقال لتعديل ملف الوالدين");
-                              },
+                              onTap: () {},
                             ),
                           ),
                         ),
@@ -158,11 +153,7 @@ class ProfileScreen extends StatelessWidget {
                             items: [
                               // زر حماية الإعدادات
                               SettingsItem(
-                                onTap: () {
-                                  print(
-                                    "استدعاء بوابة التحقق من الرمز السري...",
-                                  );
-                                },
+                                onTap: () {},
                                 icons: CupertinoIcons.lock_shield_fill,
                                 iconStyle: IconStyle(
                                   iconsColor: Colors.white,
@@ -174,9 +165,7 @@ class ProfileScreen extends StatelessWidget {
 
                               // زر وضع الطفل (Kiosk Mode)
                               SettingsItem(
-                                onTap: () {
-                                  print("تبديل وضع قفل التطبيق...");
-                                },
+                                onTap: () {},
                                 icons: isLockActive
                                     ? CupertinoIcons.lock_fill
                                     : CupertinoIcons.lock_open_fill,
@@ -195,7 +184,6 @@ class ProfileScreen extends StatelessWidget {
                                   value: isLockActive,
                                   onChanged: (newvlue) async {
                                     bloc.add(ToggleChildLockMode(newvlue));
-                                    print("تبديل وضع الطفل: $newvlue");
                                   },
                                 ),
                               ),
@@ -233,11 +221,13 @@ class ProfileScreen extends StatelessWidget {
                                       return SettingsItem(
                                         onTap: () {
                                           bloc.add(SelectChild(child));
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                  'تم اختيار ${child.name} لعرض الفيديوهات'),
+                                                'تم اختيار ${child.name} لعرض الفيديوهات',
+                                              ),
                                               backgroundColor: Colors.green,
                                             ),
                                           );
@@ -255,26 +245,33 @@ class ProfileScreen extends StatelessWidget {
                                               : Colors.green,
                                         ),
                                         trailing: isSelected
-                                            ? const Icon(Icons.check_circle,
-                                                color: Colors.blue, size: 24)
+                                            ? const Icon(
+                                                Icons.check_circle,
+                                                color: Colors.blue,
+                                                size: 24,
+                                              )
                                             : IconButton(
-                                                icon: const Icon(Icons.edit,
-                                                    size: 20),
+                                                icon: const Icon(
+                                                  Icons.edit,
+                                                  size: 20,
+                                                ),
                                                 onPressed: () async {
                                                   final result =
-                                                      await Navigator.of(context)
-                                                          .push(
-                                                    MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          UpdateChildScreen(
-                                                        child: child,
-                                                      ),
-                                                    ),
-                                                  );
+                                                      await Navigator.of(
+                                                        context,
+                                                      ).push(
+                                                        MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              UpdateChildScreen(
+                                                                child: child,
+                                                              ),
+                                                        ),
+                                                      );
 
                                                   if (result == true) {
                                                     bloc.add(
-                                                        const LoadChildren());
+                                                      const LoadChildren(),
+                                                    );
                                                   }
                                                 },
                                               ),
@@ -293,18 +290,14 @@ class ProfileScreen extends StatelessWidget {
                             items: [
                               // زر تغيير البريد الإلكتروني
                               SettingsItem(
-                                onTap: () {
-                                  print("تغيير البريد الإلكتروني");
-                                },
+                                onTap: () {},
                                 icons: Icons.email_rounded,
                                 title: "تغيير البريد الإلكتروني",
                               ),
 
                               // زر حذف الحساب
                               SettingsItem(
-                                onTap: () {
-                                  print("حذف الحساب");
-                                },
+                                onTap: () {},
                                 icons: Icons.delete_forever,
                                 title: "حذف الحساب",
                                 titleStyle: const TextStyle(color: Colors.red),
@@ -314,7 +307,6 @@ class ProfileScreen extends StatelessWidget {
                               SettingsItem(
                                 onTap: () {
                                   bloc.add(const LogoutRequested());
-                                  print("تسجيل الخروج");
                                 },
                                 icons: Icons.exit_to_app_rounded,
                                 title: "تسجيل الخروج",
