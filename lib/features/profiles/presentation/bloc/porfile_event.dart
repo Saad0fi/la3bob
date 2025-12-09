@@ -81,3 +81,34 @@ class SelectChild extends PorfileEvent {
   @override
   List<Object> get props => [child];
 }
+
+//  عند فتح صفحة الإعدادات: جلب حالة الحماية المحفوظة
+class GetSettingsProtectionEvent extends PorfileEvent {
+  final String parentId;
+  const GetSettingsProtectionEvent({required this.parentId});
+
+  @override
+  List<Object> get props => [parentId];
+}
+
+// 2. عند تغيير زر الـ Switch: حفظ الحالة الجديدة
+class SaveSettingsProtectionEvent extends PorfileEvent {
+  final String parentId;
+  final bool isProtected;
+  const SaveSettingsProtectionEvent({
+    required this.parentId,
+    required this.isProtected,
+  });
+
+  @override
+  List<Object> get props => [parentId, isProtected];
+}
+
+//  عند الضغط على أيقونة الإعدادات المحمية (في الألعاب/الفيديو)
+class TryAccessSettingsEvent extends PorfileEvent {
+  final String parentId;
+  const TryAccessSettingsEvent({required this.parentId});
+
+  @override
+  List<Object> get props => [parentId];
+}
