@@ -1,5 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 import 'package:injectable/injectable.dart';
+import 'package:la3bob/core/erors/failures/authbiometrec_failures.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 
@@ -38,18 +39,46 @@ class ProfilesUtilityDataSourceImpl implements ProfilesUtilityDataSource {
   //  المصادقة البيومترية (LocalAuth)
   @override
   Future<bool> authenticateBiometrics() async {
-    final bool didAuthenticate = await _auth.authenticate(
-      authMessages: <AuthMessages>[
-        // تخصيص رسائل الأندرويد
-        AndroidAuthMessages(
-          signInTitle: 'الرجاء التحقق من الهوية',
-          signInHint: 'استخدم البصمة أو الوجه',
-        ),
-      ],
-      localizedReason: 'الرجاء التحقق من الهوية للمتابعة',
-      persistAcrossBackgrounding: true,
-      biometricOnly: false,
-    );
-    return didAuthenticate;
+    try {
+      final bool didAuthenticate = await _auth.authenticate(
+        authMessages: <AuthMessages>[
+          // تخصيص رسائل الأندرويد
+          const AndroidAuthMessages(
+            signInTitle: 'الرجاء التحقق من الهوية',
+            signInHint: 'استخدم البصمة أو الوجه',
+          ),
+        ],
+        localizedReason: 'الرجاء التحقق من الهوية للمتابعة',
+        persistAcrossBackgrounding: true,
+        biometricOnly: false,
+      );
+      return didAuthenticate;
+    } on LocalAuthException catch (e) {
+      String errorMessage = "";
+
+      //  حالات الإلغاء
+      if (e.code == LocalAuthExceptionCode.userCanceled ||
+          e.code == LocalAuthExceptionCode.systemCanceled ||
+          e.code == LocalAuthExceptionCode.timeout ||
+          e.code == LocalAuthExceptionCode.userRequestedFallback) {
+        errorMessage = "تم إلغاء عملية التحقق";
+
+        // حالات الفشل الأمني والتقني تتطلب تدخل المستخدم
+      } else if (e.code == LocalAuthExceptionCode.noCredentialsSet ||
+          e.code == LocalAuthExceptionCode.noBiometricsEnrolled ||
+          e.code == LocalAuthExceptionCode.noBiometricHardware ||
+          e.code == LocalAuthExceptionCode.temporaryLockout ||
+          e.code == LocalAuthExceptionCode.biometricLockout) {
+        errorMessage =
+            "فشل التحقق! الرجاء إعداد قفل للشاشة (رمز مرور، بصمة، أو وجه) للمتابعة";
+      }
+      throw AuthbiometrecFailures(message: errorMessage);
+
+      // 3. أي خطأ غير معروف أو خطأ في الجهاز
+    } catch (e) {
+      throw AuthbiometrecFailures(
+        message: "حدث خطأ  غير متوقع: ${e.toString()}",
+      );
+    }
   }
 }
