@@ -18,7 +18,6 @@ class SplashScreen extends StatelessWidget {
         listener: (context, state) {
           //  معالجة حالات الـ State والتنقل
           if (state is Authenticated) {
-            print(state.user.name);
             // المستخدم مسجل انتقل إلى الشاشة الرئيسية
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => const NavigationBarScreen()),
