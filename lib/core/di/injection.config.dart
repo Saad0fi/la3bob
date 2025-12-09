@@ -56,6 +56,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i454.SupabaseClient>(
       () => thirdPartyModule.supabaseClient,
     );
+    gh.lazySingleton<_i152.LocalAuthentication>(() => thirdPartyModule.auth);
     gh.lazySingleton<_i107.AuthRemoteDataSource>(
       () => _i123.AuthRemoteDataSourceImpl(gh<_i454.SupabaseClient>()),
     );
@@ -80,17 +81,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i157.AuthCubit>(
       () => _i157.AuthCubit(gh<_i544.AuthUseCases>()),
     );
-    gh.factory<_i141.ProfilesRepository>(
-      () => _i282.ProfilesRepositoryData(gh<_i452.ProfilesDatasource>()),
-    );
     gh.factory<_i836.VideosRepository>(
       () => _i622.VideosRepositoryData(gh<_i889.VideosDatasource>()),
     );
-    gh.factory<_i1022.ProfileUsecase>(
-      () => _i1022.ProfileUsecase(gh<_i141.ProfilesRepository>()),
-    );
     gh.factory<_i362.VideosUsecase>(
       () => _i362.VideosUsecase(gh<_i836.VideosRepository>()),
+    );
+    gh.factory<_i141.ProfilesRepository>(
+      () => _i282.ProfilesRepositoryData(
+        gh<_i452.ProfilesDatasource>(),
+        gh<_i382.ProfilesUtilityDataSource>(),
+      ),
+    );
+    gh.factory<_i1022.ProfileUsecase>(
+      () => _i1022.ProfileUsecase(gh<_i141.ProfilesRepository>()),
     );
     gh.factory<_i135.VideosBloc>(
       () => _i135.VideosBloc(

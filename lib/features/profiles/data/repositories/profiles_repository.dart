@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/erors/failures/profiles_failures.dart';
+import 'package:la3bob/features/profiles/data/datasource/profiles_utility_datasource.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:la3bob/features/profiles/data/datasource/profiles_datasource.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
@@ -10,8 +11,9 @@ import 'package:la3bob/features/profiles/data/models/child_model.dart';
 @Injectable(as: ProfilesRepository)
 class ProfilesRepositoryData implements ProfilesRepository {
   final ProfilesDatasource _datasource;
+  final ProfilesUtilityDataSource _utilityDataSource;
 
-  ProfilesRepositoryData(this._datasource);
+  ProfilesRepositoryData(this._datasource, this._utilityDataSource);
 
   @override
   Future<Result<List<ChildEntity>, ProfilesFailure>> getChildern(
@@ -107,22 +109,47 @@ class ProfilesRepositoryData implements ProfilesRepository {
   }
 
   @override
-  Future<Result<bool, ProfilesFailure>> authenticateBiometrics() {
-    throw UnimplementedError();
+  Future<Result<bool, ProfilesFailure>> authenticateBiometrics() async {
+    try {
+      final result = await _utilityDataSource.authenticateBiometrics();
+      return Success(result);
+    } on AuthbiometrecFailures catch (e) {
+      return Error(e);
+    } catch (e) {
+      return Error(
+        AuthbiometrecFailures(message: "فشل غير متوقع ${e.toString()}"),
+      );
+    }
   }
 
   @override
-  Future<Result<bool, ProfilesFailure>> getSettingsProtection(String parentId) {
-    // TODO: implement getSettingsProtection
-    throw UnimplementedError();
+  Future<Result<bool, ProfilesFailure>> getSettingsProtection(
+    String parentId,
+  ) async {
+    try {
+      final bool? isProtected = await _utilityDataSource.getSettingsProtection(
+        parentId,
+      );
+
+      return Success(isProtected ?? false);
+    } catch (e) {
+      return Error(
+        LocalCacheFailure(message: "فشل جلب حالة حماية الإعدادات: "),
+      );
+    }
   }
 
   @override
   Future<Result<void, ProfilesFailure>> saveSettingsProtection(
     String parentId,
     bool isProtected,
-  ) {
-    // TODO: implement saveSettingsProtection
-    throw UnimplementedError();
+  ) async {
+    try {
+      await _utilityDataSource.setSettingsProtection(parentId, isProtected);
+
+      return const Success(null);
+    } catch (e) {
+      return Error(LocalCacheFailure(message: "فشل حفظ إعدادات الحماية: "));
+    }
   }
 }

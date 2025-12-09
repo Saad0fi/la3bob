@@ -1,6 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 import 'package:injectable/injectable.dart';
-import 'package:la3bob/core/erors/failures/authbiometrec_failures.dart';
+import 'package:la3bob/core/erors/failures/profiles_failures.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 
@@ -28,6 +28,11 @@ class ProfilesUtilityDataSourceImpl implements ProfilesUtilityDataSource {
   Future<void> setSettingsProtection(String parentId, bool value) async {
     final key = _getScopedKey(parentId);
     await _storage.write(key, value);
+
+    final savedValue = _storage.read(key);
+    print(' Local Storage Debug: Settings protection saved!');
+    print('   - Key: $key');
+    print('   - Value: $savedValue (Type: ${savedValue.runtimeType})');
   }
 
   @override
@@ -55,6 +60,7 @@ class ProfilesUtilityDataSourceImpl implements ProfilesUtilityDataSource {
       return didAuthenticate;
     } on LocalAuthException catch (e) {
       String errorMessage = "";
+      print(e);
 
       //  حالات الإلغاء
       if (e.code == LocalAuthExceptionCode.userCanceled ||
@@ -74,8 +80,9 @@ class ProfilesUtilityDataSourceImpl implements ProfilesUtilityDataSource {
       }
       throw AuthbiometrecFailures(message: errorMessage);
 
-      // 3. أي خطأ غير معروف أو خطأ في الجهاز
+      // أي خطأ غير معروف أو خطأ في الجهاز
     } catch (e) {
+      print(e);
       throw AuthbiometrecFailures(
         message: "حدث خطأ  غير متوقع: ${e.toString()}",
       );
