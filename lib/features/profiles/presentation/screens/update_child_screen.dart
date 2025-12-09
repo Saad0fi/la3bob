@@ -5,6 +5,7 @@ import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
+import 'package:la3bob/features/profiles/presentation/widgets/interests_selector.dart';
 
 class UpdateChildScreen extends StatelessWidget {
   final ChildEntity child;
@@ -14,6 +15,7 @@ class UpdateChildScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final Set<String> selectedInterests = {...child.intersets};
 
     return BlocProvider(
       create: (_) =>
@@ -95,30 +97,37 @@ class UpdateChildScreen extends StatelessWidget {
                         },
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: bloc.intersetsController,
-                        enabled: state is! PorfileLoading,
-                        decoration: const InputDecoration(
-                          labelText: 'اهتمامات الطفل',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.favorite_outline),
-                          alignLabelWithHint: true,
-                        ),
-                        maxLines: 4,
-                        textDirection: TextDirection.rtl,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'الرجاء إدخال اهتمامات الطفل';
-                          }
-                          return null;
+
+                      InterestsSelector(
+                        selectedInterests: selectedInterests,
+                        onChanged: (interests) {
+                          selectedInterests
+                            ..clear()
+                            ..addAll(interests);
                         },
                       ),
+
                       const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: state is PorfileLoading
                             ? null
                             : () {
                                 if (formKey.currentState!.validate()) {
+                                  if (selectedInterests.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'الرجاء اختيار اهتمام واحد على الأقل',
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  bloc.intersetsController.text =
+                                      selectedInterests.join(', ');
+
                                   bloc.add(
                                     UpdateChildForm(
                                       childId: child.id,
