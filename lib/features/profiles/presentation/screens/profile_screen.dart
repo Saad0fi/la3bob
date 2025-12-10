@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
@@ -35,75 +36,84 @@ class ProfileScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add, color: Colors.blue),
                   onPressed: () async {
-                    final result = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const AddChildScreen()),
-                    );
+                    // التحقق من حالة الوصول قبل السماح بإضافة طفل جديد
+                    final currentState = bloc.state;
+                    if (currentState is PorfileChildrenLoaded &&
+                        currentState.accessStatus == AccessStatus.granted) {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const AddChildScreen(),
+                        ),
+                      );
 
-                    if (result == true) {
-                      bloc.add(const LoadChildren());
+                      if (result == true) {
+                        bloc.add(const LoadChildren());
+                      }
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: 'الرجاء المصادقة أولاً لإضافة طفل.',
+                        backgroundColor: Colors.orange,
+                      );
                     }
                   },
                 ),
               ],
             ),
+
             body: BlocListener<PorfileBloc, PorfileState>(
               listener: (context, state) {
-                if (state is PorfileSuccess &&
-                    state.message == 'تم تسجيل الخروج بنجاح') {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    (route) => false,
+                // هنا  معالجة النجاح العام (Logout, Save Settings, Toggle Lock Mode)
+                if (state is PorfileSuccess) {
+                  Fluttertoast.showToast(
+                    msg: state.message,
+                    backgroundColor: Colors.green,
                   );
+                  if (state.message == 'تم تسجيل الخروج بنجاح') {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                    );
+                  }
                 }
 
-                if (state is PorfileSuccess &&
-                    state.message != 'تم تسجيل الخروج بنجاح') {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
-                }
-
+                //  معالجةال Erors
                 if (state is PorfileError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.failure.message),
-                      backgroundColor: Colors.red,
-                    ),
+                  Fluttertoast.showToast(
+                    msg: state.failure.message,
+                    backgroundColor: Colors.red,
                   );
                 }
 
+                //  معالجة اختيار الطفل
                 if (state is PorfileChildSelected) {
-                  // عند اختيار طفل، ارجع true لإعادة تحميل الفيديوهات
+                  Fluttertoast.showToast(
+                    msg: 'تم اختيار الطفل ${state.selectedChild.name} بنجاح!',
+                    backgroundColor: Colors.blue,
+                  );
                   Navigator.of(context).pop(true);
                 }
+
+                // معالجة  المصادقة البيومترية هنا
+                if (state is PorfileChildrenLoaded) {
+                  // فقط نعرض رسالة خطأ إذا تم الرفض
+                  if (state.accessStatus == AccessStatus.denied &&
+                      state.accessErrorMessage != null) {
+                    Fluttertoast.showToast(
+                      msg: state.accessErrorMessage!,
+                      backgroundColor: Colors.red,
+                    );
+                  }
+                }
               },
+
               child: BlocBuilder<PorfileBloc, PorfileState>(
                 builder: (context, state) {
                   final isLoading = state is PorfileLoading;
-
                   if (isLoading) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  if (state is PorfileError) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            state.failure.message,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 12),
-                          ElevatedButton(
-                            onPressed: () => bloc.add(const LoadChildren()),
-                            child: const Text('إعادة المحاولة'),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
+                  //  تعريف المتغيرات
                   final children = state is PorfileChildrenLoaded
                       ? state.children
                       : [];
@@ -111,11 +121,86 @@ class ProfileScreen extends StatelessWidget {
                   final isLockActive = state is PorfileChildrenLoaded
                       ? state.isChildLockModeActive
                       : false;
+                  final isSettingsProtected = state is PorfileChildrenLoaded
+                      ? state.isSettingsProtected
+                      : false;
+                  final accessStatus = state is PorfileChildrenLoaded
+                      ? state.accessStatus
+                      : AccessStatus.initial;
                   final selectedChildId = state is PorfileChildrenLoaded
                       ? state.selectedChildId
                       : null;
                   const String parentName = "ولي الأمر";
 
+                  // هنا كود شاشة الحجب/الانتظار إذا لم يتم منح الوصول بعد)
+                  if (accessStatus != AccessStatus.granted) {
+                    // إذا كان هناك خطأ عام في التحميل، نعرضه (مثل فشل تسجيل الدخول)
+                    if (state is PorfileError) {
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              state.failure.message,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () => bloc.add(const LoadChildren()),
+                              child: const Text(
+                                'إعادة المحاولة / تسجيل الدخول',
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    // شاشة الانتظار/القفل
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (accessStatus == AccessStatus.loading)
+                            const CupertinoActivityIndicator(radius: 20.0),
+
+                          const SizedBox(height: 20),
+
+                          Text(
+                            accessStatus == AccessStatus.loading
+                                ? 'الرجاء المصادقة للمتابعة...'
+                                : 'الوصول محدود. يرجى الضغط للمصادقة.',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+
+                          // زر إعادة المصادقة إذا تم الرفض أو الإلغاء
+                          if (accessStatus == AccessStatus.denied ||
+                              accessStatus == AccessStatus.initial)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: ElevatedButton.icon(
+                                icon: const Icon(Icons.security),
+                                onPressed: () {
+                                  bloc.add(const LoadChildren());
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        'جارٍ محاولة المصادقة والتحميل مجدداً...',
+                                    backgroundColor: Colors.orange,
+                                  );
+                                },
+                                label: const Text('المصادقة الآن'),
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  //  المحتوى الحساس يعرض فقط بعد منح الوصول
                   return Padding(
                     padding: const EdgeInsets.all(10),
                     child: CustomScrollView(
@@ -139,7 +224,11 @@ class ProfileScreen extends StatelessWidget {
                               title: "تعديل البيانات",
                               subtitle: "اضغط لتغيير بياناتك",
                               onTap: () {
-                                print("الانتقال لتعديل ملف الوالدين");
+                                Fluttertoast.showToast(
+                                  msg:
+                                      'جارٍ الانتقال لتعديل بيانات ولي الأمر...',
+                                  backgroundColor: Colors.blue,
+                                );
                               },
                             ),
                           ),
@@ -153,35 +242,58 @@ class ProfileScreen extends StatelessWidget {
                             backgroundColor: Colors.white,
                             settingsGroupTitle: "أدوات الرقابة الأبوية",
                             items: [
-                              // زر حماية الإعدادات
+                              //  زر تبديل تفعيل/إلغاء حماية الدخول بالبصمة
                               SettingsItem(
-                                onTap: () {
-                                  print(
-                                    "استدعاء بوابة التحقق من الرمز السري...",
-                                  );
-                                },
-                                icons: CupertinoIcons.lock_shield_fill,
+                                onTap: () {},
+                                icons: isSettingsProtected
+                                    ? CupertinoIcons.lock_shield_fill
+                                    : CupertinoIcons.lock_open_fill,
                                 iconStyle: IconStyle(
                                   iconsColor: Colors.white,
-                                  backgroundColor: Colors.orange,
+                                  backgroundColor: isSettingsProtected
+                                      ? Colors.green.shade700
+                                      : Colors.grey,
                                 ),
-                                title: "حماية الإعدادات",
-                                subtitle: "تفعيل رمز سري لدخول هذه الصفحة",
+                                title: isSettingsProtected
+                                    ? "إلغاء حماية الدخول بالبصمة"
+                                    : "تفعيل حماية الدخول بالبصمة",
+                                subtitle:
+                                    "تفعيل المصادقة البيومترية عند دخول هذه الصفحة",
+                                trailing: Switch.adaptive(
+                                  value: isSettingsProtected,
+                                  onChanged: (newValue) {
+                                    // ملاحظة: نعتمد على أن الـ Bloc يحتفظ بـ currentParentId من حدث LoadChildren الأولي
+                                    if (isLoaded) {
+                                      // نتحقق من أن الحالة الحالية هي PorfileChildrenLoaded
+                                      bloc.add(
+                                        SaveSettingsProtectionEvent(
+                                          isProtected: newValue,
+                                        ),
+                                      );
+                                    } else {
+                                      //  هنا إذا لم تكن البيانات محملة نطلق حدث التحميل مجدداً
+                                      bloc.add(const LoadChildren());
+                                      Fluttertoast.showToast(
+                                        msg:
+                                            'جاري تحميل بيانات الوالد مجدداً لحفظ الإعدادات.',
+                                        backgroundColor: Colors.orange,
+                                      );
+                                    }
+                                  },
+                                ),
                               ),
 
-                              // زر وضع الطفل (Kiosk Mode)
+                              //  زر وضع الطفل Kiosk Mode)
                               SettingsItem(
-                                onTap: () {
-                                  print("تبديل وضع قفل التطبيق...");
-                                },
+                                onTap: () {},
                                 icons: isLockActive
                                     ? CupertinoIcons.lock_fill
                                     : CupertinoIcons.lock_open_fill,
                                 iconStyle: IconStyle(
                                   iconsColor: Colors.white,
                                   backgroundColor: isLockActive
-                                      ? Colors.red.shade700
-                                      : Colors.green.shade700,
+                                      ? Colors.green.shade700
+                                      : Colors.grey,
                                 ),
                                 title: isLockActive
                                     ? "إلغاء وضع القفل (وضع الطفل)"
@@ -192,7 +304,6 @@ class ProfileScreen extends StatelessWidget {
                                   value: isLockActive,
                                   onChanged: (newvlue) async {
                                     bloc.add(ToggleChildLockMode(newvlue));
-                                    print("تبديل وضع الطفل: $newvlue");
                                   },
                                 ),
                               ),
@@ -204,7 +315,6 @@ class ProfileScreen extends StatelessWidget {
 
                         // قائمة ملفات الأطفال
                         if (isLoaded)
-                          // قسم إدارة ملفات الأطفال
                           SliverToBoxAdapter(
                             child: SettingsGroup(
                               backgroundColor: Colors.white,
@@ -230,22 +340,12 @@ class ProfileScreen extends StatelessWidget {
                                       return SettingsItem(
                                         onTap: () {
                                           bloc.add(SelectChild(child));
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'تم اختيار ${child.name} لعرض الفيديوهات',
-                                              ),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
                                         },
                                         icons: CupertinoIcons
                                             .person_alt_circle_fill,
                                         title: child.name ?? 'طفل غير مسمى',
                                         subtitle: isSelected
-                                            ? "العمر: ${child.age} -  مختار"
+                                            ? "العمر: ${child.age} - مختار"
                                             : "العمر: ${child.age}",
                                         iconStyle: IconStyle(
                                           iconsColor: Colors.white,
@@ -297,30 +397,31 @@ class ProfileScreen extends StatelessWidget {
                             backgroundColor: Colors.white,
                             settingsGroupTitle: "الحساب",
                             items: [
-                              // زر تغيير البريد الإلكتروني
                               SettingsItem(
                                 onTap: () {
-                                  print("تغيير البريد الإلكتروني");
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        'تم إطلاق طلب تغيير البريد الإلكتروني.',
+                                    backgroundColor: Colors.blue,
+                                  );
                                 },
                                 icons: Icons.email_rounded,
                                 title: "تغيير البريد الإلكتروني",
                               ),
-
-                              // زر حذف الحساب
                               SettingsItem(
                                 onTap: () {
-                                  print("حذف الحساب");
+                                  Fluttertoast.showToast(
+                                    msg: 'جارٍ تجهيز شاشة تأكيد حذف الحساب...',
+                                    backgroundColor: Colors.red,
+                                  );
                                 },
                                 icons: Icons.delete_forever,
                                 title: "حذف الحساب",
                                 titleStyle: const TextStyle(color: Colors.red),
                               ),
-
-                              // زر تسجيل الخروج
                               SettingsItem(
                                 onTap: () {
                                   bloc.add(const LogoutRequested());
-                                  print("تسجيل الخروج");
                                 },
                                 icons: Icons.exit_to_app_rounded,
                                 title: "تسجيل الخروج",

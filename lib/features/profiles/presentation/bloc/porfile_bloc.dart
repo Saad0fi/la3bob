@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,10 +22,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   final ageController = TextEditingController();
   final intersetsController = TextEditingController();
 
-  PorfileBloc(
-    this._profileUsecase,
-    this._authUseCases,
-  ) : super(PorfileInitial()) {
+  PorfileBloc(this._profileUsecase, this._authUseCases)
+    : super(PorfileInitial()) {
     on<SubmitChildForm>(_onSubmitChildForm);
     on<UpdateChildForm>(_onUpdateChildForm);
     on<LoadChildren>(_onLoadChildren);
@@ -33,10 +33,11 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     on<ResetForm>(_onResetForm);
     on<ToggleChildLockMode>(_onToggleChildLockMode);
     on<SelectChild>(_onSelectChild);
+    on<SaveSettingsProtectionEvent>(_onSaveSettingsProtection);
   }
 
   // ----------------------------------------------------------------------
-  //    handller method  اللوجيك هنا
+  //    معالجات الأحداث (Handler Methods)
 
   //  معالج حدث تبديل وضع القفل
   void _onToggleChildLockMode(
@@ -77,20 +78,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       return;
     }
 
-    final userResult = await _authUseCases.getSignedInUser();
-    String? parentId;
-    userResult.when(
-      (user) => parentId = user?.id,
-      (failure) => parentId = null,
-    );
-    if (parentId == null) {
-      emit(
-        PorfileError(
-          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
-        ),
-      );
-      return;
-    }
+    final parentId = await _getParentId(emit);
+    if (parentId == null) return;
 
     final age = int.tryParse(event.childAge);
     if (age == null || age < 1 || age > 12) {
@@ -122,7 +111,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     emit(PorfileLoading());
 
     final result = await _profileUsecase.addChild(
-      parentId!,
+      parentId,
       event.childName,
       age,
       intersets,
@@ -153,20 +142,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       return;
     }
 
-    final userResult = await _authUseCases.getSignedInUser();
-    String? parentId;
-    userResult.when(
-      (user) => parentId = user?.id,
-      (failure) => parentId = null,
-    );
-    if (parentId == null) {
-      emit(
-        PorfileError(
-          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
-        ),
-      );
-      return;
-    }
+    final parentId = await _getParentId(emit);
+    if (parentId == null) return;
 
     final age = int.tryParse(event.childAge);
     if (age == null || age < 1 || age > 12) {
@@ -202,7 +179,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         id: event.childId,
         name: event.childName,
         age: age,
-        parentId: parentId!,
+        parentId: parentId,
         intersets: intersets,
       ),
     );
@@ -223,26 +200,52 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     LoadChildren event,
     Emitter<PorfileState> emit,
   ) async {
+    final parentId = await _getParentId(emit);
+    if (parentId == null) return;
+
     emit(PorfileLoading());
 
-    final userResult = await _authUseCases.getSignedInUser();
-    String? parentId;
-    userResult.when(
-      (user) => parentId = user?.id,
-      (failure) => parentId = null,
+    //  جلب حالة الحماية (لتحديد القيمة الأولية للـ Switch وللمصادقة)
+    final protectionResult = await _profileUsecase.getSettingsProtection(
+      parentId,
     );
-    if (parentId == null) {
-      emit(
-        PorfileError(
-          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
-        ),
-      );
-      return;
+    bool isProtected = false;
+    protectionResult.when((isSet) => isProtected = isSet, (failure) {
+      print('Failed to get protection settings: ${failure.message}');
+    });
+
+    //   المصادقة شرط إظهار محتوى الإعدادات
+    bool accessGranted = false;
+    if (isProtected) {
+      // هنا تكون المصادقة مفعلة: نستدعي المصادقة البيومترية
+      final authResult = await _profileUsecase.authenticateBiometrics();
+      await authResult.when((didAuth) => accessGranted = didAuth, (failure) {
+        print('Biometrics authentication failed: ${failure.message}');
+        // لا نمنح الوصول ونصدر رسالة خطأ
+      });
+    } else {
+      // المصادقة غير مفعلة: ندخل المستحدم  مباشرة
+      accessGranted = true;
     }
 
-    final kioskModeStatusResult = await _profileUsecase.getKioskModeStatus();
+    //  إذا فشلت المصادقة: إصدار حالة الوصول الممنوع
+    if (!accessGranted) {
+      emit(
+        PorfileChildrenLoaded(
+          const [],
+          currentParentId: parentId,
+          isSettingsProtected: isProtected,
+          accessStatus: AccessStatus.denied, // منع الوصول
+          isChildLockModeActive: false,
+          selectedChildId: null,
+        ),
+      );
+      return; //  إيقاف التحميل
+    }
 
-    final childrenResult = await _profileUsecase.getChildern(parentId!);
+    //   تم منح الوصول: نجيب باقي البيانات
+    final kioskModeStatusResult = await _profileUsecase.getKioskModeStatus();
+    final childrenResult = await _profileUsecase.getChildern(parentId);
 
     bool isKioskModeActive = false;
 
@@ -255,6 +258,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       },
     );
 
+    // إصدار الحالة النهائية (الوصول ممنوح)
     childrenResult.when(
       (children) {
         final selectedChildId = GetStorage().read<String>('selected_child_id');
@@ -263,6 +267,9 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
             children,
             isChildLockModeActive: isKioskModeActive,
             selectedChildId: selectedChildId,
+            currentParentId: parentId,
+            isSettingsProtected: isProtected, // نمرر القيمة الصحيحة
+            accessStatus: AccessStatus.granted, // الحالى تكون تم منح الوصول
           ),
         );
       },
@@ -270,8 +277,9 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         emit(PorfileError(failure));
       },
     );
-  } //  معالج حدث حذف الطفل
+  }
 
+  //  معالج حدث حذف الطفل
   Future<void> _onDeleteChild(
     DeleteChild event,
     Emitter<PorfileState> emit,
@@ -333,15 +341,71 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     Emitter<PorfileState> emit,
   ) async {
     await GetStorage().write('selected_child_id', event.child.id);
-    
+
     if (state is PorfileChildrenLoaded) {
       final currentState = state as PorfileChildrenLoaded;
-      emit(
-        currentState.copyWith(selectedChildId: event.child.id),
-      );
+      emit(currentState.copyWith(selectedChildId: event.child.id));
     } else {
       emit(PorfileChildSelected(event.child));
     }
+  }
+
+  //       حفظ حالة سويتش حماية الاعدادات  الجديدة
+  FutureOr<void> _onSaveSettingsProtection(
+    SaveSettingsProtectionEvent event,
+    Emitter<PorfileState> emit,
+  ) async {
+    if (state is PorfileChildrenLoaded) {
+      final currentState = state as PorfileChildrenLoaded;
+
+      final parentId = currentState.currentParentId;
+      if (parentId == null) return;
+
+      emit(currentState.copyWith(accessStatus: AccessStatus.loading));
+
+      final result = await _profileUsecase.saveSettingsProtection(
+        parentId,
+        event.isProtected,
+      );
+
+      result.when(
+        (success) {
+          emit(
+            currentState.copyWith(
+              isSettingsProtected: event.isProtected,
+              accessStatus: AccessStatus.granted, // إعادة الوصول بعد الحفظ
+            ),
+          );
+        },
+        (failure) {
+          emit(
+            currentState.copyWith(
+              accessStatus: AccessStatus.denied,
+              accessErrorMessage: failure.message,
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  /// ميثود مساعدة لجلب  (Parent ID)
+  Future<String?> _getParentId(Emitter<PorfileState> emit) async {
+    final userResult = await _authUseCases.getSignedInUser();
+    String? parentId;
+
+    userResult.when((user) => parentId = user?.id, (failure) {});
+
+    if (parentId == null) {
+      emit(
+        PorfileError(
+          InputValidationFailure(
+            message: 'الرجاء تسجيل الدخول أولاً لإكمال العملية.',
+          ),
+        ),
+      );
+    }
+    return parentId;
   }
 
   @override

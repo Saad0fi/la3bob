@@ -16,6 +16,7 @@ final class PorfileChildrenLoaded extends PorfileState {
   final bool isSettingsProtected;
   final AccessStatus accessStatus;
   final String? accessErrorMessage;
+  final String? currentParentId;
 
   PorfileChildrenLoaded(
     this.children, {
@@ -24,6 +25,7 @@ final class PorfileChildrenLoaded extends PorfileState {
     this.isSettingsProtected = false,
     this.accessStatus = AccessStatus.initial,
     this.accessErrorMessage,
+    this.currentParentId,
   });
 
   PorfileChildrenLoaded copyWith({
@@ -33,6 +35,7 @@ final class PorfileChildrenLoaded extends PorfileState {
     bool? isSettingsProtected,
     AccessStatus? accessStatus,
     String? accessErrorMessage,
+    String? currentParentId,
   }) {
     return PorfileChildrenLoaded(
       children ?? this.children,
@@ -42,6 +45,7 @@ final class PorfileChildrenLoaded extends PorfileState {
       isSettingsProtected: isSettingsProtected ?? this.isSettingsProtected,
       accessStatus: accessStatus ?? this.accessStatus,
       accessErrorMessage: accessErrorMessage,
+      currentParentId: currentParentId ?? this.currentParentId,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/comon/helper_function/biometric_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
+import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
 import 'package:la3bob/features/videos/presentation/screens/video_player_screen.dart';
 
@@ -22,7 +23,9 @@ class VideoHomeScreen extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(50),
                 onLongPress: () async {
-                  await BiometricHelper.goToProfilePage(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                  );
                 },
                 onTap: () {},
                 child: const Padding(
@@ -67,8 +70,9 @@ class VideoHomeScreen extends StatelessWidget {
 
             if (state is VideosLoaded) {
               if (state.videos.isEmpty) {
-                final selectedChildId = getIt<GetStorage>()
-                    .read<String>('selected_child_id');
+                final selectedChildId = getIt<GetStorage>().read<String>(
+                  'selected_child_id',
+                );
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
