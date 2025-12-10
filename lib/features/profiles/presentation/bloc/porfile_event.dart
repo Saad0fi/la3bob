@@ -81,3 +81,12 @@ class SelectChild extends PorfileEvent {
   @override
   List<Object> get props => [child];
 }
+
+// عند تغيير زر الـ Switch: نحفظ حالته الجديدة في القيت ستورج
+class SaveSettingsProtectionEvent extends PorfileEvent {
+  final bool isProtected;
+  const SaveSettingsProtectionEvent({required this.isProtected});
+
+  @override
+  List<Object> get props => [isProtected];
+}
