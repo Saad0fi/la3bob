@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/di/injection.dart';
-import 'package:la3bob/core/comon/helper_function/biometric_helper.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
 import 'package:la3bob/features/videos/presentation/screens/video_player_screen.dart';
@@ -34,17 +33,15 @@ class VideoHomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(50),
                     onLongPress: () async {
-                      final didAuth = await BiometricHelper.authenticate();
-                      if (!didAuth || !context.mounted) return;
-
                       await Navigator.of(context).push<bool>(
-                        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                        MaterialPageRoute(builder: (_) => ProfileScreen()),
                       );
 
                       if (context.mounted) {
                         context.read<VideosBloc>().add(const LoadVideos());
                       }
                     },
+                    onTap: () {},
                     child: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.settings),
@@ -87,8 +84,9 @@ class VideoHomeScreen extends StatelessWidget {
 
                 if (state is VideosLoaded) {
                   if (state.videos.isEmpty) {
-                    final selectedChildId =
-                        getIt<GetStorage>().read<String>('selected_child_id');
+                    final selectedChildId = getIt<GetStorage>().read<String>(
+                      'selected_child_id',
+                    );
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -127,8 +125,10 @@ class VideoHomeScreen extends StatelessWidget {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
                         child: ListTile(
-                          leading:
-                              const Icon(Icons.play_circle_outline, size: 40),
+                          leading: const Icon(
+                            Icons.play_circle_outline,
+                            size: 40,
+                          ),
                           title: Text(
                             video.title,
                             style: const TextStyle(
@@ -136,8 +136,10 @@ class VideoHomeScreen extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          trailing:
-                              const Icon(Icons.arrow_forward_ios, size: 16),
+                          trailing: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                          ),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(

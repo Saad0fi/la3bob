@@ -32,3 +32,11 @@ class ProfilesServerFailure extends ProfilesFailure {
 class InputValidationFailure extends ProfilesFailure {
   const InputValidationFailure({required super.message});
 }
+
+class AuthbiometrecFailures extends ProfilesFailure {
+  const AuthbiometrecFailures({required super.message});
+}
+
+class LocalCacheFailure extends ProfilesFailure {
+  const LocalCacheFailure({required super.message});
+}

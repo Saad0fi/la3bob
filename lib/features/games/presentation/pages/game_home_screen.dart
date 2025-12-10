@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:la3bob/core/comon/helper_function/biometric_helper.dart';
 import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
+import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 
 class GameHomeScreen extends StatelessWidget {
   const GameHomeScreen({super.key});
@@ -16,10 +16,14 @@ class GameHomeScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: InkWell(
               borderRadius: BorderRadius.circular(50),
-              onLongPress: () async {
-                await BiometricHelper.goToProfilePage(context);
+              onLongPress: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                );
               },
+
               onTap: () {},
+
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.settings),

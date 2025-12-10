@@ -17,11 +17,8 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
   final AuthUseCases _authUseCases;
   static const String _selectedChildIdKey = 'selected_child_id';
 
-  VideosBloc(
-    this._videosUsecase,
-    this._profileUsecase,
-    this._authUseCases,
-  ) : super(VideosInitial()) {
+  VideosBloc(this._videosUsecase, this._profileUsecase, this._authUseCases)
+    : super(VideosInitial()) {
     on<LoadVideos>((event, emit) async {
       emit(VideosLoading());
 
@@ -59,7 +56,7 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
     final selectedChildId = GetStorage().read<String>(_selectedChildIdKey);
 
     if (selectedChildId == null) {
-      return videos; 
+      return videos;
     }
 
     // جلب parentId من AuthUseCases
@@ -71,37 +68,33 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
     );
 
     if (parentId == null) {
-      return videos; 
+      return videos;
     }
 
     final childrenResult = await _profileUsecase.getChildern(parentId!);
 
-    return childrenResult.when(
-      (children) {
-        final selectedChild = children.where(
-          (child) => child.id == selectedChildId,
-        ).firstOrNull;
+    return childrenResult.when((children) {
+      final selectedChild = children
+          .where((child) => child.id == selectedChildId)
+          .firstOrNull;
 
-        if (selectedChild == null) {
-          return videos;
-        }
+      if (selectedChild == null) {
+        return videos;
+      }
 
-        if (selectedChild.intersets.isEmpty) {
-          return videos;
-        }
+      if (selectedChild.intersets.isEmpty) {
+        return videos;
+      }
 
-        final filteredVideos = videos.where((video) {
-          return selectedChild.intersets.any(
-            (interest) =>
-                interest.toLowerCase().trim() ==
-                video.category.toLowerCase().trim(),
-          );
-        }).toList();
+      final filteredVideos = videos.where((video) {
+        return selectedChild.intersets.any(
+          (interest) =>
+              interest.toLowerCase().trim() ==
+              video.category.toLowerCase().trim(),
+        );
+      }).toList();
 
-        return filteredVideos;
-      },
-      (error) => videos,
-    );
+      return filteredVideos;
+    }, (error) => videos);
   }
 }
-
