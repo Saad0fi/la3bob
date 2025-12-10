@@ -5,11 +5,9 @@ import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 
 abstract class ProfilesUtilityDataSource {
-  // 1. وظائف التخزين المحلي
   Future<void> setSettingsProtection(String parentId, bool value);
   Future<bool?> getSettingsProtection(String parentId);
 
-  // 2. وظائف المصادقة البيومترية
   Future<bool> authenticateBiometrics();
 }
 

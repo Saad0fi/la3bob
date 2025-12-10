@@ -8,7 +8,7 @@ abstract class ProfilesRepository {
     String parentId,
   );
 
-  Future<Result<void, ProfilesFailure>> addChild(
+  Future<Result<String, ProfilesFailure>> addChild(
     String parentId,
     String name,
     int age,

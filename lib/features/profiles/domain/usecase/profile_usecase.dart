@@ -17,7 +17,7 @@ class ProfileUsecase {
     return _repository.getChildern(parentId);
   }
 
-  Future<Result<void, ProfilesFailure>> addChild(
+  Future<Result<String, ProfilesFailure>> addChild(
     String parentId,
     String name,
     int age,
