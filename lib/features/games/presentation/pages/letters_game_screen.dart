@@ -8,19 +8,19 @@ class LettersGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          GamesBloc()..add(const InitializeLettersGame()),
+      create: (context) => GamesBloc()..add(const InitializeLettersGame()),
       child: BlocListener<GamesBloc, GamesState>(
         listener: (context, state) {
-          if (state is GameLoaded && state.gameType == GameType.letters && state.showResult) {
+          if (state is GameLoaded &&
+              state.gameType == GameType.letters &&
+              state.showResult) {
             Future.delayed(const Duration(seconds: 2), () {
               if (context.mounted) {
-                context.read<GamesBloc>().add(
-                      const MoveToNextQuestion(),
-                    );
+                context.read<GamesBloc>().add(const MoveToNextQuestion());
               }
             });
-          } else if (state is GameCompleted && state.gameType == GameType.letters) {
+          } else if (state is GameCompleted &&
+              state.gameType == GameType.letters) {
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -42,9 +42,7 @@ class LettersGameScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.of(dialogContext).pop();
-                      context.read<GamesBloc>().add(
-                            const RestartGame(),
-                          );
+                      context.read<GamesBloc>().add(const RestartGame());
                     },
                     child: const Text('العب مرة أخرى'),
                   ),
@@ -118,20 +116,29 @@ class LettersGameScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 40),
-                          Text(
-                            question['word'] as String,
-                            style: const TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.purple,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              question['word'] as String,
+                              style: const TextStyle(
+                                fontSize: 48,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.purple,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const Text(
-                            'اختر الحرف الذي تبدأ به الكلمة',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
+                          Flexible(
+                            child: Text(
+                              'اختر الحرف الذي تبدأ به الكلمة',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(height: 40),
@@ -139,15 +146,16 @@ class LettersGameScreen extends StatelessWidget {
                             child: GridView.builder(
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                                childAspectRatio: 1.5,
-                              ),
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 15,
+                                    childAspectRatio: 1.5,
+                                  ),
                               itemCount: (question['options'] as List).length,
                               itemBuilder: (context, index) {
                                 final letter =
-                                    (question['options'] as List)[index] as String;
+                                    (question['options'] as List)[index]
+                                        as String;
                                 Color? backgroundColor;
 
                                 if (letter == question['letter']) {
@@ -184,6 +192,7 @@ class LettersGameScreen extends StatelessWidget {
                               },
                             ),
                           ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -197,9 +206,11 @@ class LettersGameScreen extends StatelessWidget {
             }
 
             final gameState = state;
-            final question = gameState.questions[gameState.currentQuestionIndex];
+            final question =
+                gameState.questions[gameState.currentQuestionIndex];
             final progress =
-                (gameState.currentQuestionIndex + 1) / gameState.questions.length;
+                (gameState.currentQuestionIndex + 1) /
+                gameState.questions.length;
 
             return Scaffold(
               appBar: AppBar(
@@ -249,20 +260,29 @@ class LettersGameScreen extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 40),
-                        Text(
-                          question['word'] as String,
-                          style: const TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.purple,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            question['word'] as String,
+                            style: const TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         const SizedBox(height: 20),
-                        const Text(
-                          'اختر الحرف الذي تبدأ به الكلمة',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
+                        Flexible(
+                          child: Text(
+                            'اختر الحرف الذي تبدأ به الكلمة',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(height: 40),
@@ -270,15 +290,16 @@ class LettersGameScreen extends StatelessWidget {
                           child: GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 15,
-                              childAspectRatio: 1.5,
-                            ),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 15,
+                                  mainAxisSpacing: 15,
+                                  childAspectRatio: 1.5,
+                                ),
                             itemCount: (question['options'] as List).length,
                             itemBuilder: (context, index) {
                               final letter =
-                                  (question['options'] as List)[index] as String;
+                                  (question['options'] as List)[index]
+                                      as String;
                               final isSelected =
                                   gameState.selectedLetter == letter;
                               Color? backgroundColor;
@@ -299,9 +320,9 @@ class LettersGameScreen extends StatelessWidget {
 
                               return GestureDetector(
                                 onTap: () {
-                                  context
-                                      .read<GamesBloc>()
-                                      .add(SelectLetter(letter));
+                                  context.read<GamesBloc>().add(
+                                    SelectLetter(letter),
+                                  );
                                   // bloc.audioController.playSound(
                                   //   'assets/images/test.mp3',
                                   // );
@@ -324,7 +345,8 @@ class LettersGameScreen extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 48,
                                         fontWeight: FontWeight.bold,
-                                        color: gameState.showResult &&
+                                        color:
+                                            gameState.showResult &&
                                                 letter == question['letter']
                                             ? Colors.white
                                             : Colors.purple.shade700,
@@ -336,6 +358,7 @@ class LettersGameScreen extends StatelessWidget {
                             },
                           ),
                         ),
+                        const SizedBox(height: 20),
                         if (gameState.showResult)
                           Container(
                             padding: const EdgeInsets.all(15),
@@ -371,5 +394,4 @@ class LettersGameScreen extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -6,6 +6,7 @@ import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubi
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_state.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
+import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
 import 'package:pinput/pinput.dart';
 
 final GlobalKey<FormState> _otpFormKey = GlobalKey<FormState>();
@@ -50,10 +51,25 @@ class VerificationScreen extends StatelessWidget {
         appBar: AppBar(title: const Text('تأكيد الرمز')),
         body: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
-            // الاستماع لحالات المصادقة
-            if (state is Authenticated) {
+            if (state is AuthenticatedWithChildren) {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const NavigationBarScreen()),
+                MaterialPageRoute(
+                  builder: (_) => const NavigationBarScreen(),
+                ),
+                (route) => false,
+              );
+            } else if (state is AuthenticatedNoChildren) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (_) => const AddChildScreen(),
+                ),
+                (route) => false,
+              );
+            } else if (state is Authenticated) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (_) => const NavigationBarScreen(),
+                ),
                 (route) => false,
               );
             } else if (state is AuthFailureState) {

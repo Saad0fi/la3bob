@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
+import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/widgets/interests_selector.dart';
@@ -28,7 +29,17 @@ class AddChildScreen extends StatelessWidget {
                   backgroundColor: Colors.green,
                 ),
               );
-              Navigator.of(context).pop(true);
+           
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop(true);
+              } else {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (_) => const NavigationBarScreen(),
+                  ),
+                  (route) => false,
+                );
+              }
             } else if (state is PorfileError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
