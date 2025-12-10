@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:la3bob/core/comon/helper_function/audio_helper.dart';
 
 part 'games_event.dart';
 part 'games_state.dart';
@@ -103,6 +104,8 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     },
   ];
 
+  int _lastPlayedQuestionIndex = -1;
+
   GamesBloc() : super(GamesInitial()) {
     on<InitializeLettersGame>(_onInitializeLettersGame);
     on<InitializeNumbersGame>(_onInitializeNumbersGame);
@@ -121,7 +124,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         .toList();
     _shuffleLettersOptions(shuffledQuestions);
 
-    emit(GameLoaded(
+    final newState = GameLoaded(
       gameType: GameType.letters,
       questions: shuffledQuestions,
       currentQuestionIndex: 0,
@@ -130,7 +133,11 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       selectedNumber: null,
       showResult: false,
       isCorrect: false,
-    ));
+    );
+    
+    emit(newState);
+    _lastPlayedQuestionIndex = -1; 
+    _playQuestionAudio(newState);
   }
 
   void _onInitializeNumbersGame(
@@ -217,7 +224,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     final currentState = state as GameLoaded;
 
     if (currentState.currentQuestionIndex < currentState.questions.length - 1) {
-      emit(GameLoaded(
+      final newState = GameLoaded(
         gameType: currentState.gameType,
         questions: currentState.questions,
         currentQuestionIndex: currentState.currentQuestionIndex + 1,
@@ -226,7 +233,14 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         selectedNumber: null,
         showResult: false,
         isCorrect: false,
-      ));
+      );
+      
+      emit(newState);
+      
+     
+      if (newState.gameType == GameType.letters) {
+        _playQuestionAudio(newState);
+      }
     } else {
       final lastQuestionIndex = currentState.currentQuestionIndex;
       emit(GameCompleted(
@@ -259,7 +273,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       _shuffleNumbersOptions(shuffledQuestions);
     }
 
-    emit(GameLoaded(
+    final newState = GameLoaded(
       gameType: completedState.gameType,
       questions: shuffledQuestions,
       currentQuestionIndex: 0,
@@ -268,7 +282,27 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       selectedNumber: null,
       showResult: false,
       isCorrect: false,
-    ));
+    );
+    
+    emit(newState);
+    _lastPlayedQuestionIndex = -1; 
+    
+    if (newState.gameType == GameType.letters) {
+      _playQuestionAudio(newState);
+    }
+  }
+
+  void _playQuestionAudio(GameLoaded state) {
+    if (state.gameType != GameType.letters || 
+        state.showResult || 
+        _lastPlayedQuestionIndex == state.currentQuestionIndex) {
+      return;
+    }
+
+    _lastPlayedQuestionIndex = state.currentQuestionIndex;
+    final question = state.questions[state.currentQuestionIndex];
+    final word = question['word'] as String;
+    AudioHelper.playQuestionSequence(word);
   }
 
   void _shuffleLettersOptions(List<Map<String, dynamic>> questions) {

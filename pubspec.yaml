@@ -32,6 +32,7 @@ dependencies:
   local_auth: ^3.0.0
   fluttertoast: ^9.0.0
   local_auth_android: ^2.0.4
+  audioplayers: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -46,3 +47,4 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/audio/
