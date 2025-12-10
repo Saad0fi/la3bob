@@ -37,13 +37,11 @@ class Authenticated extends AuthState {
 }
 
 class AuthenticatedWithChildren extends Authenticated {
-  const AuthenticatedWithChildren({required AuthUserEntity user})
-      : super(user: user);
+  const AuthenticatedWithChildren({required super.user});
 }
 
 class AuthenticatedNoChildren extends Authenticated {
-  const AuthenticatedNoChildren({required AuthUserEntity user})
-      : super(user: user);
+  const AuthenticatedNoChildren({required super.user});
 }
 
 // حالة الفشل
