@@ -212,7 +212,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     );
     bool isProtected = false;
     protectionResult.when((isSet) => isProtected = isSet, (failure) {
-      print('Failed to get protection settings: ${failure.message}');
+      print(failure.message);
     });
 
     //   المصادقة شرط إظهار محتوى الإعدادات
@@ -220,8 +220,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     if (isProtected) {
       // هنا تكون المصادقة مفعلة: نستدعي المصادقة البيومترية
       final authResult = await _profileUsecase.authenticateBiometrics();
-      await authResult.when((didAuth) => accessGranted = didAuth, (failure) {
-        print('Biometrics authentication failed: ${failure.message}');
+      authResult.when((didAuth) => accessGranted = didAuth, (failure) {
+        emit(PorfileError(AuthbiometrecFailures(message: failure.message)));
         // لا نمنح الوصول ونصدر رسالة خطأ
       });
     } else {
@@ -357,6 +357,23 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       final parentId = currentState.currentParentId;
       if (parentId == null) return;
 
+      //  إذا كان المستخدم يبغى السويتش من OFF إلى ON
+      if (event.isProtected) {
+        // هنا نتحقق اول مايظغط على السويتش  توفر المصادقة البيومترية
+        final checkResult = await _profileUsecase.authenticateBiometrics();
+        bool isAvailable = false;
+        checkResult.when((available) => isAvailable = available, (failure) {
+          emit(PorfileError(failure));
+        });
+
+        //  إذا لم تكن المصادقة متوفرة: منع التفعيل
+        if (!isAvailable) {
+          //     قراءة القيمة القديمة false وإرجاع الـ Switch إلى حالة OFF
+          add(const LoadChildren());
+          return; // إيقاف عملية الحفظ
+        }
+      }
+      // نتابع عملية الحفظ
       emit(currentState.copyWith(accessStatus: AccessStatus.loading));
 
       final result = await _profileUsecase.saveSettingsProtection(
@@ -366,6 +383,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
 
       result.when(
         (success) {
+          // إذا نجح الحفظ
           emit(
             currentState.copyWith(
               isSettingsProtected: event.isProtected,
@@ -374,12 +392,14 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
           );
         },
         (failure) {
+          // إذا فشل الحفظ
           emit(
             currentState.copyWith(
-              accessStatus: AccessStatus.denied,
-              accessErrorMessage: failure.message,
+              accessStatus: AccessStatus.granted,
+              accessErrorMessage: null,
             ),
           );
+          emit(PorfileError(failure));
         },
       );
     }
