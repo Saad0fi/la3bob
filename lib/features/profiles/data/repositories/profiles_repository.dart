@@ -30,15 +30,15 @@ class ProfilesRepositoryData implements ProfilesRepository {
   }
 
   @override
-  Future<Result<void, ProfilesFailure>> addChild(
+  Future<Result<String, ProfilesFailure>> addChild(
     String parentId,
     String name,
     int age,
     List<String> intersets,
   ) async {
     try {
-      await _datasource.addChild(parentId, name, age, intersets);
-      return const Success(null);
+      final childId = await _datasource.addChild(parentId, name, age, intersets);
+      return Success(childId);
     } catch (e) {
       return Error(
         DatabaseFailure(message: "فشل إضافة الطفل: ${e.toString()}"),

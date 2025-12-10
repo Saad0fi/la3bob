@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class ProfilesDatasource {
   Future<List<ChildModel>> getChildern(String parentId);
 
-  Future<void> addChild(
+  Future<String> addChild(
     String parentId,
     String name,
     int age,
@@ -39,18 +39,19 @@ class ApiProfileDatasource implements ProfilesDatasource {
   }
 
   @override
-  Future<void> addChild(
+  Future<String> addChild(
     String parentId,
     String name,
     int age,
     List<String> intersets,
   ) async {
-    await _supabaseClient.from('children').insert({
+    final response = await _supabaseClient.from('children').insert({
       'parent_id': parentId,
       'name': name,
       'age': age,
       'intersets': intersets,
-    });
+    }).select('id').single();
+    return response['id'] as String;
   }
 
   @override

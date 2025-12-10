@@ -127,7 +127,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     );
 
     result.when(
-      (_) {
+      (childId) {
+        GetStorage().write('selected_child_id', childId);
         emit(PorfileSuccess('تم إضافة الطفل بنجاح'));
         add(const LoadChildren());
       },
