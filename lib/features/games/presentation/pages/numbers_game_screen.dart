@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:la3bob/features/games/presentation/bloc/numbers_game_bloc.dart';
+import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
 
 class NumbersGameScreen extends StatelessWidget {
   const NumbersGameScreen({super.key});
@@ -28,18 +28,18 @@ class NumbersGameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          NumbersGameBloc()..add(const InitializeNumbersGame()),
-      child: BlocListener<NumbersGameBloc, NumbersGameState>(
+          GamesBloc()..add(const InitializeNumbersGame()),
+      child: BlocListener<GamesBloc, GamesState>(
         listener: (context, state) {
-          if (state is NumbersGameLoaded && state.showResult) {
+          if (state is GameLoaded && state.gameType == GameType.numbers && state.showResult) {
             Future.delayed(const Duration(seconds: 2), () {
               if (context.mounted) {
-                context.read<NumbersGameBloc>().add(
-                      const MoveToNextNumbersQuestion(),
+                context.read<GamesBloc>().add(
+                      const MoveToNextQuestion(),
                     );
               }
             });
-          } else if (state is NumbersGameCompleted) {
+          } else if (state is GameCompleted && state.gameType == GameType.numbers) {
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -61,8 +61,8 @@ class NumbersGameScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.of(dialogContext).pop();
-                      context.read<NumbersGameBloc>().add(
-                            const RestartNumbersGame(),
+                      context.read<GamesBloc>().add(
+                            const RestartGame(),
                           );
                     },
                     child: const Text('العب مرة أخرى'),
@@ -72,9 +72,9 @@ class NumbersGameScreen extends StatelessWidget {
             );
           }
         },
-        child: BlocBuilder<NumbersGameBloc, NumbersGameState>(
+        child: BlocBuilder<GamesBloc, GamesState>(
           builder: (context, state) {
-            if (state is NumbersGameInitial) {
+            if (state is GamesInitial) {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الأرقام'),
@@ -84,7 +84,7 @@ class NumbersGameScreen extends StatelessWidget {
               );
             }
 
-            if (state is NumbersGameCompleted) {
+            if (state is GameCompleted && state.gameType == GameType.numbers) {
               final completedState = state;
               final question = completedState.lastQuestion;
               final count = question['count'] as int;
@@ -254,7 +254,7 @@ class NumbersGameScreen extends StatelessWidget {
               );
             }
 
-            if (state is! NumbersGameLoaded) {
+            if (state is! GameLoaded || state.gameType != GameType.numbers) {
               return const SizedBox.shrink();
             }
 
@@ -391,7 +391,7 @@ class NumbersGameScreen extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () {
                                   context
-                                      .read<NumbersGameBloc>()
+                                      .read<GamesBloc>()
                                       .add(SelectNumber(number));
                                 },
                                 child: Container(

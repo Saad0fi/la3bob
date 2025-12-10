@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:la3bob/features/games/presentation/bloc/letters_game_bloc.dart';
+import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
 
 class LettersGameScreen extends StatelessWidget {
   const LettersGameScreen({super.key});
@@ -8,18 +8,19 @@ class LettersGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LettersGameBloc()..add(const InitializeGame()),
-      child: BlocListener<LettersGameBloc, LettersGameState>(
+      create: (context) =>
+          GamesBloc()..add(const InitializeLettersGame()),
+      child: BlocListener<GamesBloc, GamesState>(
         listener: (context, state) {
-          if (state is LettersGameLoaded && state.showResult) {
+          if (state is GameLoaded && state.gameType == GameType.letters && state.showResult) {
             Future.delayed(const Duration(seconds: 2), () {
               if (context.mounted) {
-                context.read<LettersGameBloc>().add(
+                context.read<GamesBloc>().add(
                       const MoveToNextQuestion(),
                     );
               }
             });
-          } else if (state is LettersGameCompleted) {
+          } else if (state is GameCompleted && state.gameType == GameType.letters) {
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -41,7 +42,7 @@ class LettersGameScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.of(dialogContext).pop();
-                      context.read<LettersGameBloc>().add(
+                      context.read<GamesBloc>().add(
                             const RestartGame(),
                           );
                     },
@@ -52,9 +53,9 @@ class LettersGameScreen extends StatelessWidget {
             );
           }
         },
-        child: BlocBuilder<LettersGameBloc, LettersGameState>(
+        child: BlocBuilder<GamesBloc, GamesState>(
           builder: (context, state) {
-            if (state is LettersGameInitial) {
+            if (state is GamesInitial) {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الحروف'),
@@ -64,7 +65,7 @@ class LettersGameScreen extends StatelessWidget {
               );
             }
 
-            if (state is LettersGameCompleted) {
+            if (state is GameCompleted && state.gameType == GameType.letters) {
               final completedState = state;
               final question = completedState.lastQuestion;
               final progress = 1.0;
@@ -191,7 +192,7 @@ class LettersGameScreen extends StatelessWidget {
               );
             }
 
-            if (state is! LettersGameLoaded) {
+            if (state is! GameLoaded || state.gameType != GameType.letters) {
               return const SizedBox.shrink();
             }
 
@@ -299,7 +300,7 @@ class LettersGameScreen extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () {
                                   context
-                                      .read<LettersGameBloc>()
+                                      .read<GamesBloc>()
                                       .add(SelectLetter(letter));
                                   // bloc.audioController.playSound(
                                   //   'assets/images/test.mp3',
