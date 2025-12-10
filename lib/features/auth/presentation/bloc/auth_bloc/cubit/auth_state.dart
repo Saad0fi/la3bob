@@ -36,6 +36,16 @@ class Authenticated extends AuthState {
   List<Object?> get props => [user];
 }
 
+class AuthenticatedWithChildren extends Authenticated {
+  const AuthenticatedWithChildren({required AuthUserEntity user})
+      : super(user: user);
+}
+
+class AuthenticatedNoChildren extends Authenticated {
+  const AuthenticatedNoChildren({required AuthUserEntity user})
+      : super(user: user);
+}
+
 // حالة الفشل
 class AuthFailureState extends AuthState {
   final AuthFailure failure;

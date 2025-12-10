@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/core/erors/failures/auth_failures.dart';
 import 'package:la3bob/features/auth/domain/entities/auth_user_entity.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
+import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 
 part 'auth_state.dart';
 
@@ -61,7 +63,21 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await _authUseCases.verifyOtp(email: email, token: token);
 
     result.when(
-      (user) => emit(Authenticated(user: user)),
+      (user) async {
+        final profileUsecase = getIt<ProfileUsecase>();
+        final childrenResult = await profileUsecase.getChildern(user.id);
+
+        childrenResult.when(
+          (children) {
+            if (children.isEmpty) {
+              emit(AuthenticatedNoChildren(user: user));
+            } else {
+              emit(AuthenticatedWithChildren(user: user));
+            }
+          },
+          (_) => emit(Authenticated(user: user)),
+        );
+      },
       (failure) => emit(AuthFailureState(failure: failure)),
     );
   }
