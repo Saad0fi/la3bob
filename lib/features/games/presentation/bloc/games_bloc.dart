@@ -320,4 +320,10 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       question['options'] = options;
     }
   }
+
+  @override
+  Future<void> close() {
+    AudioHelper.stopAudio();
+    return super.close();
+  }
 }

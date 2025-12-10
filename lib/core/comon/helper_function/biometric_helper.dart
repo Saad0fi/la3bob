@@ -31,7 +31,6 @@ class BiometricHelper {
       );
       return didAuthenticate;
     } on LocalAuthException catch (e) {
-      print(e);
       //  حالات الإلغاء
       if (e.code == LocalAuthExceptionCode.userCanceled ||
           e.code == LocalAuthExceptionCode.systemCanceled ||
