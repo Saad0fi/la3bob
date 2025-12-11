@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
@@ -23,13 +24,8 @@ class AddChildScreen extends StatelessWidget {
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
             if (state is PorfileSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-           
+              showAppToast(message: state.message, type: ToastType.success);
+
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop(true);
               } else {
@@ -41,11 +37,9 @@ class AddChildScreen extends StatelessWidget {
                 );
               }
             } else if (state is PorfileError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.failure.message),
-                  backgroundColor: Colors.red,
-                ),
+              showAppToast(
+                message: state.failure.message,
+                type: ToastType.failure,
               );
             }
           },
@@ -124,13 +118,10 @@ class AddChildScreen extends StatelessWidget {
                             : () {
                                 if (formKey.currentState!.validate()) {
                                   if (selectedInterests.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
+                                    showAppToast(
+                                      message:
                                           'الرجاء اختيار اهتمام واحد على الأقل',
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ),
+                                      type: ToastType.failure,
                                     );
                                     return;
                                   }

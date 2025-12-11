@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:la3bob/core/comon/helper_function/error_snackbar.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_state.dart';
@@ -53,32 +53,30 @@ class VerificationScreen extends StatelessWidget {
           listener: (context, state) {
             if (state is AuthenticatedWithChildren) {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (_) => const NavigationBarScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const NavigationBarScreen()),
                 (route) => false,
               );
             } else if (state is AuthenticatedNoChildren) {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (_) => const AddChildScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const AddChildScreen()),
                 (route) => false,
               );
             } else if (state is Authenticated) {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (_) => const NavigationBarScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const NavigationBarScreen()),
                 (route) => false,
               );
             } else if (state is AuthFailureState) {
-              showErrorSnackbar(context, state.failure.message);
+              showAppToast(
+                message: state.failure.message,
+                type: ToastType.failure,
+              );
               //  مسح الرمز عند الخطأ باستخدام الفورم كي
               _otpFormKey.currentState?.reset();
             } else if (state is OtpSent) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('تم إعادة إرسال الرمز بنجاح')),
+              showAppToast(
+                message: "تم إعادة ارسال الرمز بنجاح",
+                type: ToastType.success,
               );
               // إعادة تشغيل المؤقت عند وصول تأكيد الإرسال
               context.read<TimerCubit>().startTimer();
@@ -112,7 +110,7 @@ class VerificationScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
 
-                    // 1. حقل Pinput (يستمع لحالة التحميل من AuthCubit)
+                    //  فيلد ال Pinput (يستمع لحالة التحميل من AuthCubit)
                     BlocBuilder<AuthCubit, AuthState>(
                       builder: (context, state) {
                         final isLoading = state is AuthLoading;
@@ -137,7 +135,7 @@ class VerificationScreen extends StatelessWidget {
 
                     const SizedBox(height: 40),
 
-                    // 2. زر إعادة الإرسال والمؤقت (يستمع لـ TimerCubit)
+                    //  زر إعادة الإرسال والمؤقت (يستمع لـ TimerCubit)
                     BlocBuilder<TimerCubit, TimerState>(
                       builder: (context, timerState) {
                         // التحقق من حالة انتهاء العداد

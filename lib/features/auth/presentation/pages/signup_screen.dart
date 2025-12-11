@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:la3bob/core/comon/helper_function/error_snackbar.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/comon/widgets/custom_Input_Decoration.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
 import 'login_screen.dart';
@@ -33,7 +33,10 @@ class SignupScreen extends StatelessWidget {
                 ),
               );
             } else if (state is AuthFailureState) {
-              showErrorSnackbar(context, state.failure.message);
+              showAppToast(
+                message: state.failure.message,
+                type: ToastType.failure,
+              );
             }
           },
           child: Padding(

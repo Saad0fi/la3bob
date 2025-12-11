@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
@@ -53,10 +54,7 @@ class ProfileScreen extends StatelessWidget {
               listener: (context, state) {
                 // هنا  معالجة النجاح العام (Logout, Save Settings, Toggle Lock Mode)
                 if (state is PorfileSuccess) {
-                  Fluttertoast.showToast(
-                    msg: state.message,
-                    backgroundColor: Colors.green,
-                  );
+                  showAppToast(message: state.message, type: ToastType.success);
                   if (state.message == 'تم تسجيل الخروج بنجاح') {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -67,9 +65,9 @@ class ProfileScreen extends StatelessWidget {
 
                 //  معالجةال Erors
                 if (state is PorfileError) {
-                  Fluttertoast.showToast(
-                    msg: state.failure.message,
-                    backgroundColor: Colors.red,
+                  showAppToast(
+                    message: state.failure.message,
+                    type: ToastType.failure,
                   );
                 }
                 if (state is PorfileChildrenLoaded) {
@@ -79,9 +77,10 @@ class ProfileScreen extends StatelessWidget {
                 }
                 //  معالجة اختيار الطفل
                 if (state is PorfileChildSelected) {
-                  Fluttertoast.showToast(
-                    msg: 'تم اختيار الطفل ${state.selectedChild.name} بنجاح!',
-                    backgroundColor: Colors.green,
+                  showAppToast(
+                    message:
+                        'تم اختيار الطفل ${state.selectedChild.name} بنجاح!',
+                    type: ToastType.success,
                   );
                   Navigator.of(context).pop(true);
                 }
@@ -137,10 +136,10 @@ class ProfileScreen extends StatelessWidget {
                               title: "تعديل البيانات",
                               subtitle: "اضغط لتغيير بياناتك",
                               onTap: () {
-                                Fluttertoast.showToast(
-                                  msg:
+                                showAppToast(
+                                  message:
                                       'جارٍ الانتقال لتعديل بيانات ولي الأمر...',
-                                  backgroundColor: Colors.blue,
+                                  type: ToastType.info,
                                 );
                               },
                             ),
