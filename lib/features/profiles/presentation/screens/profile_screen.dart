@@ -6,7 +6,7 @@ import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/update_child_screen.dart';
-import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
+import 'package:babstrap_settings_screen_updated/babstrap_settings_screen_updated.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProfileScreen extends StatelessWidget {

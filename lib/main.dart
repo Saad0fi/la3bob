@@ -3,6 +3,7 @@ import 'package:la3bob/core/config/setup.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:la3bob/features/auth/presentation/pages/signup_screen.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
+import 'package:la3bob/features/games/presentation/pages/wave_page.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 
 Future<void> main() async {
@@ -28,7 +29,7 @@ class MainApp extends StatelessWidget {
       ],
 
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: WaveGamePage(),
     );
   }
 }
