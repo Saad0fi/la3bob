@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/colors_game_screen.dart';
-import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class GameHomeScreen extends StatelessWidget {
   const GameHomeScreen({super.key});
@@ -18,9 +15,7 @@ class GameHomeScreen extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(50),
               onLongPress: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                );
+                context.push('/profile');
               },
 
               onTap: () {},
@@ -50,11 +45,7 @@ class GameHomeScreen extends StatelessWidget {
               const SizedBox(height: 50),
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const LettersGameScreen(),
-                    ),
-                  );
+                  context.push('/tabs/games/letters');
                 },
                 child: Container(
                   padding: const EdgeInsets.all(25),
@@ -103,11 +94,7 @@ class GameHomeScreen extends StatelessWidget {
 
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const NumbersGameScreen(),
-                    ),
-                  );
+                  context.push('/tabs/games/numbers');
                 },
                 child: Container(
                   padding: const EdgeInsets.all(25),
@@ -156,11 +143,7 @@ class GameHomeScreen extends StatelessWidget {
 
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const ColorsGameScreen(),
-                    ),
-                  );
+                  context.push('/tabs/games/colors');
                 },
                 child: Container(
                   padding: const EdgeInsets.all(25),

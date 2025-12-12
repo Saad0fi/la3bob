@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
-import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -19,16 +19,10 @@ class SplashScreen extends StatelessWidget {
           //  معالجة حالات الـ State والتنقل
           if (state is Authenticated) {
             // المستخدم مسجل انتقل إلى الشاشة الرئيسية
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => const NavigationBarScreen()),
-              (route) => false,
-            );
+            context.go('/tabs/videos');
           } else if (state is Unauthenticated) {
             // المستخدم غير مسجل انتقل إلى شاشة تسجيل الدخول
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-              (route) => false,
-            );
+            context.go('/login');
           }
         },
         //  عرض CircularProgressIndicator بينما يتم التحقق

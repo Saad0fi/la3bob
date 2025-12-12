@@ -26,11 +26,6 @@ class ProfilesUtilityDataSourceImpl implements ProfilesUtilityDataSource {
   Future<void> setSettingsProtection(String parentId, bool value) async {
     final key = _getScopedKey(parentId);
     await _storage.write(key, value);
-
-    final savedValue = _storage.read(key);
-    print(' Local Storage Debug: Settings protection saved!');
-    print('   - Key: $key');
-    print('   - Value: $savedValue (Type: ${savedValue.runtimeType})');
   }
 
   @override
@@ -58,7 +53,6 @@ class ProfilesUtilityDataSourceImpl implements ProfilesUtilityDataSource {
       return didAuthenticate;
     } on LocalAuthException catch (e) {
       String errorMessage = "";
-      print(e);
 
       //  حالات الإلغاء
       if (e.code == LocalAuthExceptionCode.userCanceled ||
@@ -80,7 +74,6 @@ class ProfilesUtilityDataSourceImpl implements ProfilesUtilityDataSource {
 
       // أي خطأ غير معروف أو خطأ في الجهاز
     } catch (e) {
-      print(e);
       throw AuthbiometrecFailures(
         message: "حدث خطأ  غير متوقع: ${e.toString()}",
       );

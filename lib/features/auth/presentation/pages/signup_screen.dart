@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/comon/helper_function/error_snackbar.dart';
 import 'package:la3bob/core/comon/widgets/custom_Input_Decoration.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
-import 'login_screen.dart';
-import 'verification_screen.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -27,11 +26,7 @@ class SignupScreen extends StatelessWidget {
           listener: (context, state) {
             if (state is OtpSent) {
               // تمرير الإيميل لشاشة التحقق
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (_) => VerificationScreen(email: _email),
-                ),
-              );
+              context.go('/verify', extra: _email);
             } else if (state is AuthFailureState) {
               showErrorSnackbar(context, state.failure.message);
             }
@@ -131,11 +126,7 @@ class SignupScreen extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           // الانتقال إلى شاشة تسجيل الدخول
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
-                            ),
-                          );
+                          context.go('/login');
                         },
                         child: const Text(
                           'لديك حساب بالفعل؟ تسجيل الدخول',
