@@ -5,7 +5,7 @@ import 'package:la3bob/core/comon/helper_function/audio_helper.dart';
 part 'games_event.dart';
 part 'games_state.dart';
 
-enum GameType { letters, numbers }
+enum GameType { letters, numbers, colors }
 
 class GamesBloc extends Bloc<GamesEvent, GamesState> {
   static const List<Map<String, dynamic>> _lettersQuestions = [
@@ -104,13 +104,68 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     },
   ];
 
+  static const List<Map<String, dynamic>> _colorsQuestions = [
+    {
+      'colorName': 'أحمر',
+      'colorValue': 0xFFE53935,
+      'options': ['أحمر', 'أزرق', 'أخضر', 'أصفر'],
+    },
+    {
+      'colorName': 'أزرق',
+      'colorValue': 0xFF2196F3,
+      'options': ['أزرق', 'أحمر', 'أخضر', 'برتقالي'],
+    },
+    {
+      'colorName': 'أخضر',
+      'colorValue': 0xFF4CAF50,
+      'options': ['أخضر', 'أحمر', 'أزرق', 'بنفسجي'],
+    },
+    {
+      'colorName': 'أصفر',
+      'colorValue': 0xFFFFEB3B,
+      'options': ['أصفر', 'أحمر', 'أزرق', 'أخضر'],
+    },
+    {
+      'colorName': 'برتقالي',
+      'colorValue': 0xFFFF9800,
+      'options': ['برتقالي', 'أحمر', 'أصفر', 'أزرق'],
+    },
+    {
+      'colorName': 'بنفسجي',
+      'colorValue': 0xFF9C27B0,
+      'options': ['بنفسجي', 'أزرق', 'أحمر', 'أخضر'],
+    },
+    {
+      'colorName': 'وردي',
+      'colorValue': 0xFFE91E63,
+      'options': ['وردي', 'أحمر', 'بنفسجي', 'أزرق'],
+    },
+    {
+      'colorName': 'بني',
+      'colorValue': 0xFF795548,
+      'options': ['بني', 'أسود', 'أحمر', 'أخضر'],
+    },
+    {
+      'colorName': 'أسود',
+      'colorValue': 0xFF212121,
+      'options': ['أسود', 'أبيض', 'بني', 'أزرق'],
+    },
+    {
+      'colorName': 'أبيض',
+      'colorValue': 0xFFFFFFFF,
+      'options': ['أبيض', 'أسود', 'أصفر', 'أزرق'],
+    },
+  ];
+
   int _lastPlayedQuestionIndex = -1;
 
   GamesBloc() : super(GamesInitial()) {
     on<InitializeLettersGame>(_onInitializeLettersGame);
     on<InitializeNumbersGame>(_onInitializeNumbersGame);
+    on<InitializeColorsGame>(_onInitializeColorsGame);
     on<SelectLetter>(_onSelectLetter);
     on<SelectNumber>(_onSelectNumber);
+    on<SelectColor>(_onSelectColor);
     on<MoveToNextQuestion>(_onMoveToNextQuestion);
     on<RestartGame>(_onRestartGame);
   }
@@ -131,6 +186,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       score: 0,
       selectedLetter: null,
       selectedNumber: null,
+      selectedColor: null,
       showResult: false,
       isCorrect: false,
     );
@@ -156,6 +212,29 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       score: 0,
       selectedLetter: null,
       selectedNumber: null,
+      selectedColor: null,
+      showResult: false,
+      isCorrect: false,
+    ));
+  }
+
+  void _onInitializeColorsGame(
+    InitializeColorsGame event,
+    Emitter<GamesState> emit,
+  ) {
+    final shuffledQuestions = _colorsQuestions
+        .map((q) => Map<String, dynamic>.from(q))
+        .toList();
+    _shuffleColorsOptions(shuffledQuestions);
+
+    emit(GameLoaded(
+      gameType: GameType.colors,
+      questions: shuffledQuestions,
+      currentQuestionIndex: 0,
+      score: 0,
+      selectedLetter: null,
+      selectedNumber: null,
+      selectedColor: null,
       showResult: false,
       isCorrect: false,
     ));
@@ -183,6 +262,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       score: newScore,
       selectedLetter: event.letter,
       selectedNumber: null,
+      selectedColor: null,
       showResult: true,
       isCorrect: isCorrect,
     ));
@@ -210,6 +290,35 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       score: newScore,
       selectedLetter: null,
       selectedNumber: event.number,
+      selectedColor: null,
+      showResult: true,
+      isCorrect: isCorrect,
+    ));
+  }
+
+  void _onSelectColor(
+    SelectColor event,
+    Emitter<GamesState> emit,
+  ) {
+    if (state is! GameLoaded) return;
+
+    final currentState = state as GameLoaded;
+    if (currentState.gameType != GameType.colors || currentState.showResult) {
+      return;
+    }
+
+    final question = currentState.questions[currentState.currentQuestionIndex];
+    final isCorrect = event.color == question['colorName'];
+    final newScore = isCorrect ? currentState.score + 1 : currentState.score;
+
+    emit(GameLoaded(
+      gameType: GameType.colors,
+      questions: currentState.questions,
+      currentQuestionIndex: currentState.currentQuestionIndex,
+      score: newScore,
+      selectedLetter: null,
+      selectedNumber: null,
+      selectedColor: event.color,
       showResult: true,
       isCorrect: isCorrect,
     ));
@@ -231,6 +340,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         score: currentState.score,
         selectedLetter: null,
         selectedNumber: null,
+        selectedColor: null,
         showResult: false,
         isCorrect: false,
       );
@@ -262,15 +372,19 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     final completedState = state as GameCompleted;
     final questions = completedState.gameType == GameType.letters
         ? _lettersQuestions
-        : _numbersQuestions;
+        : completedState.gameType == GameType.numbers
+            ? _numbersQuestions
+            : _colorsQuestions;
 
     final shuffledQuestions =
         questions.map((q) => Map<String, dynamic>.from(q)).toList();
 
     if (completedState.gameType == GameType.letters) {
       _shuffleLettersOptions(shuffledQuestions);
-    } else {
+    } else if (completedState.gameType == GameType.numbers) {
       _shuffleNumbersOptions(shuffledQuestions);
+    } else {
+      _shuffleColorsOptions(shuffledQuestions);
     }
 
     final newState = GameLoaded(
@@ -316,6 +430,14 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
   void _shuffleNumbersOptions(List<Map<String, dynamic>> questions) {
     for (var question in questions) {
       final options = List<int>.from(question['options'] as List);
+      options.shuffle(Random());
+      question['options'] = options;
+    }
+  }
+
+  void _shuffleColorsOptions(List<Map<String, dynamic>> questions) {
+    for (var question in questions) {
+      final options = List<String>.from(question['options'] as List);
       options.shuffle(Random());
       question['options'] = options;
     }

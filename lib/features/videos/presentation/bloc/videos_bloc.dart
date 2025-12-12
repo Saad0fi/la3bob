@@ -16,6 +16,24 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
   final ProfileUsecase _profileUsecase;
   final AuthUseCases _authUseCases;
   static const String _selectedChildIdKey = 'selected_child_id';
+  static const List<String> _emptyInterests = [];
+
+  /// Extracts YouTube video ID from URL
+  static String extractVideoId(String url) {
+    final regex = RegExp(
+      r'(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})',
+    );
+    final match = regex.firstMatch(url);
+    return match?.group(1) ?? '';
+  }
+
+  /// Gets YouTube thumbnail URL
+
+  static String getThumbnailUrl(String link) {
+    final videoId = extractVideoId(link);
+    if (videoId.isEmpty) return '';
+    return 'https://img.youtube.com/vi/$videoId/0.jpg';
+  }
 
   VideosBloc(this._videosUsecase, this._profileUsecase, this._authUseCases)
     : super(VideosInitial()) {
@@ -26,8 +44,12 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
 
       if (result.isSuccess()) {
         final videos = result.getOrNull() ?? [];
-        final filteredVideos = await _filterVideosBySelectedChild(videos);
-        emit(VideosLoaded(filteredVideos));
+        final filtered = await _filterVideosBySelectedChild(videos);
+        final currentState = state;
+        final currentInterest = currentState is VideosLoaded 
+            ? currentState.selectedInterest 
+            : null;
+        emit(VideosLoaded(filtered.videos, filtered.interests, currentInterest));
       } else {
         final error = result.exceptionOrNull();
         emit(VideosError(error?.toString() ?? 'خطأ غير معروف'));
@@ -41,22 +63,33 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
 
       if (result.isSuccess()) {
         final videos = result.getOrNull() ?? [];
-        final filteredVideos = await _filterVideosBySelectedChild(videos);
-        emit(VideosLoaded(filteredVideos));
+        final filtered = await _filterVideosBySelectedChild(videos);
+        final currentState = state;
+        final currentInterest = currentState is VideosLoaded 
+            ? currentState.selectedInterest 
+            : null;
+        emit(VideosLoaded(filtered.videos, filtered.interests, currentInterest));
       } else {
         final error = result.exceptionOrNull();
         emit(VideosError(error?.toString() ?? 'خطأ غير معروف'));
       }
     });
+
+    on<SelectInterest>((event, emit) {
+      final currentState = state;
+      if (currentState is VideosLoaded) {
+        emit(VideosLoaded(currentState.videos, currentState.interests, event.interest));
+      }
+    });
   }
 
-  Future<List<VideoEntity>> _filterVideosBySelectedChild(
+  Future<_FilteredVideos> _filterVideosBySelectedChild(
     List<VideoEntity> videos,
   ) async {
     final selectedChildId = GetStorage().read<String>(_selectedChildIdKey);
 
     if (selectedChildId == null) {
-      return videos;
+      return _FilteredVideos(videos, _emptyInterests);
     }
 
     // جلب parentId من AuthUseCases
@@ -68,7 +101,7 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
     );
 
     if (parentId == null) {
-      return videos;
+      return _FilteredVideos(videos, _emptyInterests);
     }
 
     final childrenResult = await _profileUsecase.getChildern(parentId!);
@@ -79,22 +112,34 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
           .firstOrNull;
 
       if (selectedChild == null) {
-        return videos;
+        return _FilteredVideos(videos, _emptyInterests);
       }
 
       if (selectedChild.intersets.isEmpty) {
-        return videos;
+        return _FilteredVideos(videos, _emptyInterests);
       }
 
+      final normalizedInterests = selectedChild.intersets
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toSet()
+          .toList();
+
       final filteredVideos = videos.where((video) {
-        return selectedChild.intersets.any(
+        return normalizedInterests.any(
           (interest) =>
-              interest.toLowerCase().trim() ==
-              video.category.toLowerCase().trim(),
+              interest.toLowerCase() == video.category.toLowerCase().trim(),
         );
       }).toList();
 
-      return filteredVideos;
-    }, (error) => videos);
+      return _FilteredVideos(filteredVideos, normalizedInterests);
+    }, (error) => _FilteredVideos(videos, _emptyInterests));
   }
+}
+
+class _FilteredVideos {
+  final List<VideoEntity> videos;
+  final List<String> interests;
+
+  const _FilteredVideos(this.videos, this.interests);
 }

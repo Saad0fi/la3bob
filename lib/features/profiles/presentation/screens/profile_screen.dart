@@ -36,24 +36,12 @@ class ProfileScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add, color: Colors.blue),
                   onPressed: () async {
-                    // التحقق من حالة الوصول قبل السماح بإضافة طفل جديد
-                    final currentState = bloc.state;
-                    if (currentState is PorfileChildrenLoaded &&
-                        currentState.accessStatus == AccessStatus.granted) {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const AddChildScreen(),
-                        ),
-                      );
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const AddChildScreen()),
+                    );
 
-                      if (result == true) {
-                        bloc.add(const LoadChildren());
-                      }
-                    } else {
-                      Fluttertoast.showToast(
-                        msg: 'الرجاء المصادقة أولاً لإضافة طفل.',
-                        backgroundColor: Colors.orange,
-                      );
+                    if (result == true) {
+                      bloc.add(const LoadChildren());
                     }
                   },
                 ),
@@ -83,26 +71,18 @@ class ProfileScreen extends StatelessWidget {
                     backgroundColor: Colors.red,
                   );
                 }
-
+                if (state is PorfileChildrenLoaded) {
+                  if (state.accessStatus == AccessStatus.denied) {
+                    Navigator.of(context).pop();
+                  }
+                }
                 //  معالجة اختيار الطفل
                 if (state is PorfileChildSelected) {
                   Fluttertoast.showToast(
                     msg: 'تم اختيار الطفل ${state.selectedChild.name} بنجاح!',
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.green,
                   );
                   Navigator.of(context).pop(true);
-                }
-
-                // معالجة  المصادقة البيومترية هنا
-                if (state is PorfileChildrenLoaded) {
-                  // فقط نعرض رسالة خطأ إذا تم الرفض
-                  if (state.accessStatus == AccessStatus.denied &&
-                      state.accessErrorMessage != null) {
-                    Fluttertoast.showToast(
-                      msg: state.accessErrorMessage!,
-                      backgroundColor: Colors.red,
-                    );
-                  }
                 }
               },
 
@@ -110,7 +90,9 @@ class ProfileScreen extends StatelessWidget {
                 builder: (context, state) {
                   final isLoading = state is PorfileLoading;
                   if (isLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: CupertinoActivityIndicator(radius: 20.0),
+                    );
                   }
 
                   //  تعريف المتغيرات
@@ -124,81 +106,11 @@ class ProfileScreen extends StatelessWidget {
                   final isSettingsProtected = state is PorfileChildrenLoaded
                       ? state.isSettingsProtected
                       : false;
-                  final accessStatus = state is PorfileChildrenLoaded
-                      ? state.accessStatus
-                      : AccessStatus.initial;
+
                   final selectedChildId = state is PorfileChildrenLoaded
                       ? state.selectedChildId
                       : null;
                   const String parentName = "ولي الأمر";
-
-                  // هنا كود شاشة الحجب/الانتظار إذا لم يتم منح الوصول بعد)
-                  if (accessStatus != AccessStatus.granted) {
-                    // إذا كان هناك خطأ عام في التحميل، نعرضه (مثل فشل تسجيل الدخول)
-                    if (state is PorfileError) {
-                      return Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              state.failure.message,
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
-                              onPressed: () => bloc.add(const LoadChildren()),
-                              child: const Text(
-                                'إعادة المحاولة / تسجيل الدخول',
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    // شاشة الانتظار/القفل
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (accessStatus == AccessStatus.loading)
-                            const CupertinoActivityIndicator(radius: 20.0),
-
-                          const SizedBox(height: 20),
-
-                          Text(
-                            accessStatus == AccessStatus.loading
-                                ? 'الرجاء المصادقة للمتابعة...'
-                                : 'الوصول محدود. يرجى الضغط للمصادقة.',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-
-                          // زر إعادة المصادقة إذا تم الرفض أو الإلغاء
-                          if (accessStatus == AccessStatus.denied ||
-                              accessStatus == AccessStatus.initial)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: ElevatedButton.icon(
-                                icon: const Icon(Icons.security),
-                                onPressed: () {
-                                  bloc.add(const LoadChildren());
-                                  Fluttertoast.showToast(
-                                    msg:
-                                        'جارٍ محاولة المصادقة والتحميل مجدداً...',
-                                    backgroundColor: Colors.orange,
-                                  );
-                                },
-                                label: const Text('المصادقة الآن'),
-                              ),
-                            ),
-                        ],
-                      ),
-                    );
-                  }
 
                   //  المحتوى الحساس يعرض فقط بعد منح الوصول
                   return Padding(
@@ -262,21 +174,12 @@ class ProfileScreen extends StatelessWidget {
                                 trailing: Switch.adaptive(
                                   value: isSettingsProtected,
                                   onChanged: (newValue) {
-                                    // ملاحظة: نعتمد على أن الـ Bloc يحتفظ بـ currentParentId من حدث LoadChildren الأولي
                                     if (isLoaded) {
                                       // نتحقق من أن الحالة الحالية هي PorfileChildrenLoaded
                                       bloc.add(
                                         SaveSettingsProtectionEvent(
                                           isProtected: newValue,
                                         ),
-                                      );
-                                    } else {
-                                      //  هنا إذا لم تكن البيانات محملة نطلق حدث التحميل مجدداً
-                                      bloc.add(const LoadChildren());
-                                      Fluttertoast.showToast(
-                                        msg:
-                                            'جاري تحميل بيانات الوالد مجدداً لحفظ الإعدادات.',
-                                        backgroundColor: Colors.orange,
                                       );
                                     }
                                   },

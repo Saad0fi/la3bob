@@ -83,6 +83,15 @@ class VideoHomeScreen extends StatelessWidget {
                 }
 
                 if (state is VideosLoaded) {
+                  final interests = state.interests;
+                  final selectedInterest = state.selectedInterest;
+                  final filteredVideos = selectedInterest == null
+                      ? state.videos
+                      : state.videos.where((video) {
+                          return video.category.toLowerCase().trim() ==
+                              selectedInterest.toLowerCase().trim();
+                        }).toList();
+
                   if (state.videos.isEmpty) {
                     final selectedChildId = getIt<GetStorage>().read<String>(
                       'selected_child_id',
@@ -117,29 +126,63 @@ class VideoHomeScreen extends StatelessWidget {
                     );
                   }
 
+                  if (filteredVideos.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.video_library_outlined, size: 64, color: Colors.grey),
+                          const SizedBox(height: 12),
+                          Text(
+                            'لا توجد فيديوهات لهذا الاهتمام',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return ListView.builder(
                     padding: const EdgeInsets.all(16),
-                    itemCount: state.videos.length,
+                    itemCount: filteredVideos.length + (interests.isNotEmpty ? 1 : 0),
                     itemBuilder: (context, index) {
-                      final video = state.videos[index];
+                      if (interests.isNotEmpty && index == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ChoiceChip(
+                                label: const Text('الكل'),
+                                selected: selectedInterest == null,
+                                onSelected: (_) {
+                                  context.read<VideosBloc>().add(const SelectInterest(null));
+                                },
+                              ),
+                              ...interests.map((interest) {
+                                final isSelected =
+                                    selectedInterest?.toLowerCase().trim() ==
+                                        interest.toLowerCase().trim();
+                                return ChoiceChip(
+                                  label: Text(interest),
+                                  selected: isSelected,
+                                  onSelected: (_) {
+                                    context.read<VideosBloc>().add(SelectInterest(interest));
+                                  },
+                                );
+                              }),
+                            ],
+                          ),
+                        );
+                      }
+
+                      final video = filteredVideos[interests.isNotEmpty ? index - 1 : index];
+                      final thumbnailUrl = VideosBloc.getThumbnailUrl(video.link);
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.play_circle_outline,
-                            size: 40,
-                          ),
-                          title: Text(
-                            video.title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                          ),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -147,6 +190,64 @@ class VideoHomeScreen extends StatelessWidget {
                               ),
                             );
                           },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              ClipRRect(
+                                child: thumbnailUrl.isNotEmpty
+                                    ? Image.network(
+                                        thumbnailUrl,
+                                        width: double.infinity,
+                                        height: 200,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Container(
+                                            width: double.infinity,
+                                            height: 200,
+                                            color: Colors.grey[300],
+                                            child: const Icon(
+                                              Icons.play_circle_outline,
+                                              size: 60,
+                                              color: Colors.grey,
+                                            ),
+                                          );
+                                        },
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return Container(
+                                            width: double.infinity,
+                                            height: 200,
+                                            color: Colors.grey[200],
+                                            child: const Center(
+                                              child: CircularProgressIndicator(strokeWidth: 3),
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : Container(
+                                        width: double.infinity,
+                                        height: 200,
+                                        color: Colors.grey[300],
+                                        child: const Icon(
+                                          Icons.play_circle_outline,
+                                          size: 60,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  video.title,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
