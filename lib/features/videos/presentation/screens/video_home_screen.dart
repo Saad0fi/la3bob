@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/di/injection.dart';
-import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
-import 'package:la3bob/features/videos/presentation/screens/video_player_screen.dart';
 
 class VideoHomeScreen extends StatelessWidget {
   const VideoHomeScreen({super.key});
@@ -33,10 +32,7 @@ class VideoHomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(50),
                     onLongPress: () async {
-                      await Navigator.of(context).push<bool>(
-                        MaterialPageRoute(builder: (_) => ProfileScreen()),
-                      );
-
+                      await context.push('/profile');
                       if (context.mounted) {
                         context.read<VideosBloc>().add(const LoadVideos());
                       }
@@ -131,7 +127,11 @@ class VideoHomeScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.video_library_outlined, size: 64, color: Colors.grey),
+                          const Icon(
+                            Icons.video_library_outlined,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
                           const SizedBox(height: 12),
                           Text(
                             'لا توجد فيديوهات لهذا الاهتمام',
@@ -144,7 +144,8 @@ class VideoHomeScreen extends StatelessWidget {
 
                   return ListView.builder(
                     padding: const EdgeInsets.all(16),
-                    itemCount: filteredVideos.length + (interests.isNotEmpty ? 1 : 0),
+                    itemCount:
+                        filteredVideos.length + (interests.isNotEmpty ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (interests.isNotEmpty && index == 0) {
                         return Padding(
@@ -157,18 +158,22 @@ class VideoHomeScreen extends StatelessWidget {
                                 label: const Text('الكل'),
                                 selected: selectedInterest == null,
                                 onSelected: (_) {
-                                  context.read<VideosBloc>().add(const SelectInterest(null));
+                                  context.read<VideosBloc>().add(
+                                    const SelectInterest(null),
+                                  );
                                 },
                               ),
                               ...interests.map((interest) {
                                 final isSelected =
                                     selectedInterest?.toLowerCase().trim() ==
-                                        interest.toLowerCase().trim();
+                                    interest.toLowerCase().trim();
                                 return ChoiceChip(
                                   label: Text(interest),
                                   selected: isSelected,
                                   onSelected: (_) {
-                                    context.read<VideosBloc>().add(SelectInterest(interest));
+                                    context.read<VideosBloc>().add(
+                                      SelectInterest(interest),
+                                    );
                                   },
                                 );
                               }),
@@ -177,18 +182,19 @@ class VideoHomeScreen extends StatelessWidget {
                         );
                       }
 
-                      final video = filteredVideos[interests.isNotEmpty ? index - 1 : index];
-                      final thumbnailUrl = VideosBloc.getThumbnailUrl(video.link);
+                      final video =
+                          filteredVideos[interests.isNotEmpty
+                              ? index - 1
+                              : index];
+                      final thumbnailUrl = VideosBloc.getThumbnailUrl(
+                        video.link,
+                      );
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => VideoPlayerScreen(video: video),
-                              ),
-                            );
+                            context.push('/tabs/videos/player', extra: video);
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -200,29 +206,36 @@ class VideoHomeScreen extends StatelessWidget {
                                         width: double.infinity,
                                         height: 200,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            width: double.infinity,
-                                            height: 200,
-                                            color: Colors.grey[300],
-                                            child: const Icon(
-                                              Icons.play_circle_outline,
-                                              size: 60,
-                                              color: Colors.grey,
-                                            ),
-                                          );
-                                        },
-                                        loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null) return child;
-                                          return Container(
-                                            width: double.infinity,
-                                            height: 200,
-                                            color: Colors.grey[200],
-                                            child: const Center(
-                                              child: CircularProgressIndicator(strokeWidth: 3),
-                                            ),
-                                          );
-                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: 200,
+                                                color: Colors.grey[300],
+                                                child: const Icon(
+                                                  Icons.play_circle_outline,
+                                                  size: 60,
+                                                  color: Colors.grey,
+                                                ),
+                                              );
+                                            },
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return Container(
+                                                width: double.infinity,
+                                                height: 200,
+                                                color: Colors.grey[200],
+                                                child: const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 3,
+                                                      ),
+                                                ),
+                                              );
+                                            },
                                       )
                                     : Container(
                                         width: double.infinity,
