@@ -13,11 +13,13 @@ class VideosLoading extends VideosState {}
 
 class VideosLoaded extends VideosState {
   final List<VideoEntity> videos;
+  final List<String> interests;
+  final String? selectedInterest;
 
-  const VideosLoaded(this.videos);
+  const VideosLoaded(this.videos, this.interests, [this.selectedInterest]);
 
   @override
-  List<Object?> get props => [videos];
+  List<Object?> get props => [videos, interests, selectedInterest];
 }
 
 class VideosError extends VideosState {

@@ -10,7 +10,6 @@ import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/update_child_screen.dart';
-import 'package:la3bob/features/videos/presentation/screens/video_home_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

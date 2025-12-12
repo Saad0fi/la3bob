@@ -12,6 +12,10 @@ class InitializeNumbersGame extends GamesEvent {
   const InitializeNumbersGame();
 }
 
+class InitializeColorsGame extends GamesEvent {
+  const InitializeColorsGame();
+}
+
 class SelectLetter extends GamesEvent {
   final String letter;
 
@@ -22,6 +26,12 @@ class SelectNumber extends GamesEvent {
   final int number;
 
   const SelectNumber(this.number);
+}
+
+class SelectColor extends GamesEvent {
+  final String color;
+
+  const SelectColor(this.color);
 }
 
 class MoveToNextQuestion extends GamesEvent {

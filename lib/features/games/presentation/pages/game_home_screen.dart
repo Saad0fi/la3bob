@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
+import 'package:la3bob/features/games/presentation/pages/colors_game_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 
 class GameHomeScreen extends StatelessWidget {
@@ -147,6 +148,59 @@ class GameHomeScreen extends StatelessWidget {
                         ),
                       ),
                       const Icon(Icons.arrow_forward_ios, color: Colors.blue),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const ColorsGameScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withValues(alpha: 0.3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'لعبة الألوان',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'تعلم أسماء الألوان العربية',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios, color: Colors.orange),
                     ],
                   ),
                 ),
