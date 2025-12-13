@@ -30,8 +30,8 @@ class AddChildScreen extends StatelessWidget {
                 ),
               );
            
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop(true);
+              if (context.canPop()) {
+                context.pop(true);
               } else {
                 context.go('/tabs/videos');
               }

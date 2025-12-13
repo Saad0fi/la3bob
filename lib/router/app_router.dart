@@ -8,8 +8,10 @@ import 'package:la3bob/features/games/presentation/pages/game_home_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
+import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
+import 'package:la3bob/features/profiles/presentation/screens/update_child_screen.dart';
 import 'package:la3bob/features/splash_screen/presentation/pages/splash_screen.dart';
 import 'package:la3bob/features/videos/domain/entities/video_entity.dart';
 import 'package:la3bob/features/videos/presentation/screens/video_home_screen.dart';
@@ -42,6 +44,13 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/add-child',
       builder: (context, state) => const AddChildScreen(),
+    ),
+    GoRoute(
+      path: '/update-child',
+      builder: (context, state) {
+        final child = state.extra as ChildEntity;
+        return UpdateChildScreen(child: child);
+      },
     ),
     GoRoute(
       path: '/profile',
