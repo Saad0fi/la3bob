@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
@@ -32,7 +33,7 @@ class UpdateChildScreen extends StatelessWidget {
                   backgroundColor: Colors.green,
                 ),
               );
-              Navigator.of(context).pop(true);
+              context.pop(true);
             } else if (state is PorfileError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

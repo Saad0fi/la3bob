@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
 
 class LettersGameScreen extends StatelessWidget {
@@ -35,7 +36,7 @@ class LettersGameScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.of(dialogContext).pop();
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     child: const Text('حسناً'),
                   ),

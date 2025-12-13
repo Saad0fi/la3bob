@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
-import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
@@ -29,18 +29,16 @@ class ProfileScreen extends StatelessWidget {
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  Navigator.of(context).pop(true);
+                  context.pop(true);
                 },
               ),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.add, color: Colors.blue),
                   onPressed: () async {
-                    final result = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const AddChildScreen()),
-                    );
+                    final result = await context.push('/add-child');
 
-                    if (result == true) {
+                    if (result == true && context.mounted) {
                       bloc.add(const LoadChildren());
                     }
                   },
@@ -57,10 +55,7 @@ class ProfileScreen extends StatelessWidget {
                     backgroundColor: Colors.green,
                   );
                   if (state.message == 'تم تسجيل الخروج بنجاح') {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      (route) => false,
-                    );
+                    context.go('/login');
                   }
                 }
 
@@ -73,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
                 }
                 if (state is PorfileChildrenLoaded) {
                   if (state.accessStatus == AccessStatus.denied) {
-                    Navigator.of(context).pop();
+                    context.pop();
                   }
                 }
                 //  معالجة اختيار الطفل
@@ -82,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
                     msg: 'تم اختيار الطفل ${state.selectedChild.name} بنجاح!',
                     backgroundColor: Colors.green,
                   );
-                  Navigator.of(context).pop(true);
+                  context.pop(true);
                 }
               },
 
@@ -269,18 +264,13 @@ class ProfileScreen extends StatelessWidget {
                                                 ),
                                                 onPressed: () async {
                                                   final result =
-                                                      await Navigator.of(
-                                                        context,
-                                                      ).push(
-                                                        MaterialPageRoute(
-                                                          builder: (_) =>
-                                                              UpdateChildScreen(
-                                                                child: child,
-                                                              ),
-                                                        ),
-                                                      );
+                                                      await context.push(
+                                                    '/update-child',
+                                                    extra: child,
+                                                  );
 
-                                                  if (result == true) {
+                                                  if (result == true &&
+                                                      context.mounted) {
                                                     bloc.add(
                                                       const LoadChildren(),
                                                     );
