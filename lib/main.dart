@@ -5,6 +5,7 @@ import 'package:la3bob/features/auth/presentation/pages/signup_screen.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/wave_page.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
+import 'package:la3bob/features/games/presentation/pages/squat_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,7 @@ class MainApp extends StatelessWidget {
       ],
 
       debugShowCheckedModeBanner: false,
-      home: WaveGamePage(),
+      home: SquatGamePage(),
     );
   }
 }
