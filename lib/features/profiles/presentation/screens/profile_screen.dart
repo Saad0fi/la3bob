@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
-import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
-import 'package:la3bob/features/profiles/presentation/screens/update_child_screen.dart';
+import 'package:babstrap_settings_screen_updated/babstrap_settings_screen_updated.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -263,11 +261,11 @@ class ProfileScreen extends StatelessWidget {
                                                   size: 20,
                                                 ),
                                                 onPressed: () async {
-                                                  final result =
-                                                      await context.push(
-                                                    '/update-child',
-                                                    extra: child,
-                                                  );
+                                                  final result = await context
+                                                      .push(
+                                                        '/update-child',
+                                                        extra: child,
+                                                      );
 
                                                   if (result == true &&
                                                       context.mounted) {

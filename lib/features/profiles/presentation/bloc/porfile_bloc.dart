@@ -211,9 +211,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       parentId,
     );
     bool isProtected = false;
-    protectionResult.when((isSet) => isProtected = isSet, (failure) {
-      print(failure.message);
-    });
+    protectionResult.when((isSet) => isProtected = isSet, (failure) {});
 
     //   المصادقة شرط إظهار محتوى الإعدادات
     bool accessGranted = false;

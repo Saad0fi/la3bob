@@ -1,3 +1,7 @@
+
+
+
+
 allprojects {
     repositories {
         google()
@@ -19,6 +23,12 @@ subprojects {
             // تحويل الامتداد إلى النوع الأساسي (BaseExtension)
             (androidExtension as? com.android.build.gradle.BaseExtension)?.apply {
                 
+                if (namespace == null) {
+                    namespace = project.group.toString()
+                }
+                
+                compileSdkVersion(36)
+
                 // فرض Java 11 على Java Compiler
                 compileOptions {
                     sourceCompatibility = JavaVersion.VERSION_11
