@@ -94,3 +94,7 @@ class SaveSettingsProtectionEvent extends PorfileEvent {
 class ForceReload extends PorfileEvent {
   const ForceReload();
 }
+
+class DeleteAcount extends PorfileEvent {
+  const DeleteAcount();
+}

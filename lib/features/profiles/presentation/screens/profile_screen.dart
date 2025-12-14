@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:la3bob/core/comon/helper_function/dialog_helper.dart';
 import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
@@ -45,10 +44,18 @@ class ProfileScreen extends StatelessWidget {
 
       body: BlocListener<PorfileBloc, PorfileState>(
         listener: (context, state) {
-          // معالجة النجاح العام (Logout, Save Settings, Toggle Lock Mode)
+          // معالجة النجاح  (Logout, Save Settings, Toggle Lock Mode)
           if (state is PorfileSuccess) {
             showAppToast(message: state.message, type: ToastType.success);
             if (state.message == 'تم تسجيل الخروج بنجاح') {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false,
+              );
+            }
+
+            if (state.message ==
+                'تم حذف الحساب بنجاح. نأمل أن نراك مرة أخرى قريبًا!') {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (_) => const LoginScreen()),
                 (route) => false,
@@ -64,10 +71,9 @@ class ProfileScreen extends StatelessWidget {
             );
           }
 
-          // 🛑 معالجة حالة رفض الوصول (المصادقة فشلت)
+          //  معالجة حالة رفض الوصول المصادقة فشلت
           if (state is PorfileChildrenLoaded) {
             if (state.accessStatus == AccessStatus.denied) {
-              // الخروج من الصفحة مباشرة دون إرسال قيمة (لكي لا تُشغل VideosBloc التحميل)
               Navigator.of(context).pop();
             }
           }
@@ -128,21 +134,16 @@ class ProfileScreen extends StatelessWidget {
                         "assets/images/image8.png",
                       ),
                       cardActionWidget: SettingsItem(
-                        icons: Icons.edit,
+                        icons: Icons.email_rounded,
                         iconStyle: IconStyle(
-                          iconsColor: Colors.black,
+                          iconsColor: Colors.white,
                           withBackground: true,
                           borderRadius: 50,
-                          backgroundColor: Colors.white,
+                          backgroundColor: Colors.blueAccent.shade700,
                         ),
-                        title: "تعديل البيانات",
+                        title: "البريد الإلكتروني",
                         subtitle: parentEmail,
-                        onTap: () {
-                          showAppToast(
-                            message: 'جارٍ الانتقال لتعديل بيانات ولي الأمر...',
-                            type: ToastType.info,
-                          );
-                        },
+                        onTap: () {},
                       ),
                     ),
                   ),
@@ -159,7 +160,7 @@ class ProfileScreen extends StatelessWidget {
                         SettingsItem(
                           onTap: () {},
                           icons: isSettingsProtected
-                              ? CupertinoIcons.lock_shield_fill
+                              ? CupertinoIcons.map_pin_ellipse
                               : CupertinoIcons.lock_open_fill,
                           iconStyle: IconStyle(
                             iconsColor: Colors.white,
@@ -345,19 +346,12 @@ class ProfileScreen extends StatelessWidget {
                       items: [
                         SettingsItem(
                           onTap: () {
-                            Fluttertoast.showToast(
-                              msg: 'تم إطلاق طلب تغيير البريد الإلكتروني.',
-                              backgroundColor: Colors.blue,
-                            );
-                          },
-                          icons: Icons.email_rounded,
-                          title: "تغيير البريد الإلكتروني",
-                        ),
-                        SettingsItem(
-                          onTap: () {
-                            Fluttertoast.showToast(
-                              msg: 'جارٍ تجهيز شاشة تأكيد حذف الحساب...',
-                              backgroundColor: Colors.red,
+                            showDeleteConfirmationDialog(
+                              context: context,
+                              itemName: "حسابك",
+                              onConfirm: () {
+                                bloc.add(const DeleteAcount());
+                              },
                             );
                           },
                           icons: Icons.delete_forever_rounded,

@@ -30,6 +30,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     on<LoadChildren>(_onLoadChildren);
     on<DeleteChild>(_onDeleteChild);
     on<LogoutRequested>(_onLogoutRequested);
+    on<DeleteAcount>(_onDeletAcount);
     on<PopulateChildForm>(_onPopulateChildForm);
     on<ResetForm>(_onResetForm);
     on<ToggleChildLockMode>(_onToggleChildLockMode);
@@ -39,16 +40,15 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
   }
 
   // ----------------------------------------------------------------------
-  //    معالجات الأحداث (Handler Methods)
+  //    (Handler Methods) هنا الللعب
 
-  //  معالج حدث تحميل الأطفال
+  //  حدث تحميل الأطفال
   Future<void> _onLoadChildren(
     PorfileEvent event,
     Emitter<PorfileState> emit,
   ) async {
-    // 1. تحديد شروط التحميل
     final bool isForceReload = event is ForceReload;
-    // الكاش متاح إذا كانت الحالة السابقة PorfileChildrenLoaded ولم يكن تحديث قسري
+    // الكاش متاح إذا كانت الحالة السابقة PorfileChildrenLoaded والايفنت موب ForceReload
     final bool useCache = state is PorfileChildrenLoaded && !isForceReload;
 
     // جلب بيانات المستخدم الأب
@@ -56,7 +56,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     if (parentUser == null) return;
     final parentId = parentUser.id;
 
-    // جلب حالة الحماية (Protecion Status)
+    // جلب حالة الحماية Protecion Status
     final protectionResult = await _profileUsecase.getSettingsProtection(
       parentId,
     );
@@ -65,18 +65,14 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       print('حدث خطأ: ${failure.message}');
     });
 
-    // =======================================================
-    // 💡 2. جلب البيانات الأساسية (الشبكة أو الكاش)
-    //    هذا الجزء يضمن أن البيانات لا تضيع في حالة فشل المصادقة لاحقاً.
-    // =======================================================
-
+    // نجيب بيانات الاطفال قبل عملية المصادقة
     List<ChildEntity> children = [];
     bool isKioskModeActive = false;
     String? selectedChildId;
     bool hasError = false;
 
     if (!useCache) {
-      // 2.1. 📡 التحميل من الشبكة (في حالة الدخول الأول أو ForceReload)
+      //  supabase نجيب البيانات  من ال (في حالة الدخول الأول أو ForceReload)
       emit(PorfileLoading());
 
       final kioskModeStatusResult = await _profileUsecase.getKioskModeStatus();
@@ -99,10 +95,10 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
 
       if (hasError) return;
 
-      // جلب الـ selectedChildId بعد التحميل
+      // نجيب الـ selectedChildId بعد التحميل
       selectedChildId = GetStorage().read<String>('selected_child_id');
     } else {
-      // 2.2. 💾 استخدام البيانات المخزنة مؤقتاً (Cache)
+      //   استخدام البيانات المخزنة مؤقتاً (Cache) نستخدم
       final currentState = state as PorfileChildrenLoaded;
       children = currentState.children;
       selectedChildId = currentState.selectedChildId;
@@ -111,19 +107,16 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       final kioskModeStatusResult = await _profileUsecase.getKioskModeStatus();
       kioskModeStatusResult.when(
         (mode) => isKioskModeActive = (mode == KioskMode.enabled),
-        // إذا فشل جلب حالة الكشك، نستخدم الحالة القديمة من الكاش
+        // إذا فشل جلب حالة الكشك نستخدم الحالة القديمة من الكاش
         (failure) => isKioskModeActive = currentState.isChildLockModeActive,
       );
     }
 
-    // =======================================================
-    // 🛑 3. تطبيق المصادقة (القفل الأمني)
-    //    البيانات (children) الآن موجودة وجاهزة للإرسال.
-    // =======================================================
+    //  تطبيق المصادقة (القفل الأمني)
 
     bool accessGranted = true; // نفترض النجاح مبدئياً
 
-    // يتم تشغيل المصادقة البيومترية فقط إذا كانت الحماية مفعلة ولم يكن ForceReload
+    //  يتم تشغيل المصادقة البيومترية فقط إذا كانت الحماية مفعلة ولم يكن ForceReload
     if (isProtected && !isForceReload) {
       final authResult = await _profileUsecase.authenticateBiometrics();
       authResult.when((didAuth) => accessGranted = didAuth, (failure) {
@@ -131,19 +124,15 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         accessGranted = false;
       });
     }
-
-    // =======================================================
-    // 4. إصدار الحالة النهائية (مع تحديد AccessStatus)
-    // =======================================================
+    //  إصدار الحالة النهائية
 
     emit(
       PorfileChildrenLoaded(
-        children, // القائمة تحتوي على بيانات الأطفال (سواء من الشبكة أو الكاش)
+        children,
         isChildLockModeActive: isKioskModeActive,
         selectedChildId: selectedChildId,
         currentParentUser: parentUser,
         isSettingsProtected: isProtected,
-        // 🛑 بناء حالة الوصول النهائية
         accessStatus: accessGranted
             ? AccessStatus.granted
             : AccessStatus.denied,
@@ -151,7 +140,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     );
   }
 
-  // معالج حدث إرسال نموذج طفل جديد
+  //  حدث إرسال نموذج طفل جديد
   Future<void> _onSubmitChildForm(
     SubmitChildForm event,
     Emitter<PorfileState> emit,
@@ -216,7 +205,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     );
   }
 
-  //  معالج حدث تحديث بيانات الطفل
+  //  حدث تحديث بيانات الطفل
   Future<void> _onUpdateChildForm(
     UpdateChildForm event,
     Emitter<PorfileState> emit,
@@ -298,7 +287,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     }, (ProfilesFailure failure) => emit(PorfileError(failure)));
   }
 
-  //  معالج حدث طلب تسجيل الخروج
+  //  حدث طلب تسجيل الخروج
   Future<void> _onLogoutRequested(
     LogoutRequested event,
     Emitter<PorfileState> emit,
@@ -315,7 +304,21 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     );
   }
 
-  //  معالج حدث ملء نموذج الطفل (من أجل التحديث)
+  Future<void> _onDeletAcount(
+    DeleteAcount event,
+    Emitter<PorfileState> emit,
+  ) async {
+    emit(PorfileLoading());
+    final result = await _profileUsecase.deleteAccount();
+    result.when(
+      (_) => emit(
+        PorfileSuccess('تم حذف الحساب بنجاح. نأمل أن نراك مرة أخرى قريبًا!'),
+      ),
+      (failure) => emit(PorfileError(failure)),
+    );
+  }
+
+  //  حدث ملء نموذج الطفل (من أجل التحديث)
   void _onPopulateChildForm(
     PopulateChildForm event,
     Emitter<PorfileState> emit,
@@ -354,7 +357,6 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     }
   }
 
-  //  معالج حدث تبديل وضع قفل الطفل
   //  معالج حدث تبديل وضع القفل
   void _onToggleChildLockMode(
     ToggleChildLockMode event,
@@ -380,7 +382,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     }
   }
 
-  //       حفظ حالة سويتش حماية الاعدادات  الجديدة
+  //حفظ حالة سويتش حماية الاعدادات  الجديدة
   FutureOr<void> _onSaveSettingsProtection(
     SaveSettingsProtectionEvent event,
     Emitter<PorfileState> emit,
