@@ -69,7 +69,6 @@ class AddChildScreen extends StatelessWidget {
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
                         ),
-                        textDirection: TextDirection.rtl,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'الرجاء إدخال اسم الطفل';
@@ -88,7 +87,6 @@ class AddChildScreen extends StatelessWidget {
                           prefixIcon: Icon(Icons.cake),
                         ),
                         keyboardType: TextInputType.number,
-                        textDirection: TextDirection.rtl,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'الرجاء إدخال عمر الطفل';

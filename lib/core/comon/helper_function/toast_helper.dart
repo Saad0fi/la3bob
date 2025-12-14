@@ -16,13 +16,13 @@ enum ToastType {
 Color _getToastColor(ToastType type) {
   switch (type) {
     case ToastType.success:
-      return Colors.green.shade700;
+      return Colors.green;
     case ToastType.failure:
-      return Colors.red.shade700;
+      return Colors.red;
     case ToastType.warning:
-      return Colors.orange.shade700;
+      return Colors.orange;
     case ToastType.info:
-      return Colors.blue.shade700;
+      return Colors.blue;
   }
 }
 

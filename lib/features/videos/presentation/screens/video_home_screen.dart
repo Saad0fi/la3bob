@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/di/injection.dart';
+import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
 import 'package:la3bob/features/videos/presentation/screens/video_player_screen.dart';
@@ -33,11 +34,13 @@ class VideoHomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(50),
                     onLongPress: () async {
-                      await Navigator.of(context).push<bool>(
-                        MaterialPageRoute(builder: (_) => ProfileScreen()),
-                      );
+                      context.read<PorfileBloc>().add(const LoadChildren());
+                      final bool? shouldReloadVideos =
+                          await Navigator.of(context).push<bool>(
+                            MaterialPageRoute(builder: (_) => ProfileScreen()),
+                          );
 
-                      if (context.mounted) {
+                      if (context.mounted && shouldReloadVideos == true) {
                         context.read<VideosBloc>().add(const LoadVideos());
                       }
                     },
