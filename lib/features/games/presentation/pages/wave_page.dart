@@ -17,6 +17,30 @@ class WaveGamePage extends StatefulWidget {
 }
 
 class _WaveGamePageState extends State<WaveGamePage> {
+  // We can load cameras here or in the view.
+  // keeping initialization logical logic here is fine,
+  // but we usually want the BlocProvider to be the top level of this "Screen".
+
+  @override
+  Widget build(BuildContext context) {
+    // Inject dependencies
+    // Use GetIt to resolve DetectWave.
+    return BlocProvider(
+      create: (_) => WaveBloc(getIt<DetectWave>()),
+      child: WaveGameView(cameras: widget.cameras),
+    );
+  }
+}
+
+class WaveGameView extends StatefulWidget {
+  final List<CameraDescription>? cameras;
+  const WaveGameView({super.key, this.cameras});
+
+  @override
+  State<WaveGameView> createState() => _WaveGameViewState();
+}
+
+class _WaveGameViewState extends State<WaveGameView> {
   CameraDescription? _frontCamera;
   bool _isLoading = true;
 
@@ -60,68 +84,60 @@ class _WaveGamePageState extends State<WaveGamePage> {
       return const Scaffold(body: Center(child: Text('No camera found')));
     }
 
-    // Use GetIt to resolve DetectWave.
-    // Optimization: We could just instantiate services here if DI is not fully set up,
-    // but using GetIt is cleaner if registered.
-    return BlocProvider(
-      create: (_) => WaveBloc(getIt<DetectWave>()),
-      child: Scaffold(
-        appBar: AppBar(title: const Text('👋 Wave Game')),
-        body: Stack(
-          children: [
-            // Camera Preview
-            SizedBox.expand(
-              child: CameraPreviewWidget(
-                camera: _frontCamera!,
-                onPoseDetected: (pose) {
-                  context.read<WaveBloc>().add(PoseReceived(pose));
+    return Scaffold(
+      appBar: AppBar(title: const Text('👋 Wave Game')),
+      body: Stack(
+        children: [
+          // Camera Preview
+          SizedBox.expand(
+            child: CameraPreviewWidget(
+              camera: _frontCamera!,
+              onPoseDetected: (pose) {
+                // Now 'context' is from _WaveGameViewState, which is a child of BlocProvider
+                context.read<WaveBloc>().add(PoseReceived(pose));
+              },
+            ),
+          ),
+
+          // UI Overlay
+          Positioned(
+            top: 30,
+            left: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: BlocConsumer<WaveBloc, WaveState>(
+                listener: (context, state) {
+                  if (state.status == WaveStatus.waveDetected) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Wave detected! 👋'),
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Text(
+                    'Waves: ${state.count}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
                 },
               ),
             ),
-
-            // UI Overlay
-            Positioned(
-              top: 30,
-              left: 20,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: BlocConsumer<WaveBloc, WaveState>(
-                  listener: (context, state) {
-                    if (state.status == WaveStatus.waveDetected) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Wave detected! 👋'),
-                          duration: Duration(milliseconds: 500),
-                        ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return Text(
-                      'Waves: ${state.count}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.refresh),
-          onPressed: () => context.read<WaveBloc>().add(ResetWave()),
-        ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.refresh),
+        onPressed: () => context.read<WaveBloc>().add(ResetWave()),
       ),
     );
   }
