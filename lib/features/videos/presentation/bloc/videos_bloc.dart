@@ -1,6 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:injectable/injectable.dart';
+import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
+import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/videos/domain/entities/video_entity.dart';
 import 'package:la3bob/features/videos/domain/usecase/videos_usecase.dart';
 
@@ -10,18 +13,133 @@ part 'videos_state.dart';
 @injectable
 class VideosBloc extends Bloc<VideosEvent, VideosState> {
   final VideosUsecase _videosUsecase;
+  final ProfileUsecase _profileUsecase;
+  final AuthUseCases _authUseCases;
+  static const String _selectedChildIdKey = 'selected_child_id';
+  static const List<String> _emptyInterests = [];
 
-  VideosBloc(this._videosUsecase) : super(VideosInitial()) {
+  /// Extracts YouTube video ID from URL
+  static String extractVideoId(String url) {
+    final regex = RegExp(
+      r'(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})',
+    );
+    final match = regex.firstMatch(url);
+    return match?.group(1) ?? '';
+  }
+
+  /// Gets YouTube thumbnail URL
+
+  static String getThumbnailUrl(String link) {
+    final videoId = extractVideoId(link);
+    if (videoId.isEmpty) return '';
+    return 'https://img.youtube.com/vi/$videoId/0.jpg';
+  }
+
+  VideosBloc(this._videosUsecase, this._profileUsecase, this._authUseCases)
+    : super(VideosInitial()) {
     on<LoadVideos>((event, emit) async {
       emit(VideosLoading());
 
       final result = await _videosUsecase.getVideos();
 
-      result.fold(
-        (videos) => emit(VideosLoaded(videos)),
-        (error) => emit(VideosError(error.toString())),
-      );
+      if (result.isSuccess()) {
+        final videos = result.getOrNull() ?? [];
+        final filtered = await _filterVideosBySelectedChild(videos);
+        final currentState = state;
+        final currentInterest = currentState is VideosLoaded 
+            ? currentState.selectedInterest 
+            : null;
+        emit(VideosLoaded(filtered.videos, filtered.interests, currentInterest));
+      } else {
+        final error = result.exceptionOrNull();
+        emit(VideosError(error?.toString() ?? 'خطأ غير معروف'));
+      }
     });
+
+    on<RefreshVideos>((event, emit) async {
+      emit(VideosLoading());
+
+      final result = await _videosUsecase.getVideos();
+
+      if (result.isSuccess()) {
+        final videos = result.getOrNull() ?? [];
+        final filtered = await _filterVideosBySelectedChild(videos);
+        final currentState = state;
+        final currentInterest = currentState is VideosLoaded 
+            ? currentState.selectedInterest 
+            : null;
+        emit(VideosLoaded(filtered.videos, filtered.interests, currentInterest));
+      } else {
+        final error = result.exceptionOrNull();
+        emit(VideosError(error?.toString() ?? 'خطأ غير معروف'));
+      }
+    });
+
+    on<SelectInterest>((event, emit) {
+      final currentState = state;
+      if (currentState is VideosLoaded) {
+        emit(VideosLoaded(currentState.videos, currentState.interests, event.interest));
+      }
+    });
+  }
+
+  Future<_FilteredVideos> _filterVideosBySelectedChild(
+    List<VideoEntity> videos,
+  ) async {
+    final selectedChildId = GetStorage().read<String>(_selectedChildIdKey);
+
+    if (selectedChildId == null) {
+      return _FilteredVideos(videos, _emptyInterests);
+    }
+
+    // جلب parentId من AuthUseCases
+    final userResult = await _authUseCases.getSignedInUser();
+    String? parentId;
+    userResult.when(
+      (user) => parentId = user?.id,
+      (failure) => parentId = null,
+    );
+
+    if (parentId == null) {
+      return _FilteredVideos(videos, _emptyInterests);
+    }
+
+    final childrenResult = await _profileUsecase.getChildern(parentId!);
+
+    return childrenResult.when((children) {
+      final selectedChild = children
+          .where((child) => child.id == selectedChildId)
+          .firstOrNull;
+
+      if (selectedChild == null) {
+        return _FilteredVideos(videos, _emptyInterests);
+      }
+
+      if (selectedChild.intersets.isEmpty) {
+        return _FilteredVideos(videos, _emptyInterests);
+      }
+
+      final normalizedInterests = selectedChild.intersets
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toSet()
+          .toList();
+
+      final filteredVideos = videos.where((video) {
+        return normalizedInterests.any(
+          (interest) =>
+              interest.toLowerCase() == video.category.toLowerCase().trim(),
+        );
+      }).toList();
+
+      return _FilteredVideos(filteredVideos, normalizedInterests);
+    }, (error) => _FilteredVideos(videos, _emptyInterests));
   }
 }
 
+class _FilteredVideos {
+  final List<VideoEntity> videos;
+  final List<String> interests;
+
+  const _FilteredVideos(this.videos, this.interests);
+}

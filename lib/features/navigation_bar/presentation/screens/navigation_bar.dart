@@ -1,35 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:la3bob/features/navigation_bar/presentation/bloc/navigation_bar_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class NavigationBarScreen extends StatelessWidget {
-  const NavigationBarScreen({super.key});
+  final Widget child;
+
+  const NavigationBarScreen({super.key, required this.child});
+
+  int _currentIndexForLocation(String location) {
+    if (location.startsWith('/tabs/games')) return 1;
+    return 0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NavigationBarBloc(),
-      child: BlocBuilder<NavigationBarBloc, NavigationBarState>(
-        builder: (context, state) {
-          final bloc = context.read<NavigationBarBloc>();
-          return Scaffold(
-            body: bloc.screens[bloc.currentIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: bloc.currentIndex,
-              onTap: (index) => bloc.add(NavigationBarTapEvent(index)),
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.videocam_sharp),
-                  label: "فيديوهات",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.gamepad_sharp),
-                  label: "ألعاب",
-                ),
-              ],
-            ),
-          );
+    final location = GoRouterState.of(context).fullPath ?? '';
+    final currentIndex = _currentIndexForLocation(location);
+
+    return Scaffold(
+      body: child,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (index) {
+          if (index == 0) {
+            context.go('/tabs/videos');
+          } else {
+            context.go('/tabs/games');
+          }
         },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.videocam_sharp),
+            label: "فيديوهات",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.gamepad_sharp),
+            label: "ألعاب",
+          ),
+        ],
       ),
     );
   }

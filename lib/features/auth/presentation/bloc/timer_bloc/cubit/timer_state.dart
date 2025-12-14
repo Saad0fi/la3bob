@@ -13,7 +13,7 @@ abstract class TimerState extends Equatable {
 
 // حالة تشغيل العداد
 class TimerRunning extends TimerState {
-  const TimerRunning(int duration) : super(duration);
+  const TimerRunning(super.duration);
 }
 
 // حالة انتهاء العداد (وصل إلى صفر)

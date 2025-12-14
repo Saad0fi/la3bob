@@ -17,7 +17,7 @@ class ProfileUsecase {
     return _repository.getChildern(parentId);
   }
 
-  Future<Result<void, ProfilesFailure>> addChild(
+  Future<Result<String, ProfilesFailure>> addChild(
     String parentId,
     String name,
     int age,
@@ -46,5 +46,20 @@ class ProfileUsecase {
 
   Future<Result<KioskMode, ProfilesFailure>> getKioskModeStatus() async {
     return await _repository.getKioskModeStatus();
+  }
+
+  Future<Result<bool, ProfilesFailure>> authenticateBiometrics() {
+    return _repository.authenticateBiometrics();
+  }
+
+  Future<Result<void, ProfilesFailure>> saveSettingsProtection(
+    String parentId,
+    bool isProtected,
+  ) {
+    return _repository.saveSettingsProtection(parentId, isProtected);
+  }
+
+  Future<Result<bool, ProfilesFailure>> getSettingsProtection(String parentId) {
+    return _repository.getSettingsProtection(parentId);
   }
 }

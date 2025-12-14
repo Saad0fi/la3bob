@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/comon/helper_function/error_snackbar.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_cubit.dart';
 import 'package:la3bob/features/auth/presentation/bloc/timer_bloc/cubit/timer_state.dart';
-import 'package:la3bob/features/navigation_bar/presentation/bloc/navigation_bar_bloc.dart';
-import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 import 'package:pinput/pinput.dart';
 
 final GlobalKey<FormState> _otpFormKey = GlobalKey<FormState>();
@@ -51,14 +50,12 @@ class VerificationScreen extends StatelessWidget {
         appBar: AppBar(title: const Text('تأكيد الرمز')),
         body: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
-            // الاستماع لحالات المصادقة
-            if (state is Authenticated) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (_) => const NavigationBarScreen(),
-                ),
-                (route) => false,
-              );
+            if (state is AuthenticatedWithChildren) {
+              context.go('/tabs/videos');
+            } else if (state is AuthenticatedNoChildren) {
+              context.go('/add-child');
+            } else if (state is Authenticated) {
+              context.go('/tabs/videos');
             } else if (state is AuthFailureState) {
               showErrorSnackbar(context, state.failure.message);
               //  مسح الرمز عند الخطأ باستخدام الفورم كي

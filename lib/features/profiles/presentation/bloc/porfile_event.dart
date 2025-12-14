@@ -73,3 +73,20 @@ final class ToggleChildLockMode extends PorfileEvent {
   final bool isActive;
   const ToggleChildLockMode(this.isActive);
 }
+
+class SelectChild extends PorfileEvent {
+  final ChildEntity child;
+  const SelectChild(this.child);
+
+  @override
+  List<Object> get props => [child];
+}
+
+// عند تغيير زر الـ Switch: نحفظ حالته الجديدة في القيت ستورج
+class SaveSettingsProtectionEvent extends PorfileEvent {
+  final bool isProtected;
+  const SaveSettingsProtectionEvent({required this.isProtected});
+
+  @override
+  List<Object> get props => [isProtected];
+}

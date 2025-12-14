@@ -11,10 +11,10 @@ class CameraPreviewWidget extends StatefulWidget {
   final Function(Pose) onPoseDetected;
 
   const CameraPreviewWidget({
-    Key? key,
+    super.key,
     required this.camera,
     required this.onPoseDetected,
-  }) : super(key: key);
+  });
 
   @override
   State<CameraPreviewWidget> createState() => _CameraPreviewWidgetState();

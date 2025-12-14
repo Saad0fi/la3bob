@@ -11,3 +11,16 @@ class LoadVideos extends VideosEvent {
   const LoadVideos();
 }
 
+class RefreshVideos extends VideosEvent {
+  const RefreshVideos();
+}
+
+class SelectInterest extends VideosEvent {
+  final String? interest;
+
+  const SelectInterest(this.interest);
+
+  @override
+  List<Object?> get props => [interest];
+}
+

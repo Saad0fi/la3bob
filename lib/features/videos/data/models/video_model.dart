@@ -11,6 +11,7 @@ class VideoModel extends VideoEntity with VideoModelMappable {
     required super.id,
     required super.title,
     required super.link,
+    required super.category,
   });
 }
 

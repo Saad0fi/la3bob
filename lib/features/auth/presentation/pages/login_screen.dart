@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/comon/helper_function/error_snackbar.dart';
-import 'package:la3bob/core/comon/widgets/custom_Input_decoration.dart';
+import 'package:la3bob/core/comon/widgets/custom_input_decoration.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
-import 'signup_screen.dart';
-import 'verification_screen.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 String _email = '';
@@ -23,11 +22,7 @@ class LoginScreen extends StatelessWidget {
         body: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is OtpSent) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (_) => VerificationScreen(email: _email),
-                ),
-              );
+              context.go('/verify', extra: _email);
             } else if (state is AuthFailureState) {
               showErrorSnackbar(context, state.failure.message);
             }
@@ -114,11 +109,7 @@ class LoginScreen extends StatelessWidget {
                       // الانتقال لإنشاء حساب
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (_) => const SignupScreen(),
-                            ),
-                          );
+                          context.go('/signup');
                         },
                         child: const Text(
                           'ليس لديك حساب؟ إنشاء حساب',

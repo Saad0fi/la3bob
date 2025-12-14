@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:la3bob/core/erors/failures/profiles_failures.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
@@ -29,10 +32,12 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     on<PopulateChildForm>(_onPopulateChildForm);
     on<ResetForm>(_onResetForm);
     on<ToggleChildLockMode>(_onToggleChildLockMode);
+    on<SelectChild>(_onSelectChild);
+    on<SaveSettingsProtectionEvent>(_onSaveSettingsProtection);
   }
 
   // ----------------------------------------------------------------------
-  //    handller method  اللوجيك هنا
+  //    معالجات الأحداث (Handler Methods)
 
   //  معالج حدث تبديل وضع القفل
   void _onToggleChildLockMode(
@@ -73,20 +78,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       return;
     }
 
-    final userResult = await _authUseCases.getSignedInUser();
-    String? parentId;
-    userResult.when(
-      (user) => parentId = user?.id,
-      (failure) => parentId = null,
-    );
-    if (parentId == null) {
-      emit(
-        PorfileError(
-          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
-        ),
-      );
-      return;
-    }
+    final parentId = await _getParentId(emit);
+    if (parentId == null) return;
 
     final age = int.tryParse(event.childAge);
     if (age == null || age < 1 || age > 12) {
@@ -118,14 +111,15 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     emit(PorfileLoading());
 
     final result = await _profileUsecase.addChild(
-      parentId!,
+      parentId,
       event.childName,
       age,
       intersets,
     );
 
     result.when(
-      (_) {
+      (childId) {
+        GetStorage().write('selected_child_id', childId);
         emit(PorfileSuccess('تم إضافة الطفل بنجاح'));
         add(const LoadChildren());
       },
@@ -149,20 +143,8 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       return;
     }
 
-    final userResult = await _authUseCases.getSignedInUser();
-    String? parentId;
-    userResult.when(
-      (user) => parentId = user?.id,
-      (failure) => parentId = null,
-    );
-    if (parentId == null) {
-      emit(
-        PorfileError(
-          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
-        ),
-      );
-      return;
-    }
+    final parentId = await _getParentId(emit);
+    if (parentId == null) return;
 
     final age = int.tryParse(event.childAge);
     if (age == null || age < 1 || age > 12) {
@@ -198,7 +180,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         id: event.childId,
         name: event.childName,
         age: age,
-        parentId: parentId!,
+        parentId: parentId,
         intersets: intersets,
       ),
     );
@@ -219,44 +201,69 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     LoadChildren event,
     Emitter<PorfileState> emit,
   ) async {
+    final parentId = await _getParentId(emit);
+    if (parentId == null) return;
+
     emit(PorfileLoading());
 
-    final userResult = await _authUseCases.getSignedInUser();
-    String? parentId;
-    userResult.when(
-      (user) => parentId = user?.id,
-      (failure) => parentId = null,
+    //  جلب حالة الحماية (لتحديد القيمة الأولية للـ Switch وللمصادقة)
+    final protectionResult = await _profileUsecase.getSettingsProtection(
+      parentId,
     );
-    if (parentId == null) {
-      emit(
-        PorfileError(
-          InputValidationFailure(message: 'الرجاء تسجيل الدخول أولاً'),
-        ),
-      );
-      return;
+    bool isProtected = false;
+    protectionResult.when((isSet) => isProtected = isSet, (failure) {});
+
+    //   المصادقة شرط إظهار محتوى الإعدادات
+    bool accessGranted = false;
+    if (isProtected) {
+      // هنا تكون المصادقة مفعلة: نستدعي المصادقة البيومترية
+      final authResult = await _profileUsecase.authenticateBiometrics();
+      authResult.when((didAuth) => accessGranted = didAuth, (failure) {
+        emit(PorfileError(AuthbiometrecFailures(message: failure.message)));
+        // لا نمنح الوصول ونصدر رسالة خطأ
+      });
+    } else {
+      // المصادقة غير مفعلة: ندخل المستحدم  مباشرة
+      accessGranted = true;
     }
 
-    final kioskModeStatusResult = await _profileUsecase.getKioskModeStatus();
+    //  إذا فشلت المصادقة: إصدار حالة الوصول الممنوع
+    if (!accessGranted) {
+      emit(
+        PorfileChildrenLoaded(
+          const [],
+          currentParentId: parentId,
+          isSettingsProtected: isProtected,
+          accessStatus: AccessStatus.denied, // منع الوصول
+          isChildLockModeActive: false,
+          selectedChildId: null,
+        ),
+      );
+      return; //  إيقاف التحميل
+    }
 
-    final childrenResult = await _profileUsecase.getChildern(parentId!);
+    //   تم منح الوصول: نجيب باقي البيانات
+    final kioskModeStatusResult = await _profileUsecase.getKioskModeStatus();
+    final childrenResult = await _profileUsecase.getChildern(parentId);
 
     bool isKioskModeActive = false;
 
-    kioskModeStatusResult.when(
-      (mode) {
-        isKioskModeActive = (mode == KioskMode.enabled);
-      },
-      (failure) {
-        print('Failed to get Kiosk Mode status: ${failure.message}');
-      },
-    );
+    kioskModeStatusResult.when((mode) {
+      isKioskModeActive = (mode == KioskMode.enabled);
+    }, (failure) {});
 
+    // إصدار الحالة النهائية (الوصول ممنوح)
     childrenResult.when(
       (children) {
+        final selectedChildId = GetStorage().read<String>('selected_child_id');
         emit(
           PorfileChildrenLoaded(
             children,
             isChildLockModeActive: isKioskModeActive,
+            selectedChildId: selectedChildId,
+            currentParentId: parentId,
+            isSettingsProtected: isProtected, // نمرر القيمة الصحيحة
+            accessStatus: AccessStatus.granted, // الحالى تكون تم منح الوصول
           ),
         );
       },
@@ -264,8 +271,9 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
         emit(PorfileError(failure));
       },
     );
-  } //  معالج حدث حذف الطفل
+  }
 
+  //  معالج حدث حذف الطفل
   Future<void> _onDeleteChild(
     DeleteChild event,
     Emitter<PorfileState> emit,
@@ -320,6 +328,98 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
     ageController.clear();
     intersetsController.clear();
     emit(PorfileInitial());
+  }
+
+  Future<void> _onSelectChild(
+    SelectChild event,
+    Emitter<PorfileState> emit,
+  ) async {
+    await GetStorage().write('selected_child_id', event.child.id);
+
+    if (state is PorfileChildrenLoaded) {
+      final currentState = state as PorfileChildrenLoaded;
+      emit(currentState.copyWith(selectedChildId: event.child.id));
+    } else {
+      emit(PorfileChildSelected(event.child));
+    }
+  }
+
+  //       حفظ حالة سويتش حماية الاعدادات  الجديدة
+  FutureOr<void> _onSaveSettingsProtection(
+    SaveSettingsProtectionEvent event,
+    Emitter<PorfileState> emit,
+  ) async {
+    if (state is PorfileChildrenLoaded) {
+      final currentState = state as PorfileChildrenLoaded;
+
+      final parentId = currentState.currentParentId;
+      if (parentId == null) return;
+
+      //  إذا كان المستخدم يبغى السويتش من OFF إلى ON
+      if (event.isProtected) {
+        // هنا نتحقق اول مايظغط على السويتش  توفر المصادقة البيومترية
+        final checkResult = await _profileUsecase.authenticateBiometrics();
+        bool isAvailable = false;
+        checkResult.when((available) => isAvailable = available, (failure) {
+          emit(PorfileError(failure));
+        });
+
+        //  إذا لم تكن المصادقة متوفرة: منع التفعيل
+        if (!isAvailable) {
+          //     قراءة القيمة القديمة false وإرجاع الـ Switch إلى حالة OFF
+          add(const LoadChildren());
+          return; // إيقاف عملية الحفظ
+        }
+      }
+      // نتابع عملية الحفظ
+      emit(currentState.copyWith(accessStatus: AccessStatus.loading));
+
+      final result = await _profileUsecase.saveSettingsProtection(
+        parentId,
+        event.isProtected,
+      );
+
+      result.when(
+        (success) {
+          // إذا نجح الحفظ
+          emit(
+            currentState.copyWith(
+              isSettingsProtected: event.isProtected,
+              accessStatus: AccessStatus.granted, // إعادة الوصول بعد الحفظ
+            ),
+          );
+        },
+        (failure) {
+          // إذا فشل الحفظ
+          emit(
+            currentState.copyWith(
+              accessStatus: AccessStatus.granted,
+              accessErrorMessage: null,
+            ),
+          );
+          emit(PorfileError(failure));
+        },
+      );
+    }
+  }
+
+  /// ميثود مساعدة لجلب  (Parent ID)
+  Future<String?> _getParentId(Emitter<PorfileState> emit) async {
+    final userResult = await _authUseCases.getSignedInUser();
+    String? parentId;
+
+    userResult.when((user) => parentId = user?.id, (failure) {});
+
+    if (parentId == null) {
+      emit(
+        PorfileError(
+          InputValidationFailure(
+            message: 'الرجاء تسجيل الدخول أولاً لإكمال العملية.',
+          ),
+        ),
+      );
+    }
+    return parentId;
   }
 
   @override

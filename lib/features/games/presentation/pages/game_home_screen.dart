@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/pages/wave_page.dart';
 import 'package:la3bob/features/games/presentation/pages/squat_page.dart';
-import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
 
 class GameHomeScreen extends StatelessWidget {
   const GameHomeScreen({super.key});
@@ -16,25 +14,25 @@ class GameHomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Center(child: Text("ألعاب")),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const ProfileScreen()));
-              },
+            Padding(
+              padding: const .all(8.0),
+              child: InkWell(
+                borderRadius: .circular(50),
+                onLongPress: () {
+                  context.push('/profile');
+                },
+                onTap: () {},
+                child: const Padding(
+                  padding: .all(8.0),
+                  child: Icon(Icons.settings),
+                ),
+              ),
             ),
           ],
           bottom: const TabBar(
             tabs: [
-              Tab(
-                text: 'ألعاب تعليمية',
-                icon: Icon(Icons.school),
-              ),
-              Tab(
-                text: 'ألعاب حركية',
-                icon: Icon(Icons.sports),
-              ),
+              Tab(text: 'ألعاب تعليمية', icon: Icon(Icons.school)),
+              Tab(text: 'ألعاب حركية', icon: Icon(Icons.sports)),
             ],
           ),
         ),
@@ -74,11 +72,7 @@ class _EducationalGamesTab extends StatelessWidget {
             // لعبة الحروف
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const LettersGameScreen(),
-                  ),
-                );
+                context.push('/tabs/games/letters');
               },
               child: Container(
                 padding: const EdgeInsets.all(25),
@@ -87,7 +81,7 @@ class _EducationalGamesTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.purple.withOpacity(0.3),
+                      color: Colors.purple.withValues(alpha: .3),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -118,10 +112,7 @@ class _EducationalGamesTab extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.purple,
-                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.purple),
                   ],
                 ),
               ),
@@ -130,11 +121,7 @@ class _EducationalGamesTab extends StatelessWidget {
             // لعبة الأرقام
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const NumbersGameScreen(),
-                  ),
-                );
+                context.push('/tabs/games/numbers');
               },
               child: Container(
                 padding: const EdgeInsets.all(25),
@@ -143,7 +130,7 @@ class _EducationalGamesTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.3),
+                      color: Colors.blue.withValues(alpha: .3),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -179,6 +166,55 @@ class _EducationalGamesTab extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 30),
+            // لعبة الألوان
+            GestureDetector(
+              onTap: () {
+                context.push('/tabs/games/colors');
+              },
+              child: Container(
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withValues(alpha: .3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'لعبة الألوان',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'تعلم أسماء الألوان العربية',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.orange),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -209,11 +245,9 @@ class _PhysicalGamesTab extends StatelessWidget {
             // لعبة الموجة (Wave)
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const WaveGamePage(),
-                  ),
-                );
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const WaveGamePage()));
               },
               child: Container(
                 padding: const EdgeInsets.all(25),
@@ -222,7 +256,7 @@ class _PhysicalGamesTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.orange.withOpacity(0.3),
+                      color: Colors.orange.withValues(alpha: .3),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -253,10 +287,7 @@ class _PhysicalGamesTab extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.orange,
-                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.orange),
                   ],
                 ),
               ),
@@ -266,9 +297,7 @@ class _PhysicalGamesTab extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const SquatGamePage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const SquatGamePage()),
                 );
               },
               child: Container(
@@ -278,7 +307,7 @@ class _PhysicalGamesTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.green.withOpacity(0.3),
+                      color: Colors.green.withValues(alpha: .3),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -309,10 +338,7 @@ class _PhysicalGamesTab extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.green,
-                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.green),
                   ],
                 ),
               ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
+import 'package:la3bob/features/profiles/presentation/widgets/interests_selector.dart';
 
 class AddChildScreen extends StatelessWidget {
   const AddChildScreen({super.key});
@@ -11,6 +13,7 @@ class AddChildScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final Set<String> selectedInterests = <String>{};
 
     return BlocProvider(
       create: (context) =>
@@ -19,17 +22,20 @@ class AddChildScreen extends StatelessWidget {
         appBar: AppBar(title: const Text('إضافة طفل')),
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
-            if (state is PorfileLoading) {
-              Navigator.of(context).pop(true);
-            } else if (state is PorfileSuccess) {
+            if (state is PorfileSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
                   backgroundColor: Colors.green,
                 ),
               );
+           
+              if (context.canPop()) {
+                context.pop(true);
+              } else {
+                context.go('/tabs/videos');
+              }
             } else if (state is PorfileError) {
-              Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.failure.message),
@@ -48,11 +54,11 @@ class AddChildScreen extends StatelessWidget {
               }
 
               return SingleChildScrollView(
-                padding: const .all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Form(
                   key: formKey,
                   child: Column(
-                    crossAxisAlignment: .stretch,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 20),
                       TextFormField(
@@ -89,39 +95,44 @@ class AddChildScreen extends StatelessWidget {
                             return 'الرجاء إدخال عمر الطفل';
                           }
                           final age = int.tryParse(value);
-                          if (age == null || age < 1 || age > 13) {
-                            return 'الرجاء إدخال عمر صحيح (من 1 إلى 18)';
+                          if (age == null || age < 3 || age > 12) {
+                            return 'الرجاء إدخال عمر صحيح (من 3 إلى 12)';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: bloc.intersetsController,
-                        enabled: !isLoading,
-                        decoration: const InputDecoration(
-                          labelText: 'اهتمامات الطفل',
-                          hintText:
-                              'أدخل اهتمامات الطفل (مثل: الرسم، القراءة، الرياضة...)',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.favorite),
-                          alignLabelWithHint: true,
-                        ),
-                        maxLines: 4,
-                        textDirection: TextDirection.rtl,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'الرجاء إدخال اهتمامات الطفل';
-                          }
-                          return null;
+
+                      InterestsSelector(
+                        selectedInterests: selectedInterests,
+                        onChanged: (interests) {
+                          selectedInterests
+                            ..clear()
+                            ..addAll(interests);
                         },
                       ),
+
                       const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: isLoading
                             ? null
                             : () {
                                 if (formKey.currentState!.validate()) {
+                                  if (selectedInterests.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'الرجاء اختيار اهتمام واحد على الأقل',
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  bloc.intersetsController.text =
+                                      selectedInterests.join(', ');
+
                                   bloc.add(
                                     SubmitChildForm(
                                       childName: bloc.nameController.text
@@ -136,9 +147,9 @@ class AddChildScreen extends StatelessWidget {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          padding: const .only(top: 16, bottom: 16),
+                          padding: const EdgeInsets.only(top: 16, bottom: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: .circular(8),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                         child: isLoading

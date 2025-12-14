@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../domain/entities/video_entity.dart';
+import '../bloc/videos_bloc.dart';
 
 class VideoPlayerScreen extends StatelessWidget {
   final VideoEntity video;
 
   const VideoPlayerScreen({super.key, required this.video});
 
-  String _extractVideoId(String url) {
-    final regex = RegExp(
-      r'(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})',
-    );
-    final match = regex.firstMatch(url);
-    return match?.group(1) ?? url;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final videoId = _extractVideoId(video.link);
+    final videoId = VideosBloc.extractVideoId(video.link);
     return Scaffold(
       appBar: AppBar(
         title: Text(video.title, maxLines: 1, overflow: TextOverflow.ellipsis),

@@ -1,7 +1,6 @@
 import '../../domain/repositories/wave_repository.dart';
 import '../../domain/entities/wave_movement.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-import 'dart:math' as math;
 
 class WaveDetectorService implements WaveRepository {
   // ---------- state ----------

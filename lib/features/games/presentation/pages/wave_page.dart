@@ -10,7 +10,7 @@ import '../../../../../../core/di/injection.dart'; // import getIt
 
 class WaveGamePage extends StatefulWidget {
   final List<CameraDescription>? cameras;
-  const WaveGamePage({Key? key, this.cameras}) : super(key: key);
+  const WaveGamePage({super.key, this.cameras});
 
   @override
   State<WaveGamePage> createState() => _WaveGamePageState();

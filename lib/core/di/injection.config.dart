@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:get_storage/get_storage.dart' as _i792;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:local_auth/local_auth.dart' as _i152;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart'
@@ -27,6 +28,8 @@ import '../../features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart'
     as _i157;
 import '../../features/profiles/data/datasource/profiles_datasource.dart'
     as _i452;
+import '../../features/profiles/data/datasource/profiles_utility_datasource.dart'
+    as _i382;
 import '../../features/profiles/data/repositories/profiles_repository.dart'
     as _i282;
 import '../../features/profiles/domain/repositories/profiles_repository.dart'
@@ -39,7 +42,7 @@ import '../../features/videos/domain/repositories/videos_repository.dart'
     as _i836;
 import '../../features/videos/domain/usecase/videos_usecase.dart' as _i362;
 import '../../features/videos/presentation/bloc/videos_bloc.dart' as _i135;
-import 'injection.dart' as _i450;
+import 'injection.dart' as _i464;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -53,8 +56,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i454.SupabaseClient>(
       () => thirdPartyModule.supabaseClient,
     );
+    gh.lazySingleton<_i152.LocalAuthentication>(() => thirdPartyModule.auth);
     gh.lazySingleton<_i107.AuthRemoteDataSource>(
       () => _i123.AuthRemoteDataSourceImpl(gh<_i454.SupabaseClient>()),
+    );
+    gh.factory<_i382.ProfilesUtilityDataSource>(
+      () => _i382.ProfilesUtilityDataSourceImpl(
+        gh<_i792.GetStorage>(),
+        gh<_i152.LocalAuthentication>(),
+      ),
     );
     gh.lazySingleton<_i998.AuthRepositoryDomain>(
       () => _i596.AuthRepositoryImpl(gh<_i107.AuthRemoteDataSource>()),
@@ -71,23 +81,30 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i157.AuthCubit>(
       () => _i157.AuthCubit(gh<_i544.AuthUseCases>()),
     );
-    gh.factory<_i141.ProfilesRepository>(
-      () => _i282.ProfilesRepositoryData(gh<_i452.ProfilesDatasource>()),
-    );
     gh.factory<_i836.VideosRepository>(
       () => _i622.VideosRepositoryData(gh<_i889.VideosDatasource>()),
-    );
-    gh.factory<_i1022.ProfileUsecase>(
-      () => _i1022.ProfileUsecase(gh<_i141.ProfilesRepository>()),
     );
     gh.factory<_i362.VideosUsecase>(
       () => _i362.VideosUsecase(gh<_i836.VideosRepository>()),
     );
+    gh.factory<_i141.ProfilesRepository>(
+      () => _i282.ProfilesRepositoryData(
+        gh<_i452.ProfilesDatasource>(),
+        gh<_i382.ProfilesUtilityDataSource>(),
+      ),
+    );
+    gh.factory<_i1022.ProfileUsecase>(
+      () => _i1022.ProfileUsecase(gh<_i141.ProfilesRepository>()),
+    );
     gh.factory<_i135.VideosBloc>(
-      () => _i135.VideosBloc(gh<_i362.VideosUsecase>()),
+      () => _i135.VideosBloc(
+        gh<_i362.VideosUsecase>(),
+        gh<_i1022.ProfileUsecase>(),
+        gh<_i544.AuthUseCases>(),
+      ),
     );
     return this;
   }
 }
 
-class _$ThirdPartyModule extends _i450.ThirdPartyModule {}
+class _$ThirdPartyModule extends _i464.ThirdPartyModule {}

@@ -10,7 +10,7 @@ import '../widgets/camera_preview.dart';
 
 class SquatGamePage extends StatefulWidget {
   final List<CameraDescription>? cameras;
-  const SquatGamePage({Key? key, this.cameras}) : super(key: key);
+  const SquatGamePage({super.key, this.cameras});
 
   @override
   State<SquatGamePage> createState() => _SquatGamePageState();
