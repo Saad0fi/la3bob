@@ -17,6 +17,8 @@ abstract class ProfilesDatasource {
 
   Future<void> updateChild(ChildModel child);
 
+  Future<void> deleteAccount();
+
   Future<void> startKioskmode();
 
   Future<void> stopKioskmode();
@@ -29,6 +31,7 @@ class ApiProfileDatasource implements ProfilesDatasource {
   final SupabaseClient _supabaseClient;
 
   ApiProfileDatasource(this._supabaseClient);
+
   @override
   Future<List<ChildModel>> getChildern(String parentId) async {
     final data = await _supabaseClient
@@ -45,12 +48,16 @@ class ApiProfileDatasource implements ProfilesDatasource {
     int age,
     List<String> intersets,
   ) async {
-    final response = await _supabaseClient.from('children').insert({
-      'parent_id': parentId,
-      'name': name,
-      'age': age,
-      'intersets': intersets,
-    }).select('id').single();
+    final response = await _supabaseClient
+        .from('children')
+        .insert({
+          'parent_id': parentId,
+          'name': name,
+          'age': age,
+          'intersets': intersets,
+        })
+        .select('id')
+        .single();
     return response['id'] as String;
   }
 
@@ -80,5 +87,11 @@ class ApiProfileDatasource implements ProfilesDatasource {
   @override
   Future<KioskMode> getKioskModeStatus() async {
     return await getKioskMode();
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    await _supabaseClient.rpc('delete_self_user');
+    await _supabaseClient.auth.signOut();
   }
 }
