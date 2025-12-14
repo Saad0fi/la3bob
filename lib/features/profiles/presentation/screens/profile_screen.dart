@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:la3bob/core/comon/helper_function/dialog_helper.dart';
 import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
@@ -292,7 +293,16 @@ class ProfileScreen extends StatelessWidget {
                                                 color: Colors.red,
                                               ),
                                               onPressed: () async {
-                                                bloc.add(DeleteChild(child.id));
+                                                showDeleteConfirmationDialog(
+                                                  context: context,
+                                                  itemName:
+                                                      "ملف الطفل ${child.name}",
+                                                  onConfirm: () {
+                                                    bloc.add(
+                                                      DeleteChild(child.id),
+                                                    );
+                                                  },
+                                                );
                                               },
                                             ),
                                           ],
@@ -356,7 +366,12 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         SettingsItem(
                           onTap: () {
-                            bloc.add(const LogoutRequested());
+                            showLogoutConfirmationDialog(
+                              context: context,
+                              onConfirmLogout: () {
+                                bloc.add(const LogoutRequested());
+                              },
+                            );
                           },
                           icons: Icons.exit_to_app_rounded,
                           title: "تسجيل الخروج",

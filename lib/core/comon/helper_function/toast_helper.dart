@@ -28,7 +28,7 @@ Color _getToastColor(ToastType type) {
 
 void showAppToast({
   required String message,
-  ToastType type = ToastType.info, // القيمة الافتراضية هي info
+  ToastType type = ToastType.info, // القيمة الافتراضية
 }) {
   Fluttertoast.showToast(
     msg: message,
