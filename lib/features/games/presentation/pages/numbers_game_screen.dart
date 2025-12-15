@@ -104,155 +104,153 @@ class NumbersGameScreen extends StatelessWidget {
                     ),
                   ),
                   child: SafeArea(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: .all(5.w),
-                        child: Column(
-                          children: [
-                            LinearProgressIndicator(
-                              value: progress,
-                              backgroundColor: Colors.white,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.blue.shade400,
-                              ),
-                              minHeight: 2.h,
+                    child: Padding(
+                      padding: EdgeInsets.all(5.w),
+                      child: Column(
+                        children: [
+                          LinearProgressIndicator(
+                            value: progress,
+                            backgroundColor: Colors.white,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.blue.shade400,
                             ),
-                            SizedBox(height: 2.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            minHeight: 2.h,
+                          ),
+                          SizedBox(height: 2.h),
+                          Row(
+                            mainAxisAlignment: .spaceBetween,
+                            children: [
+                              Text(
+                                'السؤال: ${completedState.totalQuestions}/${completedState.totalQuestions}',
+                                style: TextStyle(
+                                  fontSize: 12.dp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'النقاط: ${completedState.score}',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 4.h),
+                          Container(
+                            padding: .all(8.w),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withValues(alpha: 0.3),
+                                  blurRadius: 5.w,
+                                  spreadRadius: 1.w,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: .min,
                               children: [
                                 Text(
-                                  'السؤال: ${completedState.totalQuestions}/${completedState.totalQuestions}',
+                                  'كم عدد النجوم؟',
                                   style: TextStyle(
-                                    fontSize: 12.dp,
+                                    fontSize: 14.dp,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
                                   ),
                                 ),
-                                Text(
-                                  'النقاط: ${completedState.score}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
+                                SizedBox(height: 2.h),
+                                Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  alignment: WrapAlignment.center,
+                                  children: List.generate(
+                                    10,
+                                    (index) => index < count
+                                        ? const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                            size: 40,
+                                          )
+                                        : const SizedBox(
+                                            width: 40,
+                                            height: 40,
+                                          ),
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 4.h),
-                            Container(
-                              padding: EdgeInsets.all(8.w),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.blue.withValues(alpha: 0.3),
-                                    blurRadius: 5.w,
-                                    spreadRadius: 1.w,
-                                  ),
-                                ],
+                          ),
+                          SizedBox(height: 4.h),
+                          Expanded(
+                            child: GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 4.w,
+                                mainAxisSpacing: 4.h,
+                                childAspectRatio: 1.5,
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'كم عدد النجوم؟',
-                                    style: TextStyle(
-                                      fontSize: 14.dp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                  SizedBox(height: 2.h),
-                                  Wrap(
-                                    spacing: 10,
-                                    runSpacing: 10,
-                                    alignment: WrapAlignment.center,
-                                    children: List.generate(
-                                      10,
-                                      (index) => index < count
-                                          ? const Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                              size: 40,
-                                            )
-                                          : const SizedBox(
-                                              width: 40,
-                                              height: 40,
-                                            ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            Expanded(
-                              child: GridView.builder(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 4.w,
-                                      mainAxisSpacing: 4.h,
-                                      childAspectRatio: 1.5,
-                                    ),
-                                itemCount: (question['options'] as List).length,
-                                itemBuilder: (context, index) {
-                                  final number =
-                                      (question['options'] as List)[index]
-                                          as int;
-                                  Color? backgroundColor;
+                              itemCount: (question['options'] as List).length,
+                              itemBuilder: (context, index) {
+                                final number =
+                                    (question['options'] as List)[index] as int;
+                                Color? backgroundColor;
 
-                                  if (number == count) {
-                                    backgroundColor = Colors.green.shade300;
-                                  } else {
-                                    backgroundColor = Colors.grey.shade300;
-                                  }
+                                if (number == count) {
+                                  backgroundColor = Colors.green.shade300;
+                                } else {
+                                  backgroundColor = Colors.grey.shade300;
+                                }
 
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: backgroundColor,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 10,
-                                          spreadRadius: 2,
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: backgroundColor,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 10,
+                                        spreadRadius: 2,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          .center,
+                                      children: [
+                                        Text(
+                                          number.toString(),
+                                          style: TextStyle(
+                                            fontSize: 32.dp,
+                                            fontWeight: FontWeight.bold,
+                                            color: number == count
+                                                ? Colors.white
+                                                : Colors.blue.shade700,
+                                          ),
+                                        ),
+                                        Text(
+                                          _getArabicNumber(number),
+                                          style: TextStyle(
+                                            fontSize: 14.dp,
+                                            color: number == count
+                                                ? Colors.white
+                                                : Colors.blue.shade700,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            number.toString(),
-                                            style: TextStyle(
-                                              fontSize: 32.dp,
-                                              fontWeight: FontWeight.bold,
-                                              color: number == count
-                                                  ? Colors.white
-                                                  : Colors.blue.shade700,
-                                            ),
-                                          ),
-                                          Text(
-                                            _getArabicNumber(number),
-                                            style: TextStyle(
-                                              fontSize: 14.dp,
-                                              color: number == count
-                                                  ? Colors.white
-                                                  : Colors.blue.shade700,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -287,7 +285,7 @@ class NumbersGameScreen extends StatelessWidget {
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: .all(5.w),
                     child: Column(
                       children: [
                         LinearProgressIndicator(
@@ -321,7 +319,7 @@ class NumbersGameScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 40),
                         Container(
-                          padding: const EdgeInsets.all(30),
+                          padding: .all(8.w),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
@@ -363,16 +361,17 @@ class NumbersGameScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 4.h),
                         Expanded(
                           child: GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 15,
-                                  childAspectRatio: 1.5,
-                                ),
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 4.w,
+                              mainAxisSpacing: 4.h,
+                              childAspectRatio: 1.5,
+                            ),
                             itemCount: (question['options'] as List).length,
                             itemBuilder: (context, index) {
                               final number =
@@ -404,8 +403,8 @@ class NumbersGameScreen extends StatelessWidget {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: backgroundColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
+                                    borderRadius: .circular(20),
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black26,
                                         blurRadius: 10,
@@ -423,8 +422,7 @@ class NumbersGameScreen extends StatelessWidget {
                                           style: TextStyle(
                                             fontSize: 32.dp,
                                             fontWeight: FontWeight.bold,
-                                            color:
-                                                gameState.showResult &&
+                                            color: gameState.showResult &&
                                                     number == count
                                                 ? Colors.white
                                                 : Colors.blue.shade700,
@@ -434,8 +432,7 @@ class NumbersGameScreen extends StatelessWidget {
                                           _getArabicNumber(number),
                                           style: TextStyle(
                                             fontSize: 14.dp,
-                                            color:
-                                                gameState.showResult &&
+                                            color: gameState.showResult &&
                                                     number == count
                                                 ? Colors.white
                                                 : Colors.blue.shade700,

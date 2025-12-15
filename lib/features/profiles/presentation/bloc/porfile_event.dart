@@ -86,7 +86,15 @@ class SelectChild extends PorfileEvent {
 class SaveSettingsProtectionEvent extends PorfileEvent {
   final bool isProtected;
   const SaveSettingsProtectionEvent({required this.isProtected});
-
   @override
   List<Object> get props => [isProtected];
+}
+
+// لإجبار البلوك على إعادة تحميل البيانات من السيرفر
+class ForceReload extends PorfileEvent {
+  const ForceReload();
+}
+
+class DeleteAcount extends PorfileEvent {
+  const DeleteAcount();
 }

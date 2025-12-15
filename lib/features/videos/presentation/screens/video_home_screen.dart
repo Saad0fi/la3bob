@@ -4,6 +4,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/di/injection.dart';
+import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/videos/presentation/bloc/videos_bloc.dart';
 
 class VideoHomeScreen extends StatelessWidget {
@@ -33,6 +34,7 @@ class VideoHomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: .circular(12.w),
                     onLongPress: () async {
+                      context.read<PorfileBloc>().add(const LoadChildren());
                       await context.push('/profile');
                       if (context.mounted) {
                         context.read<VideosBloc>().add(const LoadVideos());
@@ -60,13 +62,13 @@ class VideoHomeScreen extends StatelessWidget {
                       children: [
                         Text(
                           'خطأ في تحميل الفيديوهات',
-                          style: TextStyle(fontSize: 14.dp, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 14.dp,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         SizedBox(height: 2.h),
-                        Text(
-                          state.message,
-                          style: TextStyle(fontSize: 12.dp),
-                        ),
+                        Text(state.message, style: TextStyle(fontSize: 12.dp)),
                         SizedBox(height: 4.h),
                         ElevatedButton(
                           onPressed: () {
@@ -107,7 +109,10 @@ class VideoHomeScreen extends StatelessWidget {
                             selectedChildId != null
                                 ? 'لا توجد فيديوهات متاحة لاهتمامات الطفل المختار'
                                 : 'لا توجد فيديوهات متاحة',
-                            style: TextStyle(fontSize: 12.dp, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 12.dp,
+                              fontWeight: FontWeight.bold,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           if (selectedChildId != null) ...[
@@ -140,21 +145,23 @@ class VideoHomeScreen extends StatelessWidget {
                                     selected: selectedInterest == null,
                                     onSelected: (_) {
                                       context.read<VideosBloc>().add(
-                                            const SelectInterest(null),
-                                          );
+                                        const SelectInterest(null),
+                                      );
                                     },
                                   ),
                                   ...interests.map((interest) {
                                     final isSelected =
-                                        selectedInterest?.toLowerCase().trim() ==
+                                        selectedInterest
+                                            ?.toLowerCase()
+                                            .trim() ==
                                         interest.toLowerCase().trim();
                                     return ChoiceChip(
                                       label: Text(interest),
                                       selected: isSelected,
                                       onSelected: (_) {
                                         context.read<VideosBloc>().add(
-                                              SelectInterest(interest),
-                                            );
+                                          SelectInterest(interest),
+                                        );
                                       },
                                     );
                                   }),
@@ -170,7 +177,10 @@ class VideoHomeScreen extends StatelessWidget {
                           SizedBox(height: 3.h),
                           Text(
                             'لا توجد فيديوهات لهذا الاهتمام',
-                            style: TextStyle(fontSize: 12.dp, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 12.dp,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -264,9 +274,10 @@ class VideoHomeScreen extends StatelessWidget {
                                                 height: 25.h,
                                                 color: Colors.grey[200],
                                                 child: Center(
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 1.w,
-                                                  ),
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 1.w,
+                                                      ),
                                                 ),
                                               );
                                             },

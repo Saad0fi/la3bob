@@ -39,7 +39,12 @@ class ProfilesRepositoryData implements ProfilesRepository {
     List<String> intersets,
   ) async {
     try {
-      final childId = await _datasource.addChild(parentId, name, age, intersets);
+      final childId = await _datasource.addChild(
+        parentId,
+        name,
+        age,
+        intersets,
+      );
       return Success(childId);
     } catch (e) {
       return Error(
@@ -149,7 +154,17 @@ class ProfilesRepositoryData implements ProfilesRepository {
 
       return const Success(null);
     } catch (e) {
-      return Error(LocalCacheFailure(message: "فشل حفظ إعدادات الحماية: "));
+      return Error(LocalCacheFailure(message: "فشل حفظ إعدادات الحماية "));
+    }
+  }
+
+  @override
+  Future<Result<void, ProfilesFailure>> deleteAccount() async {
+    try {
+      await _datasource.deleteAccount();
+      return const Success(null);
+    } catch (e) {
+      return Error(DatabaseFailure(message: " فشل حذف الحساب حاول مرة اخرى"));
     }
   }
 }

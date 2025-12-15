@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:go_router/go_router.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
@@ -28,19 +28,12 @@ class UpdateChildScreen extends StatelessWidget {
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
             if (state is PorfileSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              context.pop(true);
+              showAppToast(message: state.message, type: ToastType.success);
+              Navigator.of(context).pop(true);
             } else if (state is PorfileError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.failure.message),
-                  backgroundColor: Colors.red,
-                ),
+              showAppToast(
+                message: state.failure.message,
+                type: ToastType.failure,
               );
             }
           },
@@ -116,15 +109,12 @@ class UpdateChildScreen extends StatelessWidget {
                             : () {
                                 if (formKey.currentState!.validate()) {
                                   if (selectedInterests.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
+                                    showAppToast(
+                                      message:
                                           'الرجاء اختيار اهتمام واحد على الأقل',
-                                          style: TextStyle(fontSize: 10.dp),
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ),
+                                      type: ToastType.failure,
                                     );
+
                                     return;
                                   }
 

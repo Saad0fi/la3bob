@@ -13,7 +13,7 @@ class KioskModeFailure extends ProfilesFailure {
   const KioskModeFailure({required super.message});
 }
 
-//  فشل خاص بالاتصال أو العمليات على قاعدة البيانات (الـ CRUD)
+//  فشل خاص بالاتصال أو العمليات على قاعدة البيانات (CRUD)
 class DatabaseFailure extends ProfilesFailure {
   const DatabaseFailure({required super.message});
 }

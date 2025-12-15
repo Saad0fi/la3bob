@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
@@ -24,24 +25,17 @@ class AddChildScreen extends StatelessWidget {
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
             if (state is PorfileSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-           
-              if (context.canPop()) {
-                context.pop(true);
+              showAppToast(message: state.message, type: ToastType.success);
+
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop(true);
               } else {
                 context.go('/tabs/videos');
               }
             } else if (state is PorfileError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.failure.message),
-                  backgroundColor: Colors.red,
-                ),
+              showAppToast(
+                message: state.failure.message,
+                type: ToastType.failure,
               );
             }
           },
@@ -71,7 +65,6 @@ class AddChildScreen extends StatelessWidget {
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
                         ),
-                        textDirection: TextDirection.rtl,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'الرجاء إدخال اسم الطفل';
@@ -90,7 +83,6 @@ class AddChildScreen extends StatelessWidget {
                           prefixIcon: Icon(Icons.cake),
                         ),
                         keyboardType: TextInputType.number,
-                        textDirection: TextDirection.rtl,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'الرجاء إدخال عمر الطفل';
@@ -121,10 +113,9 @@ class AddChildScreen extends StatelessWidget {
                                 if (formKey.currentState!.validate()) {
                                   if (selectedInterests.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                         content: Text(
                                           'الرجاء اختيار اهتمام واحد على الأقل',
-                                          style: TextStyle(fontSize: 10.dp),
                                         ),
                                         backgroundColor: Colors.red,
                                       ),
