@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/pages/wave_page.dart';
 import 'package:la3bob/features/games/presentation/pages/squat_page.dart';
+import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 
 class GameHomeScreen extends StatelessWidget {
   const GameHomeScreen({super.key});
@@ -20,6 +22,8 @@ class GameHomeScreen extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(12.w),
                 onLongPress: () {
+                  context.read<PorfileBloc>().add(const LoadChildren());
+
                   context.push('/profile');
                 },
                 onTap: () {},
