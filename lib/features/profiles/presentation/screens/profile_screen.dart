@@ -8,6 +8,7 @@ import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/update_child_screen.dart';
+import 'package:pull_down_button/pull_down_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -34,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
               ).push(MaterialPageRoute(builder: (_) => const AddChildScreen()));
 
               if (result == true) {
-                // إعادة تحميل بيانات الاطفال  بعد إضافة طفل جديد
+                // إعادة تحميل بيانات الاطفال بعد إضافة طفل جديد
                 bloc.add(const ForceReload());
               }
             },
@@ -44,7 +45,7 @@ class ProfileScreen extends StatelessWidget {
 
       body: BlocListener<PorfileBloc, PorfileState>(
         listener: (context, state) {
-          // معالجة النجاح  (Logout, Save Settings, Toggle Lock Mode)
+          // معالجة النجاح  (Logout, Save Settings, Toggle Lock Mode)
           if (state is PorfileSuccess) {
             showAppToast(message: state.message, type: ToastType.success);
             if (state.message == 'تم تسجيل الخروج بنجاح') {
@@ -71,7 +72,7 @@ class ProfileScreen extends StatelessWidget {
             );
           }
 
-          //  معالجة حالة رفض الوصول المصادقة فشلت
+          //  معالجة حالة رفض الوصول المصادقة فشلت
           if (state is PorfileChildrenLoaded) {
             if (state.accessStatus == AccessStatus.denied) {
               Navigator.of(context).pop();
@@ -128,7 +129,7 @@ class ProfileScreen extends StatelessWidget {
                   // قسم بيانات ولي الأمر (BigUserCard)
                   SliverToBoxAdapter(
                     child: BigUserCard(
-                      backgroundColor: Colors.blueAccent.shade700,
+                      backgroundColor: Colors.green.shade700,
                       userName: parentName,
                       userProfilePic: const AssetImage(
                         "assets/images/image8.png",
@@ -139,7 +140,7 @@ class ProfileScreen extends StatelessWidget {
                           iconsColor: Colors.white,
                           withBackground: true,
                           borderRadius: 50,
-                          backgroundColor: Colors.blueAccent.shade700,
+                          backgroundColor: Colors.green.shade700,
                         ),
                         title: "البريد الإلكتروني",
                         subtitle: parentEmail,
@@ -240,8 +241,10 @@ class ProfileScreen extends StatelessWidget {
                               ]
                             : children.map((child) {
                                 final isSelected = child.id == selectedChildId;
+
                                 return SettingsItem(
                                   onTap: () {
+                                    // إطلاق حدث اختيار الطفل
                                     bloc.add(SelectChild(child));
                                   },
                                   icons: CupertinoIcons.person_alt_circle_fill,
@@ -252,85 +255,59 @@ class ProfileScreen extends StatelessWidget {
                                   iconStyle: IconStyle(
                                     iconsColor: Colors.white,
                                     backgroundColor: isSelected
-                                        ? Colors.blue
-                                        : Colors.green,
+                                        ? Colors.green.shade700
+                                        : Colors.grey,
                                   ),
-                                  trailing: isSelected
-                                      ? Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(
-                                              Icons.check_circle,
-                                              color: Colors.blue,
-                                              size: 24,
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                size: 20,
-                                              ),
-                                              onPressed: () async {
-                                                final result =
-                                                    await Navigator.of(
-                                                      context,
-                                                    ).push(
-                                                      MaterialPageRoute(
-                                                        builder: (_) =>
-                                                            UpdateChildScreen(
-                                                              child: child,
-                                                            ),
+
+                                  trailing: PullDownButton(
+                                    itemBuilder: (context) => [
+                                      //  زر التعديل
+                                      PullDownMenuItem(
+                                        title: 'تعديل بيانات الطفل',
+                                        icon: Icons.edit,
+                                        onTap: () async {
+                                          final result =
+                                              await Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      UpdateChildScreen(
+                                                        child: child,
                                                       ),
-                                                    );
+                                                ),
+                                              );
 
-                                                if (result == true) {
-                                                  bloc.add(const ForceReload());
-                                                }
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.delete_forever_rounded,
-                                                size: 20,
-                                                color: Colors.red,
-                                              ),
-                                              onPressed: () async {
-                                                showDeleteConfirmationDialog(
-                                                  context: context,
-                                                  itemName:
-                                                      "ملف الطفل ${child.name}",
-                                                  onConfirm: () {
-                                                    bloc.add(
-                                                      DeleteChild(child.id),
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        )
-                                      : IconButton(
+                                          if (result == true) {
+                                            bloc.add(const ForceReload());
+                                          }
+                                        },
+                                      ),
+
+                                      //  زر الحذف
+                                      PullDownMenuItem(
+                                        title: 'حذف الطفل',
+                                        icon: CupertinoIcons.delete,
+                                        isDestructive: true,
+                                        onTap: () {
+                                          showDeleteConfirmationDialog(
+                                            context: context,
+                                            itemName: "ملف الطفل ${child.name}",
+                                            onConfirm: () {
+                                              bloc.add(DeleteChild(child.id));
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                    buttonBuilder: (context, showMenu) =>
+                                        IconButton(
                                           icon: const Icon(
-                                            Icons.edit,
-                                            size: 20,
+                                            CupertinoIcons.ellipsis_circle,
+                                            size: 24,
                                           ),
-                                          onPressed: () async {
-                                            final result =
-                                                await Navigator.of(
-                                                  context,
-                                                ).push(
-                                                  MaterialPageRoute(
-                                                    builder: (_) =>
-                                                        UpdateChildScreen(
-                                                          child: child,
-                                                        ),
-                                                  ),
-                                                );
-
-                                            if (result == true) {
-                                              bloc.add(const ForceReload());
-                                            }
-                                          },
+                                          onPressed: //
+                                              showMenu,
                                         ),
+                                  ),
                                 );
                               }).toList(),
                       ),
@@ -354,7 +331,7 @@ class ProfileScreen extends StatelessWidget {
                               },
                             );
                           },
-                          icons: Icons.delete_forever_rounded,
+                          icons: CupertinoIcons.delete,
                           title: "حذف الحساب",
                           titleStyle: const TextStyle(color: Colors.red),
                         ),

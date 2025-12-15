@@ -283,7 +283,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
 
     result.when((_) {
       emit(PorfileSuccess('تم حذف الطفل بنجاح'));
-      add(const LoadChildren());
+      add(const ForceReload());
     }, (ProfilesFailure failure) => emit(PorfileError(failure)));
   }
 
