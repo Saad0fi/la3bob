@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
@@ -27,19 +28,12 @@ class UpdateChildScreen extends StatelessWidget {
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
             if (state is PorfileSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              context.pop(true);
+              showAppToast(message: state.message, type: ToastType.success);
+              Navigator.of(context).pop(true);
             } else if (state is PorfileError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.failure.message),
-                  backgroundColor: Colors.red,
-                ),
+              showAppToast(
+                message: state.failure.message,
+                type: ToastType.failure,
               );
             }
           },
@@ -52,13 +46,13 @@ class UpdateChildScreen extends StatelessWidget {
               }
 
               return SingleChildScrollView(
-                padding: const .all(16.0),
+                padding: .all(4.w),
                 child: Form(
                   key: formKey,
                   child: Column(
                     crossAxisAlignment: .stretch,
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       TextFormField(
                         controller: bloc.nameController,
                         enabled: state is! PorfileLoading,
@@ -75,7 +69,7 @@ class UpdateChildScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       TextFormField(
                         controller: bloc.ageController,
                         enabled: state is! PorfileLoading,
@@ -97,7 +91,7 @@ class UpdateChildScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
 
                       InterestsSelector(
                         selectedInterests: selectedInterests,
@@ -108,21 +102,19 @@ class UpdateChildScreen extends StatelessWidget {
                         },
                       ),
 
-                      const SizedBox(height: 30),
+                      SizedBox(height: 4.h),
                       ElevatedButton(
                         onPressed: state is PorfileLoading
                             ? null
                             : () {
                                 if (formKey.currentState!.validate()) {
                                   if (selectedInterests.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
+                                    showAppToast(
+                                      message:
                                           'الرجاء اختيار اهتمام واحد على الأقل',
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ),
+                                      type: ToastType.failure,
                                     );
+
                                     return;
                                   }
 
@@ -144,14 +136,14 @@ class UpdateChildScreen extends StatelessWidget {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          padding: const .only(top: 16, bottom: 16),
+                          padding: .all(2.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: .circular(8),
+                            borderRadius: .circular(2.w),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'حفظ التعديلات',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 12.dp),
                         ),
                       ),
                     ],

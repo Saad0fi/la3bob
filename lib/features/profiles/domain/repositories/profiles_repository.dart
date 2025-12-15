@@ -18,6 +18,8 @@ abstract class ProfilesRepository {
 
   Future<Result<void, ProfilesFailure>> updateChild(ChildEntity child);
 
+  Future<Result<void, ProfilesFailure>> deleteAccount();
+
   Future<Result<void, ProfilesFailure>> startKioskmode();
 
   Future<Result<void, ProfilesFailure>> stopKioskmode();

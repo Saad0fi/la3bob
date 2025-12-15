@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
+import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
 import 'package:la3bob/features/profiles/domain/usecase/profile_usecase.dart';
@@ -23,24 +25,17 @@ class AddChildScreen extends StatelessWidget {
         body: BlocListener<PorfileBloc, PorfileState>(
           listener: (context, state) {
             if (state is PorfileSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-           
-              if (context.canPop()) {
-                context.pop(true);
+              showAppToast(message: state.message, type: ToastType.success);
+
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop(true);
               } else {
                 context.go('/tabs/videos');
               }
             } else if (state is PorfileError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.failure.message),
-                  backgroundColor: Colors.red,
-                ),
+              showAppToast(
+                message: state.failure.message,
+                type: ToastType.failure,
               );
             }
           },
@@ -54,13 +49,13 @@ class AddChildScreen extends StatelessWidget {
               }
 
               return SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
+                padding: .all(4.w),
                 child: Form(
                   key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       TextFormField(
                         controller: bloc.nameController,
                         enabled: !isLoading,
@@ -70,7 +65,6 @@ class AddChildScreen extends StatelessWidget {
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
                         ),
-                        textDirection: TextDirection.rtl,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'الرجاء إدخال اسم الطفل';
@@ -78,7 +72,7 @@ class AddChildScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       TextFormField(
                         controller: bloc.ageController,
                         enabled: !isLoading,
@@ -89,7 +83,6 @@ class AddChildScreen extends StatelessWidget {
                           prefixIcon: Icon(Icons.cake),
                         ),
                         keyboardType: TextInputType.number,
-                        textDirection: TextDirection.rtl,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'الرجاء إدخال عمر الطفل';
@@ -101,7 +94,7 @@ class AddChildScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
 
                       InterestsSelector(
                         selectedInterests: selectedInterests,
@@ -112,7 +105,7 @@ class AddChildScreen extends StatelessWidget {
                         },
                       ),
 
-                      const SizedBox(height: 30),
+                      SizedBox(height: 4.h),
                       ElevatedButton(
                         onPressed: isLoading
                             ? null
@@ -147,22 +140,22 @@ class AddChildScreen extends StatelessWidget {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.only(top: 16, bottom: 16),
+                          padding: EdgeInsets.all(2.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(2.w),
                           ),
                         ),
                         child: isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
+                            ? SizedBox(
+                                height: 5.w,
+                                width: 5.w,
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                                  strokeWidth: 0.5.w,
                                 ),
                               )
-                            : const Text(
+                            : Text(
                                 'إضافة الطفل',
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: 12.dp),
                               ),
                       ),
                     ],

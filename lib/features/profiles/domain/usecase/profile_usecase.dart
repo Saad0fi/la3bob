@@ -34,6 +34,10 @@ class ProfileUsecase {
     return _repository.updateChild(child);
   }
 
+  Future<Result<void, ProfilesFailure>> deleteAccount() {
+    return _repository.deleteAccount();
+  }
+
   Future<Result<void, ProfilesFailure>> toggleChildLockMode({
     required bool shouldBeActive,
   }) {

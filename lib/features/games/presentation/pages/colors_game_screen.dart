@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
 
@@ -24,7 +25,8 @@ class ColorsGameScreen extends StatelessWidget {
                 context.read<GamesBloc>().add(const MoveToNextQuestion());
               }
             });
-          } else if (state is GameCompleted && state.gameType == GameType.colors) {
+          } else if (state is GameCompleted &&
+              state.gameType == GameType.colors) {
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -32,7 +34,7 @@ class ColorsGameScreen extends StatelessWidget {
                 title: const Text('🎉 ممتاز! 🎉'),
                 content: Text(
                   'لقد حصلت على ${state.score} من ${state.totalQuestions}',
-                  style: const TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 12.dp),
                   textAlign: TextAlign.center,
                 ),
                 actions: [
@@ -88,7 +90,7 @@ class ColorsGameScreen extends StatelessWidget {
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: .all(5.w),
                       child: Column(
                         children: [
                           LinearProgressIndicator(
@@ -97,16 +99,16 @@ class ColorsGameScreen extends StatelessWidget {
                             valueColor: AlwaysStoppedAnimation<Color>(
                               Colors.orange.shade400,
                             ),
-                            minHeight: 10,
+                            minHeight: 2.h,
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 2.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'السؤال: ${completedState.totalQuestions}/${completedState.totalQuestions}',
-                                style: const TextStyle(
-                                  fontSize: 18,
+                                style: TextStyle(
+                                  fontSize: 12.dp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -120,9 +122,9 @@ class ColorsGameScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 40),
+                          SizedBox(height: 4.h),
                           Container(
-                            padding: const EdgeInsets.all(30),
+                            padding: .all(8.w),
                             decoration: BoxDecoration(
                               color: _getColorFromValue(colorValue),
                               shape: BoxShape.circle,
@@ -134,35 +136,34 @@ class ColorsGameScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: const SizedBox(
-                              width: 150,
-                              height: 150,
-                            ),
+                            child: const SizedBox(width: 150, height: 150),
                           ),
-                          const SizedBox(height: 30),
-                          const Text(
+                          SizedBox(height: 3.h),
+                          Text(
                             'ما اسم هذا اللون؟',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 14.dp,
                               fontWeight: FontWeight.bold,
                               color: Colors.orange,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 40),
-                          Expanded(
-                            child: GridView.builder(
+                          SizedBox(height: 4.h),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
                               gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
+                              crossAxisSpacing: 4.w,
+                              mainAxisSpacing: 4.h,
                                 childAspectRatio: 1.5,
                               ),
                               itemCount: (question['options'] as List).length,
                               itemBuilder: (context, index) {
                                 final colorName =
-                                    (question['options'] as List)[index] as String;
+                                  (question['options'] as List)[index]
+                                      as String;
                                 Color? backgroundColor;
 
                                 if (colorName == question['colorName']) {
@@ -175,7 +176,7 @@ class ColorsGameScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: backgroundColor,
                                     borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
+                                  boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black26,
                                         blurRadius: 10,
@@ -187,7 +188,7 @@ class ColorsGameScreen extends StatelessWidget {
                                     child: Text(
                                       colorName,
                                       style: TextStyle(
-                                        fontSize: 24,
+                                      fontSize: 14.dp,
                                         fontWeight: FontWeight.bold,
                                         color: colorName == question['colorName']
                                             ? Colors.white
@@ -198,8 +199,7 @@ class ColorsGameScreen extends StatelessWidget {
                                 );
                               },
                             ),
-                          ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 2.h),
                         ],
                       ),
                     ),
@@ -217,7 +217,8 @@ class ColorsGameScreen extends StatelessWidget {
                 gameState.questions[gameState.currentQuestionIndex];
             final colorValue = question['colorValue'] as int;
             final progress =
-                (gameState.currentQuestionIndex + 1) / gameState.questions.length;
+                (gameState.currentQuestionIndex + 1) /
+                gameState.questions.length;
 
             return Scaffold(
               appBar: AppBar(
@@ -234,7 +235,7 @@ class ColorsGameScreen extends StatelessWidget {
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: EdgeInsets.all(5.w),
                     child: Column(
                       children: [
                         LinearProgressIndicator(
@@ -245,14 +246,14 @@ class ColorsGameScreen extends StatelessWidget {
                           ),
                           minHeight: 10,
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 2.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               'السؤال: ${gameState.currentQuestionIndex + 1}/${gameState.questions.length}',
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: 12.dp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -268,7 +269,7 @@ class ColorsGameScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 40),
                         Container(
-                          padding: const EdgeInsets.all(30),
+                          padding: .all(8.w),
                           decoration: BoxDecoration(
                             color: _getColorFromValue(colorValue),
                             shape: BoxShape.circle,
@@ -280,35 +281,34 @@ class ColorsGameScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: const SizedBox(
-                            width: 150,
-                            height: 150,
-                          ),
+                          child: const SizedBox(width: 150, height: 150),
                         ),
                         const SizedBox(height: 30),
-                        const Text(
+                        Text(
                           'ما اسم هذا اللون؟',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 14.dp,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 4.h),
                         Expanded(
                           child: GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 15,
+                              crossAxisSpacing: 4.w,
+                              mainAxisSpacing: 4.h,
                               childAspectRatio: 1.5,
                             ),
                             itemCount: (question['options'] as List).length,
                             itemBuilder: (context, index) {
                               final colorName =
-                                  (question['options'] as List)[index] as String;
+                                  (question['options'] as List)[index]
+                                      as String;
                               final isSelected =
                                   gameState.selectedColor == colorName;
                               Color? backgroundColor;
@@ -337,7 +337,7 @@ class ColorsGameScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: backgroundColor,
                                     borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black26,
                                         blurRadius: 10,
@@ -349,10 +349,12 @@ class ColorsGameScreen extends StatelessWidget {
                                     child: Text(
                                       colorName,
                                       style: TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 14.dp,
                                         fontWeight: FontWeight.bold,
-                                        color: gameState.showResult &&
-                                                colorName == question['colorName']
+                                        color:
+                                            gameState.showResult &&
+                                                colorName ==
+                                                    question['colorName']
                                             ? Colors.white
                                             : Colors.orange.shade700,
                                       ),
@@ -365,20 +367,20 @@ class ColorsGameScreen extends StatelessWidget {
                         ),
                         if (gameState.showResult)
                           Container(
-                            padding: const EdgeInsets.all(15),
+                            padding: .all(4.w),
                             margin: const EdgeInsets.only(top: 20),
                             decoration: BoxDecoration(
                               color: gameState.isCorrect
                                   ? Colors.green.shade100
                                   : Colors.red.shade100,
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(4.w),
                             ),
                             child: Text(
                               gameState.isCorrect
                                   ? '🎉 ممتاز! إجابة صحيحة'
                                   : '😔 حاول مرة أخرى',
                               style: TextStyle(
-                                fontSize: 22,
+                                fontSize: 12.dp,
                                 fontWeight: FontWeight.bold,
                                 color: gameState.isCorrect
                                     ? Colors.green.shade800
@@ -399,4 +401,3 @@ class ColorsGameScreen extends StatelessWidget {
     );
   }
 }
-

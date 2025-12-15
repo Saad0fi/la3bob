@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
 
@@ -29,7 +30,7 @@ class LettersGameScreen extends StatelessWidget {
                 title: const Text('🎉 ممتاز! 🎉'),
                 content: Text(
                   'لقد حصلت على ${state.score} من ${state.totalQuestions}',
-                  style: const TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 12.dp),
                   textAlign: TextAlign.center,
                 ),
                 actions: [
@@ -84,7 +85,7 @@ class LettersGameScreen extends StatelessWidget {
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: .all(5.w),
                       child: Column(
                         children: [
                           LinearProgressIndicator(
@@ -93,16 +94,16 @@ class LettersGameScreen extends StatelessWidget {
                             valueColor: AlwaysStoppedAnimation<Color>(
                               Colors.purple.shade400,
                             ),
-                            minHeight: 10,
+                            minHeight: 2.h,
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 2.h),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: .spaceBetween,
                             children: [
                               Text(
                                 'السؤال: ${completedState.totalQuestions}/${completedState.totalQuestions}',
-                                style: const TextStyle(
-                                  fontSize: 18,
+                                style: TextStyle(
+                                  fontSize: 12.dp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -116,7 +117,7 @@ class LettersGameScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 40),
+                          SizedBox(height: 4.h),
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
@@ -129,7 +130,7 @@ class LettersGameScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 2.h),
                           Flexible(
                             child: Text(
                               'اختر الحرف الذي تبدأ به الكلمة',
@@ -142,16 +143,17 @@ class LettersGameScreen extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(height: 40),
-                          Expanded(
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 15,
-                                    mainAxisSpacing: 15,
-                                    childAspectRatio: 1.5,
-                                  ),
+                          SizedBox(height: 4.h),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 4.w,
+                              mainAxisSpacing: 4.h,
+                              childAspectRatio: 1.0,
+                            ),
                               itemCount: (question['options'] as List).length,
                               itemBuilder: (context, index) {
                                 final letter =
@@ -165,35 +167,34 @@ class LettersGameScreen extends StatelessWidget {
                                   backgroundColor = Colors.grey.shade300;
                                 }
 
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      letter,
-                                      style: TextStyle(
-                                        fontSize: 48,
-                                        fontWeight: FontWeight.bold,
-                                        color: letter == question['letter']
-                                            ? Colors.white
-                                            : Colors.purple.shade700,
-                                      ),
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: backgroundColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    letter,
+                                    style: TextStyle(
+                                      fontSize: 14.dp,
+                                      fontWeight: FontWeight.bold,
+                                      color: letter == question['letter']
+                                          ? Colors.white
+                                          : Colors.purple.shade700,
                                     ),
                                   ),
-                                );
+                                ),
+                              );
                               },
                             ),
-                          ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 2.h),
                         ],
                       ),
                     ),
@@ -228,7 +229,7 @@ class LettersGameScreen extends StatelessWidget {
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: EdgeInsets.all(5.w),
                     child: Column(
                       children: [
                         LinearProgressIndicator(
@@ -239,9 +240,9 @@ class LettersGameScreen extends StatelessWidget {
                           ),
                           minHeight: 10,
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 2.h),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: .spaceBetween,
                           children: [
                             Text(
                               'السؤال: ${gameState.currentQuestionIndex + 1}/${gameState.questions.length}',
@@ -265,20 +266,20 @@ class LettersGameScreen extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                           child: Text(
                             question['word'] as String,
-                            style: const TextStyle(
-                              fontSize: 48,
+                            style: TextStyle(
+                              fontSize: 28.dp,
                               fontWeight: FontWeight.bold,
                               color: Colors.purple,
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 2.h),
                         Flexible(
                           child: Text(
                             'اختر الحرف الذي تبدأ به الكلمة',
-                            style: const TextStyle(
-                              fontSize: 20,
+                            style: TextStyle(
+                              fontSize: 12.dp,
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
@@ -286,16 +287,17 @@ class LettersGameScreen extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 4.h),
                         Expanded(
                           child: GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 15,
-                                  childAspectRatio: 1.5,
-                                ),
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 4.w,
+                              mainAxisSpacing: 4.h,
+                              childAspectRatio: 1.0,
+                            ),
                             itemCount: (question['options'] as List).length,
                             itemBuilder: (context, index) {
                               final letter =
@@ -324,15 +326,12 @@ class LettersGameScreen extends StatelessWidget {
                                   context.read<GamesBloc>().add(
                                     SelectLetter(letter),
                                   );
-                                  // bloc.audioController.playSound(
-                                  //   'assets/images/test.mp3',
-                                  // );
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: backgroundColor,
                                     borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black26,
                                         blurRadius: 10,
@@ -344,10 +343,9 @@ class LettersGameScreen extends StatelessWidget {
                                     child: Text(
                                       letter,
                                       style: TextStyle(
-                                        fontSize: 48,
+                                        fontSize: 14.dp,
                                         fontWeight: FontWeight.bold,
-                                        color:
-                                            gameState.showResult &&
+                                        color: gameState.showResult &&
                                                 letter == question['letter']
                                             ? Colors.white
                                             : Colors.purple.shade700,
@@ -359,8 +357,8 @@ class LettersGameScreen extends StatelessWidget {
                             },
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        if (gameState.showResult)
+                        if (gameState.showResult) ...[
+                          SizedBox(height: 2.h),
                           Container(
                             padding: const EdgeInsets.all(15),
                             margin: const EdgeInsets.only(top: 20),
@@ -375,7 +373,7 @@ class LettersGameScreen extends StatelessWidget {
                                   ? '🎉 ممتاز! إجابة صحيحة'
                                   : '😔 حاول مرة أخرى',
                               style: TextStyle(
-                                fontSize: 22,
+                                fontSize: 12.dp,
                                 fontWeight: FontWeight.bold,
                                 color: gameState.isCorrect
                                     ? Colors.green.shade800
@@ -384,6 +382,7 @@ class LettersGameScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                           ),
+                        ],
                       ],
                     ),
                   ),

@@ -62,24 +62,18 @@ class AuthCubit extends Cubit<AuthState> {
 
     final result = await _authUseCases.verifyOtp(email: email, token: token);
 
-    result.when(
-      (user) async {
-        final profileUsecase = getIt<ProfileUsecase>();
-        final childrenResult = await profileUsecase.getChildern(user.id);
+    result.when((user) async {
+      final profileUsecase = getIt<ProfileUsecase>();
+      final childrenResult = await profileUsecase.getChildern(user.id);
 
-        childrenResult.when(
-          (children) {
-            if (children.isEmpty) {
-              emit(AuthenticatedNoChildren(user: user));
-            } else {
-              emit(AuthenticatedWithChildren(user: user));
-            }
-          },
-          (_) => emit(Authenticated(user: user)),
-        );
-      },
-      (failure) => emit(AuthFailureState(failure: failure)),
-    );
+      childrenResult.when((children) {
+        if (children.isEmpty) {
+          emit(AuthenticatedNoChildren(user: user));
+        } else {
+          emit(AuthenticatedWithChildren(user: user));
+        }
+      }, (_) => emit(Authenticated(user: user)));
+    }, (failure) => emit(AuthFailureState(failure: failure)));
   }
 
   //  تسجيل الخروج
