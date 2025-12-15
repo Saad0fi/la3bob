@@ -16,5 +16,5 @@ Future<void> setupAppDependencies() async {
   await Supabase.initialize(url: url!, anonKey: anonKey!);
 
   configureDependencies();
-  setupWavingGame();
+  setupGames();
 }
