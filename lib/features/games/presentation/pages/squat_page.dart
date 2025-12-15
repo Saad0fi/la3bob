@@ -64,7 +64,7 @@ class _SquatGamePageState extends State<SquatGamePage> {
       create: (_) => SquatBloc(getIt<DetectSquat>()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('🏋️ Squat Challenge'),
+          title: const Text('🏋️ تحدي القرفصاء '),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
