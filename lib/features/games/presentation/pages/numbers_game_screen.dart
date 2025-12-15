@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
+import 'package:la3bob/features/games/presentation/widgets/game_option_tile.dart';
 
 class NumbersGameScreen extends StatelessWidget {
   const NumbersGameScreen({super.key});
@@ -199,53 +200,14 @@ class NumbersGameScreen extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 final number =
                                     (question['options'] as List)[index] as int;
-                                Color? backgroundColor;
 
-                                if (number == count) {
-                                  backgroundColor = Colors.green.shade300;
-                                } else {
-                                  backgroundColor = Colors.grey.shade300;
-                                }
-
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          .center,
-                                      children: [
-                                        Text(
-                                          number.toString(),
-                                          style: TextStyle(
-                                            fontSize: 32.dp,
-                                            fontWeight: FontWeight.bold,
-                                            color: number == count
-                                                ? Colors.white
-                                                : Colors.blue.shade700,
-                                          ),
-                                        ),
-                                        Text(
-                                          _getArabicNumber(number),
-                                          style: TextStyle(
-                                            fontSize: 14.dp,
-                                            color: number == count
-                                                ? Colors.white
-                                                : Colors.blue.shade700,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                return GameOptionTile(
+                                  mainText: number.toString(),
+                                  subText: _getArabicNumber(number),
+                                  isSelected: false,
+                                  isCorrectOption: number == count,
+                                  showResult: true,
+                                  primaryColor: Colors.blue,
                                 );
                               },
                             ),
@@ -378,21 +340,6 @@ class NumbersGameScreen extends StatelessWidget {
                                   (question['options'] as List)[index] as int;
                               final isSelected =
                                   gameState.selectedNumber == number;
-                              Color? backgroundColor;
-
-                              if (gameState.showResult) {
-                                if (number == count) {
-                                  backgroundColor = Colors.green.shade300;
-                                } else if (isSelected && !gameState.isCorrect) {
-                                  backgroundColor = Colors.red.shade300;
-                                } else {
-                                  backgroundColor = Colors.grey.shade300;
-                                }
-                              } else {
-                                backgroundColor = isSelected
-                                    ? Colors.blue.shade300
-                                    : Colors.white;
-                              }
 
                               return GestureDetector(
                                 onTap: () {
@@ -400,47 +347,13 @@ class NumbersGameScreen extends StatelessWidget {
                                     SelectNumber(number),
                                   );
                                 },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    borderRadius: .circular(20),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          number.toString(),
-                                          style: TextStyle(
-                                            fontSize: 32.dp,
-                                            fontWeight: FontWeight.bold,
-                                            color: gameState.showResult &&
-                                                    number == count
-                                                ? Colors.white
-                                                : Colors.blue.shade700,
-                                          ),
-                                        ),
-                                        Text(
-                                          _getArabicNumber(number),
-                                          style: TextStyle(
-                                            fontSize: 14.dp,
-                                            color: gameState.showResult &&
-                                                    number == count
-                                                ? Colors.white
-                                                : Colors.blue.shade700,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                child: GameOptionTile(
+                                  mainText: number.toString(),
+                                  subText: _getArabicNumber(number),
+                                  isSelected: isSelected,
+                                  isCorrectOption: number == count,
+                                  showResult: gameState.showResult,
+                                  primaryColor: Colors.blue,
                                 ),
                               );
                             },

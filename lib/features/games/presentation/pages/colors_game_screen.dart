@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
+import 'package:la3bob/features/games/presentation/widgets/game_option_tile.dart';
 
 class ColorsGameScreen extends StatelessWidget {
   const ColorsGameScreen({super.key});
@@ -72,7 +73,6 @@ class ColorsGameScreen extends StatelessWidget {
             if (state is GameCompleted && state.gameType == GameType.colors) {
               final completedState = state;
               final question = completedState.lastQuestion;
-              final colorValue = question['colorValue'] as int;
               final progress = 1.0;
 
               return Scaffold(
@@ -90,7 +90,7 @@ class ColorsGameScreen extends StatelessWidget {
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding: .all(5.w),
+                      padding: EdgeInsets.all(5.w),
                       child: Column(
                         children: [
                           LinearProgressIndicator(
@@ -124,27 +124,19 @@ class ColorsGameScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Container(
-                            padding: .all(8.w),
+                            width: 150,
+                            height: 150,
                             decoration: BoxDecoration(
-                              color: _getColorFromValue(colorValue),
+                              color: _getColorFromValue(question['colorValue'] as int),
                               shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 20,
-                                  spreadRadius: 5,
-                                ),
-                              ],
                             ),
-                            child: const SizedBox(width: 150, height: 150),
                           ),
-                          SizedBox(height: 3.h),
+                          SizedBox(height: 2.h),
                           Text(
                             'ما اسم هذا اللون؟',
-                            style: TextStyle(
-                              fontSize: 14.dp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -152,53 +144,28 @@ class ColorsGameScreen extends StatelessWidget {
                           GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
+                            gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
+                              crossAxisCount: 2,
                               crossAxisSpacing: 4.w,
                               mainAxisSpacing: 4.h,
-                                childAspectRatio: 1.5,
-                              ),
-                              itemCount: (question['options'] as List).length,
-                              itemBuilder: (context, index) {
-                                final colorName =
+                              childAspectRatio: 1.5,
+                            ),
+                            itemCount: (question['options'] as List).length,
+                            itemBuilder: (context, index) {
+                              final colorName =
                                   (question['options'] as List)[index]
                                       as String;
-                                Color? backgroundColor;
-
-                                if (colorName == question['colorName']) {
-                                  backgroundColor = Colors.green.shade300;
-                                } else {
-                                  backgroundColor = Colors.grey.shade300;
-                                }
-
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      colorName,
-                                      style: TextStyle(
-                                      fontSize: 14.dp,
-                                        fontWeight: FontWeight.bold,
-                                        color: colorName == question['colorName']
-                                            ? Colors.white
-                                            : Colors.orange.shade700,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                              return GameOptionTile(
+                                mainText: colorName,
+                                isSelected: false,
+                                isCorrectOption:
+                                    colorName == question['colorName'],
+                                showResult: true,
+                                primaryColor: Colors.orange,
+                              );
+                            },
+                          ),
                           SizedBox(height: 2.h),
                         ],
                       ),
@@ -215,7 +182,6 @@ class ColorsGameScreen extends StatelessWidget {
             final gameState = state;
             final question =
                 gameState.questions[gameState.currentQuestionIndex];
-            final colorValue = question['colorValue'] as int;
             final progress =
                 (gameState.currentQuestionIndex + 1) /
                 gameState.questions.length;
@@ -246,14 +212,14 @@ class ColorsGameScreen extends StatelessWidget {
                           ),
                           minHeight: 10,
                         ),
-                        SizedBox(height: 2.h),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               'السؤال: ${gameState.currentQuestionIndex + 1}/${gameState.questions.length}',
-                              style: TextStyle(
-                                fontSize: 12.dp,
+                              style: const TextStyle(
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -269,27 +235,19 @@ class ColorsGameScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 40),
                         Container(
-                          padding: .all(8.w),
+                          width: 150,
+                          height: 150,
                           decoration: BoxDecoration(
-                            color: _getColorFromValue(colorValue),
+                            color: _getColorFromValue(question['colorValue'] as int),
                             shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 20,
-                                spreadRadius: 5,
-                              ),
-                            ],
                           ),
-                          child: const SizedBox(width: 150, height: 150),
                         ),
-                        const SizedBox(height: 30),
+                        SizedBox(height: 2.h),
                         Text(
                           'ما اسم هذا اللون؟',
                           style: TextStyle(
-                            fontSize: 14.dp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
+                            fontSize: 12.dp,
+                            fontWeight: FontWeight.w500,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -311,55 +269,20 @@ class ColorsGameScreen extends StatelessWidget {
                                       as String;
                               final isSelected =
                                   gameState.selectedColor == colorName;
-                              Color? backgroundColor;
-
-                              if (gameState.showResult) {
-                                if (colorName == question['colorName']) {
-                                  backgroundColor = Colors.green.shade300;
-                                } else if (isSelected && !gameState.isCorrect) {
-                                  backgroundColor = Colors.red.shade300;
-                                } else {
-                                  backgroundColor = Colors.grey.shade300;
-                                }
-                              } else {
-                                backgroundColor = isSelected
-                                    ? Colors.orange.shade300
-                                    : Colors.white;
-                              }
 
                               return GestureDetector(
                                 onTap: () {
                                   context.read<GamesBloc>().add(
-                                    SelectColor(colorName),
-                                  );
+                                        SelectColor(colorName),
+                                      );
                                 },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      colorName,
-                                      style: TextStyle(
-                                        fontSize: 14.dp,
-                                        fontWeight: FontWeight.bold,
-                                        color:
-                                            gameState.showResult &&
-                                                colorName ==
-                                                    question['colorName']
-                                            ? Colors.white
-                                            : Colors.orange.shade700,
-                                      ),
-                                    ),
-                                  ),
+                                child: GameOptionTile(
+                                  mainText: colorName,
+                                  isSelected: isSelected,
+                                  isCorrectOption:
+                                      colorName == question['colorName'],
+                                  showResult: gameState.showResult,
+                                  primaryColor: Colors.orange,
                                 ),
                               );
                             },
@@ -367,8 +290,8 @@ class ColorsGameScreen extends StatelessWidget {
                         ),
                         if (gameState.showResult)
                           Container(
-                            padding: .all(4.w),
-                            margin: const EdgeInsets.only(top: 20),
+                            padding: EdgeInsets.all(4.w),
+                            margin: EdgeInsets.only(top: 2.h),
                             decoration: BoxDecoration(
                               color: gameState.isCorrect
                                   ? Colors.green.shade100
