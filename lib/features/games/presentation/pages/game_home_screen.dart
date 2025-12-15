@@ -248,133 +248,171 @@ class _PhysicalGamesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: .all(5.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'اختر لعبة',
-                style: TextStyle(
-                  fontSize: 18.dp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepOrange,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'اختر لعبة',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepOrange,
+              ),
+            ),
+            const SizedBox(height: 50),
+            // لعبة الموجة (Wave)
+            GestureDetector(
+              onTap: () {
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const WaveGamePage()));
+              },
+              child: Container(
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withValues(alpha: .3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'لعبة الموجة',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'لوّح بيدك لتجمع النقاط',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.orange),
+                  ],
                 ),
               ),
-              SizedBox(height: 6.h),
-              // لعبة الموجة (Wave)
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const WaveGamePage()),
-                  );
-                },
-                child: Container(
-                  padding: .all(6.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: .circular(6.w),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.orange.withValues(alpha: 0.3),
-                        blurRadius: 5.w,
-                        spreadRadius: 1.w,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'لعبة الموجة',
-                              style: TextStyle(
-                                fontSize: 14.dp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
-                              ),
+            ),
+            const SizedBox(height: 30),
+            // لعبة القرفصاء (Squat)
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const SquatGamePage()),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withValues(alpha: .3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'لعبة القرفصاء',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
                             ),
-                            SizedBox(height: 1.h),
-                            Text(
-                              'لوّح بيدك لتجمع النقاط',
-                              style: TextStyle(
-                                fontSize: 10.dp,
-                                color: Colors.grey.shade700,
-                              ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'تمرين القرفصاء مع الكاميرا',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.orange,
-                        size: 5.w,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.green),
+                  ],
                 ),
               ),
-              SizedBox(height: 4.h),
-              // لعبة القرفصاء (Squat)
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SquatGamePage()),
-                  );
-                },
-                child: Container(
-                  padding: .all(6.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: .circular(6.w),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.green.withValues(alpha: 0.3),
-                        blurRadius: 5.w,
-                        spreadRadius: 1.w,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'لعبة القرفصاء',
-                              style: TextStyle(
-                                fontSize: 14.dp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
+            ),
+            const SizedBox(height: 30),
+            // لعبة القفز (Jump)
+            GestureDetector(
+              onTap: () {
+                context.push('/tabs/games/jump');
+              },
+              child: Container(
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withValues(alpha: .3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'لعبة القفز',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
                             ),
-                            SizedBox(height: 1.h),
-                            Text(
-                              'تمرين القرفصاء مع الكاميرا',
-                              style: TextStyle(
-                                fontSize: 10.dp,
-                                color: Colors.grey.shade700,
-                              ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'اقفز لتتجاوز العقبات!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.green,
-                        size: 5.w,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.blue),
+                  ],
                 ),
               ),
-              SizedBox(height: 4.h),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
