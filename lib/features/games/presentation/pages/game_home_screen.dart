@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
-import 'package:la3bob/features/games/presentation/pages/wave_page.dart';
+
 import 'package:la3bob/features/games/presentation/pages/squat_page.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 
@@ -62,6 +62,7 @@ class _EducationalGamesTab extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
+<<<<<<< HEAD
           padding: EdgeInsets.all(5.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -70,17 +71,31 @@ class _EducationalGamesTab extends StatelessWidget {
                 'اختر لعبة',
                 style: TextStyle(
                   fontSize: 18.dp,
+=======
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              const Text(
+                'اختر لعبة',
+                style: TextStyle(
+                  fontSize: 32,
+>>>>>>> origin/improving_games
                   fontWeight: FontWeight.bold,
                   color: Colors.deepPurple,
                 ),
               ),
+<<<<<<< HEAD
               SizedBox(height: 6.h),
+=======
+              const SizedBox(height: 50),
+>>>>>>> origin/improving_games
               // لعبة الحروف
               GestureDetector(
                 onTap: () {
                   context.push('/tabs/games/letters');
                 },
                 child: Container(
+<<<<<<< HEAD
                   padding: EdgeInsets.all(6.w),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -90,6 +105,17 @@ class _EducationalGamesTab extends StatelessWidget {
                         color: Colors.purple.withValues(alpha: 0.3),
                         blurRadius: 5.w,
                         spreadRadius: 1.w,
+=======
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.purple.withValues(alpha: .3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+>>>>>>> origin/improving_games
                       ),
                     ],
                   ),
@@ -99,25 +125,41 @@ class _EducationalGamesTab extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+<<<<<<< HEAD
                             Text(
                               'لعبة الحروف',
                               style: TextStyle(
                                 fontSize: 14.dp,
+=======
+                            const Text(
+                              'لعبة الحروف',
+                              style: TextStyle(
+                                fontSize: 24,
+>>>>>>> origin/improving_games
                                 fontWeight: FontWeight.bold,
                                 color: Colors.purple,
                               ),
                             ),
+<<<<<<< HEAD
                             SizedBox(height: 1.h),
                             Text(
                               'تعلم الحروف العربية مع الكلمات',
                               style: TextStyle(
                                 fontSize: 10.dp,
+=======
+                            const SizedBox(height: 8),
+                            Text(
+                              'تعلم الحروف العربية مع الكلمات',
+                              style: TextStyle(
+                                fontSize: 16,
+>>>>>>> origin/improving_games
                                 color: Colors.grey.shade700,
                               ),
                             ),
                           ],
                         ),
                       ),
+<<<<<<< HEAD
                       Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.purple,
@@ -181,21 +223,28 @@ class _EducationalGamesTab extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 4.h),
-              // لعبة الألوان
+=======
+                      const Icon(Icons.arrow_forward_ios, color: Colors.purple),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              // لعبة الأرقام
               GestureDetector(
                 onTap: () {
-                  context.push('/tabs/games/colors');
+                  context.push('/tabs/games/numbers');
                 },
                 child: Container(
-                  padding: .all(6.w),
+                  padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: .circular(6.w),
+                    borderRadius: BorderRadius.circular(25),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.orange.withValues(alpha: 0.3),
-                        blurRadius: 5.w,
-                        spreadRadius: 1.w,
+                        color: Colors.blue.withValues(alpha: .3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
                       ),
                     ],
                   ),
@@ -205,35 +254,119 @@ class _EducationalGamesTab extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'لعبة الألوان',
+                            const Text(
+                              'لعبة الأرقام',
                               style: TextStyle(
-                                fontSize: 14.dp,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.orange,
+                                color: Colors.blue,
                               ),
                             ),
-                            SizedBox(height: 1.h),
+                            const SizedBox(height: 8),
                             Text(
-                              'تعلم أسماء الألوان العربية',
+                              'تعلم الأرقام والعد',
                               style: TextStyle(
-                                fontSize: 10.dp,
+                                fontSize: 16,
                                 color: Colors.grey.shade700,
                               ),
                             ),
                           ],
                         ),
                       ),
+                      const Icon(Icons.arrow_forward_ios, color: Colors.blue),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+>>>>>>> origin/improving_games
+              // لعبة الألوان
+              GestureDetector(
+                onTap: () {
+                  context.push('/tabs/games/colors');
+                },
+                child: Container(
+<<<<<<< HEAD
+                  padding: .all(6.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: .circular(6.w),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withValues(alpha: 0.3),
+                        blurRadius: 5.w,
+                        spreadRadius: 1.w,
+=======
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withValues(alpha: .3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+>>>>>>> origin/improving_games
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+<<<<<<< HEAD
+                            Text(
+                              'لعبة الألوان',
+                              style: TextStyle(
+                                fontSize: 14.dp,
+=======
+                            const Text(
+                              'لعبة الألوان',
+                              style: TextStyle(
+                                fontSize: 24,
+>>>>>>> origin/improving_games
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
+                            ),
+<<<<<<< HEAD
+                            SizedBox(height: 1.h),
+                            Text(
+                              'تعلم أسماء الألوان العربية',
+                              style: TextStyle(
+                                fontSize: 10.dp,
+=======
+                            const SizedBox(height: 8),
+                            Text(
+                              'تعلم أسماء الألوان العربية',
+                              style: TextStyle(
+                                fontSize: 16,
+>>>>>>> origin/improving_games
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+<<<<<<< HEAD
                       Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.orange,
                         size: 5.w,
                       ),
+=======
+                      const Icon(Icons.arrow_forward_ios, color: Colors.orange),
+>>>>>>> origin/improving_games
                     ],
                   ),
                 ),
               ),
+<<<<<<< HEAD
               SizedBox(height: 4.h),
+=======
+>>>>>>> origin/improving_games
             ],
           ),
         ),
@@ -248,171 +381,219 @@ class _PhysicalGamesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'اختر لعبة',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepOrange,
-              ),
-            ),
-            const SizedBox(height: 50),
-            // لعبة الموجة (Wave)
-            GestureDetector(
-              onTap: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const WaveGamePage()));
-              },
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withValues(alpha: .3),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                    ),
-                  ],
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              const Text(
+                'اختر لعبة',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange,
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'لعبة الموجة',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'لوّح بيدك لتجمع النقاط',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey.shade700,
-                            ),
-                          ),
-                        ],
+              ),
+              const SizedBox(height: 50),
+              // لعبة القرفصاء (Squat)
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SquatGamePage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.withValues(alpha: .3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
                       ),
-                    ),
-                    const Icon(Icons.arrow_forward_ios, color: Colors.orange),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            // لعبة القرفصاء (Squat)
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const SquatGamePage()),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.green.withValues(alpha: .3),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'لعبة القرفصاء',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'لعبة القرفصاء',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'تمرين القرفصاء مع الكاميرا',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey.shade700,
+                            const SizedBox(height: 8),
+                            Text(
+                              'تمرين القرفصاء مع الكاميرا',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade700,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const Icon(Icons.arrow_forward_ios, color: Colors.green),
-                  ],
+                      const Icon(Icons.arrow_forward_ios, color: Colors.green),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 30),
-            // لعبة القفز (Jump)
-            GestureDetector(
-              onTap: () {
-                context.push('/tabs/games/jump');
-              },
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blue.withValues(alpha: .3),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'لعبة القفز',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'اقفز لتتجاوز العقبات!',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey.shade700,
-                            ),
-                          ),
-                        ],
+              const SizedBox(height: 30),
+              // لعبة القفز (Jump)
+              GestureDetector(
+                onTap: () {
+                  context.push('/tabs/games/jump');
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withValues(alpha: .3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
                       ),
-                    ),
-                    const Icon(Icons.arrow_forward_ios, color: Colors.blue),
-                  ],
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'لعبة القفز',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'اقفز لتتجاوز العقبات!',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios, color: Colors.blue),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 30),
+              // لعبة أوامر القائد (Simon Says)
+              GestureDetector(
+                onTap: () {
+                  context.push('/tabs/games/simon_says');
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.purple.withValues(alpha: .3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'أوامر القائد',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.purple,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'نفذ الأوامر بسرعة!',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios, color: Colors.purple),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              // لعبة التجمد (Freeze)
+              GestureDetector(
+                onTap: () {
+                  context.push('/tabs/games/freeze');
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.red.withValues(alpha: .3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'لعبة التجمد',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'تحرك ثم تجمد!',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios, color: Colors.red),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
