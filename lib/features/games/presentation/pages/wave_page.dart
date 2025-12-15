@@ -85,7 +85,7 @@ class _WaveGameViewState extends State<WaveGameView> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('👋 Wave Game')),
+      appBar: AppBar(title: const Text('👋 لعبة التلويح')),
       body: Stack(
         children: [
           // Camera Preview
@@ -102,7 +102,7 @@ class _WaveGameViewState extends State<WaveGameView> {
           // UI Overlay
           Positioned(
             top: 30,
-            left: 20,
+            right: 20, // Right align for Arabic
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
@@ -114,7 +114,7 @@ class _WaveGameViewState extends State<WaveGameView> {
                   if (state.status == WaveStatus.waveDetected) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Wave detected! 👋'),
+                        content: Text('تم اكتشاف تلويح! 👋'),
                         duration: Duration(milliseconds: 500),
                       ),
                     );
@@ -122,7 +122,7 @@ class _WaveGameViewState extends State<WaveGameView> {
                 },
                 builder: (context, state) {
                   return Text(
-                    'Waves: ${state.count}',
+                    'عدد التلويحات: ${state.count}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
