@@ -11,6 +11,9 @@ import 'package:la3bob/features/games/domain/usecases/detect_jump.dart';
 import 'package:la3bob/features/games/domain/repositories/simon_says_repository.dart';
 import 'package:la3bob/features/games/data/models/simon_says_detector_service.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_simon_move.dart';
+import 'package:la3bob/features/games/domain/repositories/freeze_repository.dart';
+import 'package:la3bob/features/games/data/models/freeze_detector_service.dart';
+import 'package:la3bob/features/games/domain/usecases/detect_movement.dart';
 
 final getIt = GetIt.instance;
 
@@ -52,5 +55,16 @@ void setupGames() {
 
   if (!getIt.isRegistered<DetectSimonMove>()) {
     getIt.registerFactory(() => DetectSimonMove(getIt<SimonSaysRepository>()));
+  }
+
+  // --- Freeze Dance Game Dependencies ---
+  if (!getIt.isRegistered<FreezeRepository>()) {
+    getIt.registerLazySingleton<FreezeRepository>(
+      () => FreezeDetectorService(),
+    );
+  }
+
+  if (!getIt.isRegistered<DetectMovement>()) {
+    getIt.registerFactory(() => DetectMovement(getIt<FreezeRepository>()));
   }
 }

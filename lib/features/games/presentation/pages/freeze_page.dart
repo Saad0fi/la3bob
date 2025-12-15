@@ -3,21 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../core/di/injection.dart';
-import '../../domain/usecases/detect_simon_move.dart';
-import '../bloc/simon_says/simon_says_bloc.dart';
-import '../bloc/simon_says/simon_says_event.dart';
-import '../bloc/simon_says/simon_says_state.dart';
+import '../../domain/usecases/detect_movement.dart';
+import '../bloc/freeze/freeze_bloc.dart';
+import '../bloc/freeze/freeze_event.dart';
+import '../bloc/freeze/freeze_state.dart';
 import '../widgets/camera_preview.dart';
 
-class SimonSaysGamePage extends StatefulWidget {
+class FreezeGamePage extends StatefulWidget {
   final List<CameraDescription>? cameras;
-  const SimonSaysGamePage({super.key, this.cameras});
+  const FreezeGamePage({super.key, this.cameras});
 
   @override
-  State<SimonSaysGamePage> createState() => _SimonSaysGamePageState();
+  State<FreezeGamePage> createState() => _FreezeGamePageState();
 }
 
-class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
+class _FreezeGamePageState extends State<FreezeGamePage> {
   CameraDescription? _frontCamera;
   bool _isLoading = true;
   bool _permissionDenied = false;
@@ -29,7 +29,6 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
   }
 
   Future<void> _initCameras() async {
-    // Check Permission first
     final status = await Permission.camera.request();
     if (status.isDenied || status.isPermanentlyDenied) {
       if (mounted) {
@@ -58,9 +57,7 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
     }
 
     if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
@@ -102,39 +99,52 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
     }
 
     return BlocProvider(
-      create: (_) => SimonSaysBloc(getIt<DetectSimonMove>()),
+      create: (_) => FreezeBloc(getIt<DetectMovement>()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('أوامر القائد (Simon Says)'),
+          title: const Text('لعبة التجمد (Freeze Dance)'),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
         extendBodyBehindAppBar: true,
-        body: BlocBuilder<SimonSaysBloc, SimonSaysState>(
+        body: BlocBuilder<FreezeBloc, FreezeState>(
           builder: (context, state) {
+            Color borderColor = Colors.transparent;
+            if (state.phase == FreezePhase.dancing) {
+              borderColor = Colors.green.withValues(alpha: .5);
+            } else if (state.phase == FreezePhase.freezing) {
+              borderColor = Colors.red.withValues(alpha: .8);
+            }
+
             return Stack(
               fit: StackFit.expand,
               children: [
                 // 1. Camera Layer
-                Builder(
-                  builder: (context) {
-                    return CameraPreviewWidget(
-                      camera: _frontCamera!,
-                      onPoseDetected: (pose) {
-                        context.read<SimonSaysBloc>().add(PoseDetected(pose));
-                      },
-                    );
+                CameraPreviewWidget(
+                  camera: _frontCamera!,
+                  onPoseDetected: (pose) {
+                    context.read<FreezeBloc>().add(PoseDetected(pose));
                   },
                 ),
 
-                // 2. Game Overlay
-                if (state.status == SimonGameStatus.initial)
+                // 2. Border/Overlay for Phases
+                IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: borderColor, width: 20),
+                    ),
+                  ),
+                ),
+
+                // 3. Game UI
+                if (state.phase == FreezePhase.initial)
                   _buildStartScreen(context, state),
 
-                if (state.status == SimonGameStatus.active)
+                if (state.phase == FreezePhase.dancing ||
+                    state.phase == FreezePhase.freezing)
                   _buildActiveGame(context, state),
 
-                if (state.status == SimonGameStatus.gameOver)
+                if (state.phase == FreezePhase.gameOver)
                   _buildGameOver(context, state),
               ],
             );
@@ -144,17 +154,17 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
     );
   }
 
-  Widget _buildStartScreen(BuildContext context, SimonSaysState state) {
+  Widget _buildStartScreen(BuildContext context, FreezeState state) {
     return Container(
       color: Colors.black54,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.directions_run, size: 80, color: Colors.white),
+            const Icon(Icons.music_note, size: 80, color: Colors.white),
             const SizedBox(height: 20),
             const Text(
-              "أوامر القائد",
+              "لعبة التجمد",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
@@ -168,6 +178,15 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
                 style: const TextStyle(color: Colors.amber, fontSize: 24),
               ),
             ],
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                "تحرك عندما يكون الضوء أخضر.\nتجمد تماماً عندما يصبح أحمر!",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white70, fontSize: 18),
+              ),
+            ),
             const SizedBox(height: 40),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -180,8 +199,8 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              onPressed: () => context.read<SimonSaysBloc>().add(StartGame()),
-              child: const Text("ابدأ اللعبة", style: TextStyle(fontSize: 20)),
+              onPressed: () => context.read<FreezeBloc>().add(StartGame()),
+              child: const Text("ابدأ الرقص", style: TextStyle(fontSize: 20)),
             ),
           ],
         ),
@@ -189,27 +208,51 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
     );
   }
 
-  Widget _buildActiveGame(BuildContext context, SimonSaysState state) {
+  Widget _buildActiveGame(BuildContext context, FreezeState state) {
+    // Determine status text/color
+    String mainText = "";
+    Color mainColor = Colors.white;
+    IconData mainIcon = Icons.question_mark;
+
+    if (state.phase == FreezePhase.dancing) {
+      mainText = "تحرك! 💃";
+      mainColor = Colors.green;
+      mainIcon = Icons.directions_run;
+    } else if (state.phase == FreezePhase.freezing) {
+      mainText = "تجمد! ✋";
+      mainColor = Colors.red;
+      mainIcon = Icons.pan_tool;
+    }
+
     return Stack(
       children: [
-        // Timer
-        Positioned(
-          top: 50,
-          left: 20,
+        // Top Center Status
+        Align(
+          alignment: Alignment.topCenter,
           child: Container(
-            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(top: 100),
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
             decoration: BoxDecoration(
-              color: Colors.black45,
-              borderRadius: BorderRadius.circular(15),
+              color: mainColor.withValues(alpha: .8),
+              borderRadius: BorderRadius.circular(40),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                ),
+              ],
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.timer, color: Colors.white70),
+                Icon(mainIcon, color: Colors.white, size: 40),
+                const SizedBox(height: 8),
                 Text(
-                  "${state.remainingTime}",
+                  mainText,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -217,46 +260,6 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
             ),
           ),
         ),
-
-        // Center Message (Command)
-        Align(
-          alignment: Alignment.center,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              state.message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-
-        // Feedback Overlay
-        if (state.feedback != null)
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 150),
-              child: Text(
-                state.feedback!,
-                style: const TextStyle(
-                  color: Colors.greenAccent,
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  shadows: [Shadow(blurRadius: 10, color: Colors.black)],
-                ),
-              ),
-            ),
-          ),
 
         // Score
         Positioned(
@@ -286,22 +289,35 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
             ),
           ),
         ),
+
+        // Debug Movement (Optional, helpful for tuning)
+        // Positioned(
+        //   bottom: 50,
+        //   left: 20,
+        //   child: Text(
+        //     "Movement: ${state.currentMovement.toStringAsFixed(1)}",
+        //     style: TextStyle(color: Colors.white, fontSize: 12),
+        //   ),
+        // ),
       ],
     );
   }
 
-  Widget _buildGameOver(BuildContext context, SimonSaysState state) {
+  Widget _buildGameOver(BuildContext context, FreezeState state) {
     return Container(
       color: Colors.black87,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "انتهى الوقت!",
-              style: TextStyle(
+            const Icon(Icons.error_outline, size: 80, color: Colors.red),
+            const SizedBox(height: 20),
+            Text(
+              state.message, // "You moved!"
+              textAlign: TextAlign.center,
+              style: const TextStyle(
                 color: Colors.white,
-                fontSize: 40,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -327,7 +343,7 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              onPressed: () => context.read<SimonSaysBloc>().add(StartGame()),
+              onPressed: () => context.read<FreezeBloc>().add(ResetGame()),
               child: const Text(
                 "العب مرة أخرى",
                 style: TextStyle(fontSize: 20),

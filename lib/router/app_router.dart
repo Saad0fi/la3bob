@@ -9,6 +9,7 @@ import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dar
 import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/jump_page.dart';
 import 'package:la3bob/features/games/presentation/pages/simon_says_page.dart';
+import 'package:la3bob/features/games/presentation/pages/freeze_page.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
@@ -86,6 +87,10 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: 'simon_says',
               builder: (context, state) => const SimonSaysGamePage(),
+            ),
+            GoRoute(
+              path: 'freeze',
+              builder: (context, state) => const FreezeGamePage(),
             ),
           ],
         ),
