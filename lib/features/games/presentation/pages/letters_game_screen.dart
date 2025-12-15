@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
 
@@ -29,7 +30,7 @@ class LettersGameScreen extends StatelessWidget {
                 title: const Text('🎉 ممتاز! 🎉'),
                 content: Text(
                   'لقد حصلت على ${state.score} من ${state.totalQuestions}',
-                  style: const TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 12.dp),
                   textAlign: TextAlign.center,
                 ),
                 actions: [
@@ -83,118 +84,114 @@ class LettersGameScreen extends StatelessWidget {
                     ),
                   ),
                   child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          LinearProgressIndicator(
-                            value: progress,
-                            backgroundColor: Colors.white,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.purple.shade400,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: .all(5.w),
+                        child: Column(
+                          children: [
+                            LinearProgressIndicator(
+                              value: progress,
+                              backgroundColor: Colors.white,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.purple.shade400,
+                              ),
+                              minHeight: 2.h,
                             ),
-                            minHeight: 10,
-                          ),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'السؤال: ${completedState.totalQuestions}/${completedState.totalQuestions}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                            SizedBox(height: 2.h),
+                            Row(
+                              mainAxisAlignment: .spaceBetween,
+                              children: [
+                                Text(
+                                  'السؤال: ${completedState.totalQuestions}/${completedState.totalQuestions}',
+                                  style: TextStyle(
+                                    fontSize: 12.dp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'النقاط: ${completedState.score}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                Text(
+                                  'النقاط: ${completedState.score}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 40),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              question['word'] as String,
-                              style: const TextStyle(
-                                fontSize: 48,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple,
-                              ),
-                              textAlign: TextAlign.center,
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          Flexible(
-                            child: Text(
-                              'اختر الحرف الذي تبدأ به الكلمة',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
+                            SizedBox(height: 4.h),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                question['word'] as String,
+                                style: const TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.purple,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          const SizedBox(height: 40),
-                          Expanded(
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 15,
-                                    mainAxisSpacing: 15,
-                                    childAspectRatio: 1.5,
-                                  ),
-                              itemCount: (question['options'] as List).length,
-                              itemBuilder: (context, index) {
-                                final letter =
-                                    (question['options'] as List)[index]
-                                        as String;
-                                Color? backgroundColor;
+                            SizedBox(height: 2.h),
+                            Flexible(
+                              child: Text(
+                                'اختر الحرف الذي تبدأ به الكلمة',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Wrap(
+                              spacing: 3.w,
+                              runSpacing: 3.h,
+                              alignment: WrapAlignment.center,
+                              children: (question['options'] as List)
+                                  .map<Widget>((letter) {
+                                    Color? backgroundColor;
 
-                                if (letter == question['letter']) {
-                                  backgroundColor = Colors.green.shade300;
-                                } else {
-                                  backgroundColor = Colors.grey.shade300;
-                                }
+                                    if (letter == question['letter']) {
+                                      backgroundColor = Colors.green.shade300;
+                                    } else {
+                                      backgroundColor = Colors.grey.shade300;
+                                    }
 
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
+                                    return Container(
+                                      width: 20.w,
+                                      height: 12.h,
+                                      decoration: BoxDecoration(
+                                        color: backgroundColor,
+                                        borderRadius: .circular(5.w),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 2.w,
+                                            spreadRadius: 0.5.w,
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      letter,
-                                      style: TextStyle(
-                                        fontSize: 48,
-                                        fontWeight: FontWeight.bold,
-                                        color: letter == question['letter']
-                                            ? Colors.white
-                                            : Colors.purple.shade700,
+                                      child: Center(
+                                        child: Text(
+                                          letter as String,
+                                          style: TextStyle(
+                                            fontSize: 24.dp,
+                                            fontWeight: FontWeight.bold,
+                                            color: letter == question['letter']
+                                                ? Colors.white
+                                                : Colors.purple.shade700,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              },
+                                    );
+                                  })
+                                  .toList(),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
+                            SizedBox(height: 2.h),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -239,9 +236,9 @@ class LettersGameScreen extends StatelessWidget {
                           ),
                           minHeight: 10,
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 2.h),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: .spaceBetween,
                           children: [
                             Text(
                               'السؤال: ${gameState.currentQuestionIndex + 1}/${gameState.questions.length}',
@@ -265,20 +262,20 @@ class LettersGameScreen extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                           child: Text(
                             question['word'] as String,
-                            style: const TextStyle(
-                              fontSize: 48,
+                            style: TextStyle(
+                              fontSize: 28.dp,
                               fontWeight: FontWeight.bold,
                               color: Colors.purple,
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 2.h),
                         Flexible(
                           child: Text(
                             'اختر الحرف الذي تبدأ به الكلمة',
-                            style: const TextStyle(
-                              fontSize: 20,
+                            style: TextStyle(
+                              fontSize: 12.dp,
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
@@ -286,80 +283,71 @@ class LettersGameScreen extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(height: 40),
-                        Expanded(
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 15,
-                                  childAspectRatio: 1.5,
-                                ),
-                            itemCount: (question['options'] as List).length,
-                            itemBuilder: (context, index) {
-                              final letter =
-                                  (question['options'] as List)[index]
-                                      as String;
-                              final isSelected =
-                                  gameState.selectedLetter == letter;
-                              Color? backgroundColor;
+                        SizedBox(height: 4.h),
+                        Wrap(
+                          spacing: 3.w,
+                          runSpacing: 3.h,
+                          alignment: WrapAlignment.center,
+                          children: (question['options'] as List).map<Widget>((
+                            letter,
+                          ) {
+                            final isSelected =
+                                gameState.selectedLetter == letter as String;
+                            Color? backgroundColor;
 
-                              if (gameState.showResult) {
-                                if (letter == question['letter']) {
-                                  backgroundColor = Colors.green.shade300;
-                                } else if (isSelected && !gameState.isCorrect) {
-                                  backgroundColor = Colors.red.shade300;
-                                } else {
-                                  backgroundColor = Colors.grey.shade300;
-                                }
+                            if (gameState.showResult) {
+                              if (letter == question['letter']) {
+                                backgroundColor = Colors.green.shade300;
+                              } else if (isSelected && !gameState.isCorrect) {
+                                backgroundColor = Colors.red.shade300;
                               } else {
-                                backgroundColor = isSelected
-                                    ? Colors.purple.shade300
-                                    : Colors.white;
+                                backgroundColor = Colors.grey.shade300;
                               }
+                            } else {
+                              backgroundColor = isSelected
+                                  ? Colors.purple.shade300
+                                  : Colors.white;
+                            }
 
-                              return GestureDetector(
-                                onTap: () {
-                                  context.read<GamesBloc>().add(
-                                    SelectLetter(letter),
-                                  );
-                                  // bloc.audioController.playSound(
-                                  //   'assets/images/test.mp3',
-                                  // );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: backgroundColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      letter,
-                                      style: TextStyle(
-                                        fontSize: 48,
-                                        fontWeight: FontWeight.bold,
-                                        color:
-                                            gameState.showResult &&
-                                                letter == question['letter']
-                                            ? Colors.white
-                                            : Colors.purple.shade700,
-                                      ),
+                            return GestureDetector(
+                              onTap: () {
+                                context.read<GamesBloc>().add(
+                                  SelectLetter(letter),
+                                );
+                              },
+                              child: Container(
+                                width: 20.w,
+                                height: 12.h,
+                                decoration: BoxDecoration(
+                                  color: backgroundColor,
+                                  borderRadius: .circular(5.w),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 2.w,
+                                      spreadRadius: 0.5.w,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    letter,
+                                    style: TextStyle(
+                                      fontSize: 24.dp,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          gameState.showResult &&
+                                              letter == question['letter']
+                                          ? Colors.white
+                                          : Colors.purple.shade700,
                                     ),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          }).toList(),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 2.h),
                         if (gameState.showResult)
                           Container(
                             padding: const EdgeInsets.all(15),
@@ -375,7 +363,7 @@ class LettersGameScreen extends StatelessWidget {
                                   ? '🎉 ممتاز! إجابة صحيحة'
                                   : '😔 حاول مرة أخرى',
                               style: TextStyle(
-                                fontSize: 22,
+                                fontSize: 12.dp,
                                 fontWeight: FontWeight.bold,
                                 color: gameState.isCorrect
                                     ? Colors.green.shade800

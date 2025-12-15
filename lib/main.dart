@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:la3bob/core/config/setup.dart';
 import 'package:la3bob/router/app_router.dart';
 
@@ -15,16 +16,20 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      locale: const Locale('ar'),
-      supportedLocales: const [Locale('ar', 'SA'), Locale('en', 'US')],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      debugShowCheckedModeBanner: false,
-      routerConfig: appRouter,
+    return FlutterSizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp.router(
+          locale: const Locale('ar'),
+          supportedLocales: const [Locale('ar', 'SA'), Locale('en', 'US')],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          debugShowCheckedModeBanner: false,
+          routerConfig: appRouter,
+        );
+      },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/domain/usecases/auth_use_cases.dart';
@@ -52,13 +53,13 @@ class UpdateChildScreen extends StatelessWidget {
               }
 
               return SingleChildScrollView(
-                padding: const .all(16.0),
+                padding: .all(4.w),
                 child: Form(
                   key: formKey,
                   child: Column(
                     crossAxisAlignment: .stretch,
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       TextFormField(
                         controller: bloc.nameController,
                         enabled: state is! PorfileLoading,
@@ -75,7 +76,7 @@ class UpdateChildScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
                       TextFormField(
                         controller: bloc.ageController,
                         enabled: state is! PorfileLoading,
@@ -97,7 +98,7 @@ class UpdateChildScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 2.h),
 
                       InterestsSelector(
                         selectedInterests: selectedInterests,
@@ -108,7 +109,7 @@ class UpdateChildScreen extends StatelessWidget {
                         },
                       ),
 
-                      const SizedBox(height: 30),
+                      SizedBox(height: 4.h),
                       ElevatedButton(
                         onPressed: state is PorfileLoading
                             ? null
@@ -116,9 +117,10 @@ class UpdateChildScreen extends StatelessWidget {
                                 if (formKey.currentState!.validate()) {
                                   if (selectedInterests.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                         content: Text(
                                           'الرجاء اختيار اهتمام واحد على الأقل',
+                                          style: TextStyle(fontSize: 10.dp),
                                         ),
                                         backgroundColor: Colors.red,
                                       ),
@@ -144,14 +146,14 @@ class UpdateChildScreen extends StatelessWidget {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          padding: const .only(top: 16, bottom: 16),
+                          padding: .all(2.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: .circular(8),
+                            borderRadius: .circular(2.w),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'حفظ التعديلات',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 12.dp),
                         ),
                       ),
                     ],

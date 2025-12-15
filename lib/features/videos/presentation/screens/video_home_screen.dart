@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/di/injection.dart';
@@ -28,9 +29,9 @@ class VideoHomeScreen extends StatelessWidget {
               title: const Center(child: Text("فيديوهات")),
               actions: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: .all(2.w),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: .circular(12.w),
                     onLongPress: () async {
                       await context.push('/profile');
                       if (context.mounted) {
@@ -38,9 +39,9 @@ class VideoHomeScreen extends StatelessWidget {
                       }
                     },
                     onTap: () {},
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.settings),
+                    child: Padding(
+                      padding: .all(2.w),
+                      child: const Icon(Icons.settings),
                     ),
                   ),
                 ),
@@ -59,14 +60,14 @@ class VideoHomeScreen extends StatelessWidget {
                       children: [
                         Text(
                           'خطأ في تحميل الفيديوهات',
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: TextStyle(fontSize: 14.dp, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 2.h),
                         Text(
                           state.message,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: TextStyle(fontSize: 12.dp),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 4.h),
                         ElevatedButton(
                           onPressed: () {
                             context.read<VideosBloc>().add(const LoadVideos());
@@ -98,22 +99,22 @@ class VideoHomeScreen extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.video_library_outlined,
-                            size: 64,
+                            size: 16.w,
                             color: Colors.grey,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 4.h),
                           Text(
                             selectedChildId != null
                                 ? 'لا توجد فيديوهات متاحة لاهتمامات الطفل المختار'
                                 : 'لا توجد فيديوهات متاحة',
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: TextStyle(fontSize: 12.dp, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                           if (selectedChildId != null) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 2.h),
                             Text(
                               'يمكنك اختيار طفل آخر من الإعدادات',
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: TextStyle(fontSize: 10.dp),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -123,19 +124,53 @@ class VideoHomeScreen extends StatelessWidget {
                   }
 
                   if (filteredVideos.isEmpty) {
-                    return Center(
+                    return SingleChildScrollView(
+                      padding: .all(4.w),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
+                          if (interests.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 3.h, top: 2.h),
+                              child: Wrap(
+                                spacing: 2.w,
+                                runSpacing: 2.h,
+                                children: [
+                                  ChoiceChip(
+                                    label: const Text('الكل'),
+                                    selected: selectedInterest == null,
+                                    onSelected: (_) {
+                                      context.read<VideosBloc>().add(
+                                            const SelectInterest(null),
+                                          );
+                                    },
+                                  ),
+                                  ...interests.map((interest) {
+                                    final isSelected =
+                                        selectedInterest?.toLowerCase().trim() ==
+                                        interest.toLowerCase().trim();
+                                    return ChoiceChip(
+                                      label: Text(interest),
+                                      selected: isSelected,
+                                      onSelected: (_) {
+                                        context.read<VideosBloc>().add(
+                                              SelectInterest(interest),
+                                            );
+                                      },
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
+                          SizedBox(height: 4.h),
+                          Icon(
                             Icons.video_library_outlined,
-                            size: 64,
+                            size: 16.w,
                             color: Colors.grey,
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 3.h),
                           Text(
                             'لا توجد فيديوهات لهذا الاهتمام',
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: TextStyle(fontSize: 12.dp, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -143,16 +178,16 @@ class VideoHomeScreen extends StatelessWidget {
                   }
 
                   return ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                    padding: .all(4.w),
                     itemCount:
                         filteredVideos.length + (interests.isNotEmpty ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (interests.isNotEmpty && index == 0) {
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
+                          padding: EdgeInsets.only(bottom: 3.h),
                           child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
+                            spacing: 2.w,
+                            runSpacing: 2.h,
                             children: [
                               ChoiceChip(
                                 label: const Text('الكل'),
@@ -190,7 +225,7 @@ class VideoHomeScreen extends StatelessWidget {
                         video.link,
                       );
                       return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: EdgeInsets.only(bottom: 3.h),
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
                           onTap: () {
@@ -204,17 +239,17 @@ class VideoHomeScreen extends StatelessWidget {
                                     ? Image.network(
                                         thumbnailUrl,
                                         width: double.infinity,
-                                        height: 200,
+                                        height: 25.h,
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                               return Container(
                                                 width: double.infinity,
-                                                height: 200,
+                                                height: 25.h,
                                                 color: Colors.grey[300],
-                                                child: const Icon(
+                                                child: Icon(
                                                   Icons.play_circle_outline,
-                                                  size: 60,
+                                                  size: 15.w,
                                                   color: Colors.grey,
                                                 ),
                                               );
@@ -226,13 +261,12 @@ class VideoHomeScreen extends StatelessWidget {
                                               }
                                               return Container(
                                                 width: double.infinity,
-                                                height: 200,
+                                                height: 25.h,
                                                 color: Colors.grey[200],
-                                                child: const Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 3,
-                                                      ),
+                                                child: Center(
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 1.w,
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -249,11 +283,11 @@ class VideoHomeScreen extends StatelessWidget {
                                       ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(16.0),
+                                padding: .all(4.w),
                                 child: Text(
                                   video.title,
-                                  style: const TextStyle(
-                                    fontSize: 16,
+                                  style: TextStyle(
+                                    fontSize: 12.dp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.right,

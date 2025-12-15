@@ -35,6 +35,7 @@ dependencies:
   fluttertoast: ^9.0.0
   local_auth_android: ^2.0.4
   audioplayers: ^6.0.0
+  flutter_sizer: 1.0.5
 
 dev_dependencies:
   flutter_test:
