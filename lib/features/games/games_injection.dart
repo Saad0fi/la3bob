@@ -8,10 +8,13 @@ import 'package:la3bob/features/games/domain/usecases/detect_squat.dart';
 import 'package:la3bob/features/games/domain/repositories/jump_repository.dart';
 import 'package:la3bob/features/games/data/models/jump_detector_service.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_jump.dart';
+import 'package:la3bob/features/games/domain/repositories/simon_says_repository.dart';
+import 'package:la3bob/features/games/data/models/simon_says_detector_service.dart';
+import 'package:la3bob/features/games/domain/usecases/detect_simon_move.dart';
 
 final getIt = GetIt.instance;
 
-void setupWavingGame() {
+void setupGames() {
   // Register Repository
   if (!getIt.isRegistered<WaveRepository>()) {
     getIt.registerLazySingleton<WaveRepository>(() => WaveDetectorService());
@@ -21,9 +24,6 @@ void setupWavingGame() {
   if (!getIt.isRegistered<DetectWave>()) {
     getIt.registerFactory(() => DetectWave(getIt<WaveRepository>()));
   }
-
-  // Bloc is created in API/Page via factory or directly using usecase,
-  // so we don't strictly need to register Bloc itself if we useBlocProvider(create: (_) => WaveBloc(getIt<DetectWave>()))
 
   // --- Squat Game Dependencies ---
   if (!getIt.isRegistered<SquatRepository>()) {
@@ -41,5 +41,16 @@ void setupWavingGame() {
 
   if (!getIt.isRegistered<DetectJump>()) {
     getIt.registerFactory(() => DetectJump(getIt<JumpRepository>()));
+  }
+
+  // --- Simon Says Game Dependencies ---
+  if (!getIt.isRegistered<SimonSaysRepository>()) {
+    getIt.registerLazySingleton<SimonSaysRepository>(
+      () => SimonSaysDetectorService(),
+    );
+  }
+
+  if (!getIt.isRegistered<DetectSimonMove>()) {
+    getIt.registerFactory(() => DetectSimonMove(getIt<SimonSaysRepository>()));
   }
 }

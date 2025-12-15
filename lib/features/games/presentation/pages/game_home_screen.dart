@@ -392,6 +392,55 @@ class _PhysicalGamesTab extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 30),
+            // لعبة أوامر القائد (Simon Says)
+            GestureDetector(
+              onTap: () {
+                context.push('/tabs/games/simon_says');
+              },
+              child: Container(
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.purple.withValues(alpha: .3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'أوامر القائد',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'نفذ الأوامر بسرعة!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.purple),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
