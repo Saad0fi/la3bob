@@ -129,42 +129,8 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
       fit: StackFit.expand,
       children: [
         CameraPreview(_controller),
-        if (_customPaint != null) _customPaint!,
-
-        // Debug Overlay
-        Positioned(
-          top: 100,
-          left: 10,
-          child: Container(
-            color: Colors.black54,
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "DEBUG INFO (SamFix)",
-                  style: TextStyle(color: Colors.yellow),
-                ),
-                Text(
-                  "Error: $_lastError",
-                  style: const TextStyle(color: Colors.redAccent),
-                ),
-                Text(
-                  "Frames: $_framesProcessed",
-                  style: const TextStyle(color: Colors.white),
-                ),
-                Text(
-                  "Poses: $_posesFound",
-                  style: const TextStyle(color: Colors.greenAccent),
-                ),
-                Text(
-                  "Fmt Raw: $_lastFormatRaw",
-                  style: const TextStyle(color: Colors.orange),
-                ),
-              ],
-            ),
-          ),
-        ),
+        // if (_customPaint != null) _customPaint!,
+        // Debug info removed as per user request
       ],
     );
   }

@@ -343,6 +343,55 @@ class _PhysicalGamesTab extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 30),
+            // لعبة القفز (Jump)
+            GestureDetector(
+              onTap: () {
+                context.push('/tabs/games/jump');
+              },
+              child: Container(
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withValues(alpha: .3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'لعبة القفز',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'اقفز لتتجاوز العقبات!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.blue),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

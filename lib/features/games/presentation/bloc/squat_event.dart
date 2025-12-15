@@ -14,4 +14,13 @@ class PoseDetected extends SquatEvent {
   const PoseDetected(this.pose);
 }
 
+class StartGame extends SquatEvent {}
+
+class Tick extends SquatEvent {
+  final int remainingTime;
+  const Tick(this.remainingTime);
+  @override
+  List<Object> get props => [remainingTime];
+}
+
 class ResetGame extends SquatEvent {}
