@@ -442,6 +442,104 @@ class _EducationalGamesTab extends StatelessWidget {
 
               ),
 
+              const SizedBox(height: 30),
+
+              // لعبة التطابق
+
+              GestureDetector(
+
+                onTap: () {
+
+                  context.push('/tabs/games/matching');
+
+                },
+
+                child: Container(
+
+                  padding: const EdgeInsets.all(25),
+
+                  decoration: BoxDecoration(
+
+                    color: Colors.white,
+
+                    borderRadius: BorderRadius.circular(25),
+
+                    boxShadow: [
+
+                      BoxShadow(
+
+                        color: Colors.teal.withValues(alpha: .3),
+
+                        blurRadius: 20,
+
+                        spreadRadius: 5,
+
+                      ),
+
+                    ],
+
+                  ),
+
+                  child: Row(
+
+                    children: [
+
+                      Expanded(
+
+                        child: Column(
+
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                          children: [
+
+                            const Text(
+
+                              'لعبة التطابق',
+
+                              style: TextStyle(
+
+                                fontSize: 24,
+
+                                fontWeight: FontWeight.bold,
+
+                                color: Colors.teal,
+
+                              ),
+
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Text(
+
+                              'اختر الشكلين المتطابقين',
+
+                              style: TextStyle(
+
+                                fontSize: 16,
+
+                                color: Colors.grey.shade700,
+
+                              ),
+
+                            ),
+
+                          ],
+
+                        ),
+
+                      ),
+
+                      const Icon(Icons.arrow_forward_ios, color: Colors.teal),
+
+                    ],
+
+                  ),
+
+                ),
+
+              ),
+
             ],
 
           ),

@@ -16,6 +16,10 @@ class InitializeColorsGame extends GamesEvent {
   const InitializeColorsGame();
 }
 
+class InitializeMatchingGame extends GamesEvent {
+  const InitializeMatchingGame();
+}
+
 class SelectLetter extends GamesEvent {
   final String letter;
 
@@ -34,8 +38,19 @@ class SelectColor extends GamesEvent {
   const SelectColor(this.color);
 }
 
+class SelectMatch extends GamesEvent {
+  final String match;
+  final int index;
+
+  const SelectMatch(this.match, this.index);
+}
+
 class MoveToNextQuestion extends GamesEvent {
   const MoveToNextQuestion();
+}
+
+class ResetMatchingSelection extends GamesEvent {
+  const ResetMatchingSelection();
 }
 
 class RestartGame extends GamesEvent {

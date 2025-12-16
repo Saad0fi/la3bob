@@ -5,7 +5,7 @@ import 'package:la3bob/core/comon/helper_function/audio_helper.dart';
 part 'games_event.dart';
 part 'games_state.dart';
 
-enum GameType { letters, numbers, colors }
+enum GameType { letters, numbers, colors, matching }
 
 class GamesBloc extends Bloc<GamesEvent, GamesState> {
   static const List<Map<String, dynamic>> _lettersQuestions = [
@@ -157,16 +157,72 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     },
   ];
 
+  static const List<Map<String, dynamic>> _matchingQuestions = [
+    {
+      'item': '🐱',
+      'itemName': 'قطة',
+      'options': ['🐱', '🐱', '🐶', '🐰'],
+    },
+    {
+      'item': '🍎',
+      'itemName': 'تفاحة',
+      'options': ['🍎', '🍎', '🍌', '🍇'],
+    },
+    {
+      'item': '⭐',
+      'itemName': 'نجمة',
+      'options': ['⭐', '⭐', '🌙', '☀️'],
+    },
+    {
+      'item': '🚗',
+      'itemName': 'سيارة',
+      'options': ['🚗', '🚗', '🚕', '🚙'],
+    },
+    {
+      'item': '🏠',
+      'itemName': 'منزل',
+      'options': ['🏠', '🏠', '🏫', '🏭'],
+    },
+    {
+      'item': '🎈',
+      'itemName': 'بالون',
+      'options': ['🎈', '🎈', '🎉', '🎊'],
+    },
+    {
+      'item': '🌳',
+      'itemName': 'شجرة',
+      'options': ['🌳', '🌳', '🌲', '🌴'],
+    },
+    {
+      'item': '🦋',
+      'itemName': 'فراشة',
+      'options': ['🦋', '🦋', '🐝', '🐛'],
+    },
+    {
+      'item': '🎵',
+      'itemName': 'موسيقى',
+      'options': ['🎵', '🎵', '🎶', '🎤'],
+    },
+    {
+      'item': '🌈',
+      'itemName': 'قوس قزح',
+      'options': ['🌈', '🌈', '☁️', '⛈️'],
+    },
+  ];
+
   int _lastPlayedQuestionIndex = -1;
 
   GamesBloc() : super(GamesInitial()) {
     on<InitializeLettersGame>(_onInitializeLettersGame);
     on<InitializeNumbersGame>(_onInitializeNumbersGame);
     on<InitializeColorsGame>(_onInitializeColorsGame);
+    on<InitializeMatchingGame>(_onInitializeMatchingGame);
     on<SelectLetter>(_onSelectLetter);
     on<SelectNumber>(_onSelectNumber);
     on<SelectColor>(_onSelectColor);
+    on<SelectMatch>(_onSelectMatch);
     on<MoveToNextQuestion>(_onMoveToNextQuestion);
+    on<ResetMatchingSelection>(_onResetMatchingSelection);
     on<RestartGame>(_onRestartGame);
   }
 
@@ -235,6 +291,34 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       selectedLetter: null,
       selectedNumber: null,
       selectedColor: null,
+      selectedMatch: null,
+      selectedMatches: null,
+      selectedIndices: null,
+      showResult: false,
+      isCorrect: false,
+    ));
+  }
+
+  void _onInitializeMatchingGame(
+    InitializeMatchingGame event,
+    Emitter<GamesState> emit,
+  ) {
+    final shuffledQuestions = _matchingQuestions
+        .map((q) => Map<String, dynamic>.from(q))
+        .toList();
+    _shuffleMatchingOptions(shuffledQuestions);
+
+    emit(GameLoaded(
+      gameType: GameType.matching,
+      questions: shuffledQuestions,
+      currentQuestionIndex: 0,
+      score: 0,
+      selectedLetter: null,
+      selectedNumber: null,
+      selectedColor: null,
+      selectedMatch: null,
+      selectedMatches: [],
+      selectedIndices: [],
       showResult: false,
       isCorrect: false,
     ));
@@ -263,6 +347,9 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       selectedLetter: event.letter,
       selectedNumber: null,
       selectedColor: null,
+      selectedMatch: null,
+      selectedMatches: null,
+      selectedIndices: null,
       showResult: true,
       isCorrect: isCorrect,
     ));
@@ -291,6 +378,9 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       selectedLetter: null,
       selectedNumber: event.number,
       selectedColor: null,
+      selectedMatch: null,
+      selectedMatches: null,
+      selectedIndices: null,
       showResult: true,
       isCorrect: isCorrect,
     ));
@@ -319,8 +409,105 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       selectedLetter: null,
       selectedNumber: null,
       selectedColor: event.color,
+      selectedMatch: null,
+      selectedMatches: null,
+      selectedIndices: null,
       showResult: true,
       isCorrect: isCorrect,
+    ));
+  }
+
+  void _onSelectMatch(
+    SelectMatch event,
+    Emitter<GamesState> emit,
+  ) {
+    if (state is! GameLoaded) return;
+
+    final currentState = state as GameLoaded;
+    if (currentState.gameType != GameType.matching || currentState.showResult) {
+      return;
+    }
+
+    final question = currentState.questions[currentState.currentQuestionIndex];
+    final correctItem = question['item'] as String;
+    
+    List<String> newSelectedMatches = List.from(currentState.selectedMatches ?? []);
+    List<int> newSelectedIndices = List.from(currentState.selectedIndices ?? []);
+    
+    if (newSelectedIndices.contains(event.index)) {
+      return; 
+    }
+    
+    if (newSelectedMatches.length < 2) {
+      newSelectedMatches.add(event.match);
+      newSelectedIndices.add(event.index);
+    }
+
+    bool isCorrect = false;
+    bool showResult = false;
+
+    if (newSelectedMatches.length == 2) {
+      showResult = true;
+      final firstMatch = newSelectedMatches[0];
+      final secondMatch = newSelectedMatches[1];
+      isCorrect = firstMatch == secondMatch && firstMatch == correctItem;
+      
+      final newScore = isCorrect ? currentState.score + 1 : currentState.score;
+      
+      emit(GameLoaded(
+        gameType: GameType.matching,
+        questions: currentState.questions,
+        currentQuestionIndex: currentState.currentQuestionIndex,
+        score: newScore,
+        selectedLetter: null,
+        selectedNumber: null,
+        selectedColor: null,
+        selectedMatch: event.match,
+        selectedMatches: newSelectedMatches,
+        selectedIndices: newSelectedIndices,
+        showResult: showResult,
+        isCorrect: isCorrect,
+      ));
+    } else {
+      emit(GameLoaded(
+        gameType: GameType.matching,
+        questions: currentState.questions,
+        currentQuestionIndex: currentState.currentQuestionIndex,
+        score: currentState.score,
+        selectedLetter: null,
+        selectedNumber: null,
+        selectedColor: null,
+        selectedMatch: event.match,
+        selectedMatches: newSelectedMatches,
+        selectedIndices: newSelectedIndices,
+        showResult: false,
+        isCorrect: false,
+      ));
+    }
+  }
+
+  void _onResetMatchingSelection(
+    ResetMatchingSelection event,
+    Emitter<GamesState> emit,
+  ) {
+    if (state is! GameLoaded) return;
+
+    final currentState = state as GameLoaded;
+    if (currentState.gameType != GameType.matching) return;
+
+    emit(GameLoaded(
+      gameType: GameType.matching,
+      questions: currentState.questions,
+      currentQuestionIndex: currentState.currentQuestionIndex,
+      score: currentState.score,
+      selectedLetter: null,
+      selectedNumber: null,
+      selectedColor: null,
+      selectedMatch: null,
+      selectedMatches: [],
+      selectedIndices: [],
+      showResult: false,
+      isCorrect: false,
     ));
   }
 
@@ -341,6 +528,8 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         selectedLetter: null,
         selectedNumber: null,
         selectedColor: null,
+        selectedMatch: null,
+        selectedMatches: null,
         showResult: false,
         isCorrect: false,
       );
@@ -374,7 +563,9 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         ? _lettersQuestions
         : completedState.gameType == GameType.numbers
             ? _numbersQuestions
-            : _colorsQuestions;
+            : completedState.gameType == GameType.colors
+                ? _colorsQuestions
+                : _matchingQuestions;
 
     final shuffledQuestions =
         questions.map((q) => Map<String, dynamic>.from(q)).toList();
@@ -383,8 +574,10 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       _shuffleLettersOptions(shuffledQuestions);
     } else if (completedState.gameType == GameType.numbers) {
       _shuffleNumbersOptions(shuffledQuestions);
-    } else {
+    } else if (completedState.gameType == GameType.colors) {
       _shuffleColorsOptions(shuffledQuestions);
+    } else {
+      _shuffleMatchingOptions(shuffledQuestions);
     }
 
     final newState = GameLoaded(
@@ -394,6 +587,10 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       score: 0,
       selectedLetter: null,
       selectedNumber: null,
+      selectedColor: null,
+      selectedMatch: null,
+      selectedMatches: completedState.gameType == GameType.matching ? [] : null,
+      selectedIndices: completedState.gameType == GameType.matching ? [] : null,
       showResult: false,
       isCorrect: false,
     );
@@ -441,6 +638,16 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       options.shuffle(Random());
       question['options'] = options;
     }
+  }
+
+  void _shuffleMatchingOptions(List<Map<String, dynamic>> questions) {
+    final random = Random();
+    for (var question in questions) {
+      final options = List<String>.from(question['options'] as List);
+      options.shuffle(random);
+      question['options'] = options;
+    }
+    questions.shuffle(random);
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:la3bob/features/auth/presentation/pages/verification_screen.dart
 import 'package:la3bob/features/games/presentation/pages/colors_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/game_home_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
+import 'package:la3bob/features/games/presentation/pages/matching_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/jump_page.dart';
 import 'package:la3bob/features/games/presentation/pages/simon_says_page.dart';
@@ -77,6 +78,10 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: 'colors',
               builder: (context, state) => const ColorsGameScreen(),
+            ),
+            GoRoute(
+              path: 'matching',
+              builder: (context, state) => const MatchingGameScreen(),
             ),
             GoRoute(
               path: 'jump',
