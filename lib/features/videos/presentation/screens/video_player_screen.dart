@@ -22,10 +22,7 @@ class _YoutubePlayerWidget extends StatefulWidget {
   final String videoId;
   final String videoTitle;
 
-  const _YoutubePlayerWidget({
-    required this.videoId,
-    required this.videoTitle,
-  });
+  const _YoutubePlayerWidget({required this.videoId, required this.videoTitle});
 
   @override
   State<_YoutubePlayerWidget> createState() => _YoutubePlayerWidgetState();
@@ -55,7 +52,7 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
       setState(() {
         _isFullScreen = _controller!.value.isFullScreen;
       });
-      
+
       if (_isFullScreen) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       } else {
@@ -123,7 +120,7 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-          body: player,
+          body: Center(child: player),
         );
       },
     );
