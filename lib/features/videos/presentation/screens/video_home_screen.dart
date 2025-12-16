@@ -39,9 +39,9 @@ class VideoHomeScreen extends StatelessWidget {
               ),
               title: Center(
                 child: Text(
-                  "فيديوهات",
+                  " فيديوهات لعبوب",
                   style: TextStyle(
-                    fontSize: 18.dp,
+                    fontSize: 25.dp,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
                   ),
