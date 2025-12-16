@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:la3bob/core/comon/theme/app_color.dart';
 import 'package:la3bob/core/constants/interests.dart';
 
 class InterestsSelector extends StatefulWidget {
@@ -39,52 +40,91 @@ class _InterestsSelectorWidgetState extends State<InterestsSelector> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'اهتمامات الطفل',
-          style: TextStyle(fontSize: 12.dp, fontWeight: FontWeight.bold),
-          textDirection: TextDirection.rtl,
-        ),
-        SizedBox(height: 2.h),
-        Container(
-          padding: .all(3.w),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: _localInterests.isEmpty ? Colors.red : Colors.grey,
-              width: _localInterests.isEmpty ? 0.5.w : 0.3.w,
+        Row(
+          children: [
+            Icon(Icons.interests, color: AppColors.accent, size: 5.w),
+            SizedBox(width: 2.w),
+            Text(
+              'اهتمامات الطفل',
+              style: TextStyle(
+                fontSize: 13.dp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
-            borderRadius: .circular(2.w),
-          ),
-          child: Wrap(
-            spacing: 2.w,
-            runSpacing: 2.h,
-            textDirection: TextDirection.rtl,
-            children: InterestsConstants.availableInterests.map((interest) {
-              final isSelected = _localInterests.contains(interest);
-              return FilterChip(
-                label: Text(interest, style: TextStyle(fontSize: 10.dp)),
-                selected: isSelected,
-                onSelected: (selected) => _toggleInterest(interest, selected),
-                selectedColor: Colors.blue.shade100,
-                checkmarkColor: Colors.blue.shade700,
-                labelStyle: TextStyle(
-                  color: isSelected ? Colors.blue.shade700 : Colors.black87,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 10.dp,
+            if (_localInterests.isNotEmpty) ...[
+              SizedBox(width: 2.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                padding: .all(2.w),
-              );
-            }).toList(),
+                child: Text(
+                  '${_localInterests.length}',
+                  style: TextStyle(fontSize: 9.dp, color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ],
+        ),
+        SizedBox(height: 1.5.h),
+        Card(
+          elevation: 2,
+          shadowColor: _localInterests.isEmpty ? Colors.red.withValues(alpha: .3) : Colors.grey.withValues(alpha: .2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: _localInterests.isEmpty ? Colors.red.shade300 : Colors.transparent,
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(4.w),
+            child: Wrap(
+              spacing: 2.w,
+              runSpacing: 1.5.h,
+              textDirection: TextDirection.rtl,
+              children: InterestsConstants.availableInterests.map((interest) {
+                final isSelected = _localInterests.contains(interest);
+                return FilterChip(
+                  label: Text(interest),
+                  selected: isSelected,
+                  onSelected: (selected) => _toggleInterest(interest, selected),
+                  selectedColor: AppColors.accent.withValues(alpha: .25),
+                  backgroundColor: Colors.grey.shade100,
+                  showCheckmark: false,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: isSelected ? AppColors.accent : Colors.grey.shade300,
+                      width: isSelected ? 2 : 1,
+                    ),
+                  ),
+                  labelStyle: TextStyle(
+                    color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                    fontSize: 10.dp,
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.w),
+                );
+              }).toList(),
+            ),
           ),
         ),
         if (_localInterests.isEmpty)
           Padding(
-            padding: .all(2.w),
-            child: Text(
-              'الرجاء اختيار اهتمام واحد على الأقل',
-              style: TextStyle(color: Colors.red.shade700, fontSize: 10.dp),
-              textDirection: TextDirection.rtl,
+            padding: EdgeInsets.only(top: 1.h, right: 2.w),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.red.shade400, size: 4.w),
+                SizedBox(width: 1.w),
+                Text(
+                  'الرجاء اختيار اهتمام واحد على الأقل',
+                  style: TextStyle(color: Colors.red.shade600, fontSize: 10.dp),
+                ),
+              ],
             ),
           ),
       ],
