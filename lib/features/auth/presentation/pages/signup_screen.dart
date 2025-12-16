@@ -25,9 +25,7 @@ class SignupScreen extends StatelessWidget {
           backgroundColor: AppColors.accent,
           elevation: 4,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -85,17 +83,14 @@ class SignupScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
+                                color: AppColors.primary.withValues(alpha: .3),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
                             ],
                           ),
                           child: Center(
-                            child: Text(
-                              '👋',
-                              style: TextStyle(fontSize: 12.w),
-                            ),
+                            child: Text('👋', style: TextStyle(fontSize: 12.w)),
                           ),
                         ),
 
@@ -113,7 +108,7 @@ class SignupScreen extends StatelessWidget {
                         SizedBox(height: 1.h),
 
                         Text(
-                          'سجّل الآن واستمتع بالألعاب التعليمية',
+                          'سجّل الآن واستمتع بالبيئة التعليمية',
                           style: TextStyle(
                             fontSize: 12.dp,
                             color: AppColors.textSecondary,
@@ -146,13 +141,14 @@ class SignupScreen extends StatelessWidget {
                                   decoration: InputDecoration(
                                     hintText: 'أدخل اسمك',
                                     hintStyle: TextStyle(
-                                      color: AppColors.textSecondary
-                                          .withOpacity(0.5),
+                                      color: AppColors.textSecondary.withValues(
+                                        alpha: .5,
+                                      ),
                                       fontSize: 12.dp,
                                     ),
                                     filled: true,
                                     fillColor: AppColors.categoryChipBackground
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: .3),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
                                       borderSide: BorderSide.none,
@@ -196,13 +192,14 @@ class SignupScreen extends StatelessWidget {
                                   decoration: InputDecoration(
                                     hintText: 'example@email.com',
                                     hintStyle: TextStyle(
-                                      color: AppColors.textSecondary
-                                          .withOpacity(0.5),
+                                      color: AppColors.textSecondary.withValues(
+                                        alpha: .5,
+                                      ),
                                       fontSize: 12.dp,
                                     ),
                                     filled: true,
                                     fillColor: AppColors.categoryChipBackground
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: .3),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
                                       borderSide: BorderSide.none,
@@ -226,8 +223,8 @@ class SignupScreen extends StatelessWidget {
                                   onChanged: (value) => _email = value,
                                   validator: (value) =>
                                       value!.isEmpty || !value.contains('@')
-                                          ? 'الرجاء إدخال بريد إلكتروني صحيح'
-                                          : null,
+                                      ? 'الرجاء إدخال بريد إلكتروني صحيح'
+                                      : null,
                                 ),
 
                                 SizedBox(height: 3.h),
@@ -248,8 +245,9 @@ class SignupScreen extends StatelessWidget {
                                           foregroundColor: Colors.white,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
                                           ),
                                         ),
                                         child: isSubmitting
@@ -258,9 +256,9 @@ class SignupScreen extends StatelessWidget {
                                                 height: 6.w,
                                                 child:
                                                     const CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                  strokeWidth: 3,
-                                                ),
+                                                      color: Colors.white,
+                                                      strokeWidth: 3,
+                                                    ),
                                               )
                                             : Text(
                                                 'إنشاء حساب',
@@ -295,9 +293,10 @@ class SignupScreen extends StatelessWidget {
                               child: Text(
                                 'تسجيل الدخول',
                                 style: TextStyle(
-                                  color: AppColors.accent,
+                                  color: AppColors.textPrimary,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12.dp,
+                                  fontSize: 13.dp,
+                                  decoration: TextDecoration.underline,
                                 ),
                               ),
                             ),
@@ -321,9 +320,9 @@ class SignupScreen extends StatelessWidget {
       _formKey.currentState!.save();
 
       context.read<AuthCubit>().signUp(
-            email: _email.trim(),
-            name: _name.trim(),
-          );
+        email: _email.trim(),
+        name: _name.trim(),
+      );
     }
   }
 }
