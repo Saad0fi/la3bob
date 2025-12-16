@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:la3bob/core/comon/helper_function/dialog_helper.dart';
 import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
+import 'package:la3bob/core/comon/theme/app_color.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
@@ -28,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, color: Colors.blue),
+            icon: const Icon(Icons.add, color: AppColors.accent),
             onPressed: () async {
               final result = await Navigator.of(
                 context,
@@ -129,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
                   // قسم بيانات ولي الأمر (BigUserCard)
                   SliverToBoxAdapter(
                     child: BigUserCard(
-                      backgroundColor: Colors.green.shade700,
+                      backgroundColor: AppColors.accent,
                       userName: parentName,
                       userProfilePic: const AssetImage(
                         "assets/images/image8.png",
@@ -140,7 +141,7 @@ class ProfileScreen extends StatelessWidget {
                           iconsColor: Colors.white,
                           withBackground: true,
                           borderRadius: 50,
-                          backgroundColor: Colors.green.shade700,
+                          backgroundColor: AppColors.accent,
                         ),
                         title: "البريد الإلكتروني",
                         subtitle: parentEmail,
