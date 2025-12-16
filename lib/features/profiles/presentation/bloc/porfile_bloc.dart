@@ -61,9 +61,7 @@ class PorfileBloc extends Bloc<PorfileEvent, PorfileState> {
       parentId,
     );
     bool isProtected = false;
-    protectionResult.when((isSet) => isProtected = isSet, (failure) {
-      print('حدث خطأ: ${failure.message}');
-    });
+    protectionResult.when((isSet) => isProtected = isSet, (failure) {});
 
     // نجيب بيانات الاطفال قبل عملية المصادقة
     List<ChildEntity> children = [];

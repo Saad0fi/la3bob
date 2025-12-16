@@ -47,6 +47,13 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(path: '/profile', builder: (context, state) => ProfileScreen()),
+    GoRoute(
+      path: '/video-player',
+      builder: (context, state) {
+        final video = state.extra as VideoEntity;
+        return VideoPlayerScreen(video: video);
+      },
+    ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) => NavigationBarScreen(child: child),
@@ -54,15 +61,6 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/tabs/videos',
           builder: (context, state) => const VideoHomeScreen(),
-          routes: [
-            GoRoute(
-              path: 'player',
-              builder: (context, state) {
-                final video = state.extra as VideoEntity;
-                return VideoPlayerScreen(video: video);
-              },
-            ),
-          ],
         ),
         GoRoute(
           path: '/tabs/games',

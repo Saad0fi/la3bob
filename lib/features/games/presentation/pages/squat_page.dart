@@ -169,7 +169,7 @@ class _SquatGamePageState extends State<SquatGamePage> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: state.remainingTime <= 10
-                    ? Colors.red.withOpacity(0.8)
+                    ? Colors.red.withValues(alpha: .8)
                     : Colors.black45,
                 borderRadius: BorderRadius.circular(20),
               ),
