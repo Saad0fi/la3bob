@@ -93,27 +93,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             child: Image.asset(item.image, fit: BoxFit.contain),
                           ),
                         ),
-                        SizedBox(height: 2.h),
-                        // Dots Indicator
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(_items.length, (dotIndex) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 1.w),
-                              width: _currentPage == dotIndex ? 3.w : 2.w,
-                              height: _currentPage == dotIndex ? 3.w : 2.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _currentPage == dotIndex
-                                    ? const Color(
-                                        0xFF8B5CF6,
-                                      ) // Purple for active dot (matching mockup)
-                                    : Colors.grey.shade300,
-                              ),
-                            );
-                          }),
-                        ),
-                        SizedBox(height: 4.h),
                         // Title
                         Text(
                           item.title,
@@ -142,6 +121,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     );
                   },
                 ),
+              ),
+              SizedBox(height: 2.h),
+              // Dots Indicator
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_items.length, (dotIndex) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 1.w),
+                    width: _currentPage == dotIndex ? 3.w : 2.w,
+                    height: _currentPage == dotIndex ? 3.w : 2.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentPage == dotIndex
+                          ? const Color(
+                              0xFF8B5CF6,
+                            ) // Purple for active dot (matching mockup)
+                          : Colors.grey.shade300,
+                    ),
+                  );
+                }),
               ),
               // Buttons
               Padding(
