@@ -123,17 +123,13 @@ class ProfileScreen extends StatelessWidget {
                   : [];
               final isLoaded = state is PorfileChildrenLoaded;
               final isLockActive = isLoaded
-                  ? (state as PorfileChildrenLoaded).isChildLockModeActive
+                  ? (state).isChildLockModeActive
                   : false;
               final isSettingsProtected = isLoaded
-                  ? (state as PorfileChildrenLoaded).isSettingsProtected
+                  ? (state).isSettingsProtected
                   : false;
-              final selectedChildId = isLoaded
-                  ? (state as PorfileChildrenLoaded).selectedChildId
-                  : null;
-              final parentUser = isLoaded
-                  ? (state as PorfileChildrenLoaded).currentParentUser
-                  : null;
+              final selectedChildId = isLoaded ? (state).selectedChildId : null;
+              final parentUser = isLoaded ? (state).currentParentUser : null;
               final parentName = parentUser?.name ?? 'ولي الأمر';
               final parentEmail = parentUser?.email ?? 'غير متوفر';
 
@@ -344,12 +340,13 @@ class ProfileScreen extends StatelessWidget {
                                 value: isSettingsProtected,
                                 activeColor: AppColors.accent,
                                 onChanged: (val) {
-                                  if (isLoaded)
+                                  if (isLoaded) {
                                     bloc.add(
                                       SaveSettingsProtectionEvent(
                                         isProtected: val,
                                       ),
                                     );
+                                  }
                                 },
                               ),
                             ],
@@ -698,8 +695,9 @@ class ProfileScreen extends StatelessWidget {
                                                             ),
                                                       ),
                                                     );
-                                                if (result == true)
+                                                if (result == true) {
                                                   bloc.add(const ForceReload());
+                                                }
                                               } else if (value == 'delete') {
                                                 showDeleteConfirmationDialog(
                                                   context: context,
