@@ -12,6 +12,7 @@ import 'package:la3bob/features/games/presentation/pages/jump_page.dart';
 import 'package:la3bob/features/games/presentation/pages/simon_says_page.dart';
 import 'package:la3bob/features/games/presentation/pages/freeze_page.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
+import 'package:la3bob/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
 import 'package:la3bob/features/profiles/presentation/screens/add_child_screen.dart';
 import 'package:la3bob/features/profiles/presentation/screens/profile_screen.dart';
@@ -29,6 +30,10 @@ final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
   routes: [
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(path: '/signup', builder: (context, state) => const SignupScreen()),
     GoRoute(
