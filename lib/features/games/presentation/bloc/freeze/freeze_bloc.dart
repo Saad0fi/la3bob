@@ -14,7 +14,9 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
 
   // Thresholds
   // If movement > this during Freeze phase -> Game Over
-  final double _freezeThreshold = 50.0;
+  // 0.02 = 2% of body height.
+  // Let's try 0.04 (4%) to be a bit forgiving but still catch real movement.
+  final double _freezeThreshold = 0.04;
   // If movement > this during Dance phase -> Bonus points?
   // final double _danceThreshold = 30.0;
 
