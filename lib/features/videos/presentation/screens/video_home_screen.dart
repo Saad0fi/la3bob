@@ -324,7 +324,7 @@ class VideoHomeScreen extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () {
                                     context.push(
-                                      '/tabs/videos/player',
+                                      '/video-player',
                                       extra: video,
                                     );
                                   },
