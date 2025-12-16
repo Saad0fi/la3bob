@@ -2,6 +2,7 @@ import 'package:babstrap_settings_screen_updated/babstrap_settings_screen_update
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:la3bob/core/comon/helper_function/dialog_helper.dart';
 import 'package:la3bob/core/comon/helper_function/toast_helper.dart';
 import 'package:la3bob/core/comon/theme/app_color.dart';
@@ -96,7 +97,12 @@ class ProfileScreen extends StatelessWidget {
             final isLoading = state is PorfileLoading;
             if (isLoading) {
               return const Center(
-                child: CupertinoActivityIndicator(radius: 20.0),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primary,
+                    strokeWidth: 1.5,
+                  ),
+                ),
               );
             }
 
