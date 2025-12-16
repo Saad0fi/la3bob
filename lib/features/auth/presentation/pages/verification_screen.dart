@@ -62,6 +62,10 @@ class VerificationScreen extends StatelessWidget {
               bottom: Radius.circular(20),
             ),
           ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => context.go('/login'),
+          ),
           title: Center(
             child: Text(
               "تأكيد الرمز",
@@ -72,6 +76,7 @@ class VerificationScreen extends StatelessWidget {
               ),
             ),
           ),
+          actions: [SizedBox(width: 12.w)],
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -205,26 +210,29 @@ class VerificationScreen extends StatelessWidget {
                                 SizedBox(height: 3.h),
 
                                 //  فيلد ال Pinput (يستمع لحالة التحميل من AuthCubit)
-                                BlocBuilder<AuthCubit, AuthState>(
-                                  builder: (context, state) {
-                                    final isLoading = state is AuthLoading;
-                                    return Pinput(
-                                      length: 6,
-                                      defaultPinTheme: defaultPinTheme,
-                                      focusedPinTheme: focusedPinTheme,
-                                      submittedPinTheme: submittedPinTheme,
-                                      pinputAutovalidateMode:
-                                          PinputAutovalidateMode.onSubmit,
-                                      onCompleted: (pin) {
-                                        if (!isLoading) {
-                                          context.read<AuthCubit>().verifyOtp(
-                                                email: email,
-                                                token: pin,
-                                              );
-                                        }
-                                      },
-                                    );
-                                  },
+                                Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: BlocBuilder<AuthCubit, AuthState>(
+                                    builder: (context, state) {
+                                      final isLoading = state is AuthLoading;
+                                      return Pinput(
+                                        length: 6,
+                                        defaultPinTheme: defaultPinTheme,
+                                        focusedPinTheme: focusedPinTheme,
+                                        submittedPinTheme: submittedPinTheme,
+                                        pinputAutovalidateMode:
+                                            PinputAutovalidateMode.onSubmit,
+                                        onCompleted: (pin) {
+                                          if (!isLoading) {
+                                            context.read<AuthCubit>().verifyOtp(
+                                                  email: email,
+                                                  token: pin,
+                                                );
+                                          }
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
 
                                 SizedBox(height: 3.h),
