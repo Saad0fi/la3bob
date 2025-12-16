@@ -82,7 +82,7 @@ class _InterestsSelectorWidgetState extends State<InterestsSelector> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(4.w),
+            padding: EdgeInsets.all(7.w),
             child: Wrap(
               spacing: 2.w,
               runSpacing: 1.5.h,
