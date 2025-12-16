@@ -6,8 +6,8 @@ class AppColors {
   static const Color backgroundMiddle = Color(0xFFFFE4E6); // Pink-100
   static const Color backgroundEnd = Color(0xFFE0F7FA); // Blue-100
 
-  static const Color primary = Color(0xFF917BFF);
-  static const Color accent = Color(0xFF917BFF);
+  static const Color primary = Color(0xFFFFD18B);
+  static const Color accent = Color(0xFFFFD18B);
 
   static const Color textPrimary = Color(0xFF1F2937); // Gray-800
   static const Color textSecondary = Color(0xFF4B5563); // Gray-600
