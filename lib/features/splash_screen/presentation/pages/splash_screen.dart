@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:la3bob/core/di/injection.dart';
 import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubit.dart';
 
@@ -20,8 +21,15 @@ class SplashScreen extends StatelessWidget {
             // المستخدم مسجل انتقل إلى الشاشة الرئيسية
             context.go('/tabs/videos');
           } else if (state is Unauthenticated) {
-            // المستخدم غير مسجل انتقل إلى شاشة تسجيل الدخول
-            context.go('/login');
+            // Check if seen onboarding
+            final box = getIt<GetStorage>();
+            final seenOnboarding = box.read<bool>('seen_onboarding') ?? false;
+
+            if (seenOnboarding) {
+              context.go('/login');
+            } else {
+              context.go('/onboarding');
+            }
           }
         },
         //  عرض CircularProgressIndicator بينما يتم التحقق
