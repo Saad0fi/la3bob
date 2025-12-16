@@ -22,9 +22,7 @@ class LoginScreen extends StatelessWidget {
           backgroundColor: AppColors.accent,
           elevation: 4,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
           ),
           title: Center(
             child: Text(
@@ -78,17 +76,14 @@ class LoginScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
+                                color: AppColors.primary.withValues(alpha: .3),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
                             ],
                           ),
                           child: Center(
-                            child: Text(
-                              '🎮',
-                              style: TextStyle(fontSize: 15.w),
-                            ),
+                            child: Text('🎮', style: TextStyle(fontSize: 15.w)),
                           ),
                         ),
 
@@ -142,13 +137,14 @@ class LoginScreen extends StatelessWidget {
                                   decoration: InputDecoration(
                                     hintText: 'example@email.com',
                                     hintStyle: TextStyle(
-                                      color: AppColors.textSecondary
-                                          .withOpacity(0.5),
+                                      color: AppColors.textSecondary.withValues(
+                                        alpha: .5,
+                                      ),
                                       fontSize: 12.dp,
                                     ),
                                     filled: true,
                                     fillColor: AppColors.categoryChipBackground
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: .3),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
                                       borderSide: BorderSide.none,
@@ -172,8 +168,8 @@ class LoginScreen extends StatelessWidget {
                                   onChanged: (value) => _email = value,
                                   validator: (value) =>
                                       value!.isEmpty || !value.contains('@')
-                                          ? 'الرجاء إدخال بريد إلكتروني صحيح'
-                                          : null,
+                                      ? 'الرجاء إدخال بريد إلكتروني صحيح'
+                                      : null,
                                 ),
 
                                 SizedBox(height: 3.h),
@@ -194,8 +190,9 @@ class LoginScreen extends StatelessWidget {
                                           foregroundColor: Colors.white,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
                                           ),
                                         ),
                                         child: isSubmitting
@@ -204,9 +201,9 @@ class LoginScreen extends StatelessWidget {
                                                 height: 6.w,
                                                 child:
                                                     const CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                  strokeWidth: 3,
-                                                ),
+                                                      color: Colors.white,
+                                                      strokeWidth: 3,
+                                                    ),
                                               )
                                             : Text(
                                                 'تسجيل الدخول',

@@ -215,7 +215,9 @@ class VideoHomeScreen extends StatelessWidget {
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: AppColors.primary,
                                     side: BorderSide(
-                                      color: AppColors.primary.withOpacity(0.5),
+                                      color: AppColors.primary.withValues(
+                                        alpha: .5,
+                                      ),
                                     ),
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 5.w,
@@ -323,10 +325,7 @@ class VideoHomeScreen extends StatelessWidget {
                                 clipBehavior: Clip.antiAlias,
                                 child: InkWell(
                                   onTap: () {
-                                    context.push(
-                                      '/video-player',
-                                      extra: video,
-                                    );
+                                    context.push('/video-player', extra: video);
                                   },
                                   child: Column(
                                     crossAxisAlignment:
@@ -501,7 +500,7 @@ Widget _buildInterestChips(
         ChoiceChip(
           label: const Text('الكل'),
           selected: selectedInterest == null,
-          selectedColor: AppColors.accent.withOpacity(0.8),
+          selectedColor: AppColors.accent.withValues(alpha: .8),
           labelStyle: TextStyle(
             color: selectedInterest == null ? Colors.white : Colors.white,
             fontWeight: FontWeight.w600,
@@ -522,7 +521,7 @@ Widget _buildInterestChips(
           return ChoiceChip(
             label: Text(interest),
             selected: isSelected,
-            selectedColor: AppColors.accent.withOpacity(0.8),
+            selectedColor: AppColors.accent.withValues(alpha: .8),
             labelStyle: TextStyle(
               color: isSelected ? Colors.white : Colors.white,
               fontWeight: FontWeight.w600,
@@ -549,12 +548,12 @@ Widget _buildPlaceholder(double height, Color color) {
   return Container(
     width: double.infinity,
     height: height,
-    color: color.withOpacity(0.2),
+    color: color.withValues(alpha: 0.2),
     child: Center(
       child: Icon(
         Icons.broken_image_outlined,
         size: 15.w,
-        color: color.withOpacity(0.6),
+        color: color.withValues(alpha: 0.6),
       ),
     ),
   );

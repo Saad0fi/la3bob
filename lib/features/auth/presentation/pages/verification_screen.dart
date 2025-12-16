@@ -29,7 +29,7 @@ class VerificationScreen extends StatelessWidget {
         color: AppColors.textPrimary,
       ),
       decoration: BoxDecoration(
-        color: AppColors.categoryChipBackground.withOpacity(0.3),
+        color: AppColors.categoryChipBackground.withValues(alpha: .3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.categoryChipBackground),
       ),
@@ -42,7 +42,7 @@ class VerificationScreen extends StatelessWidget {
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
-        color: AppColors.categoryChipBackground.withOpacity(0.5),
+        color: AppColors.categoryChipBackground.withValues(alpha: .5),
         border: Border.all(color: AppColors.primary),
       ),
     );
@@ -58,9 +58,7 @@ class VerificationScreen extends StatelessWidget {
           backgroundColor: AppColors.accent,
           elevation: 4,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -130,17 +128,14 @@ class VerificationScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
+                                color: AppColors.primary.withValues(alpha: .3),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
                             ],
                           ),
                           child: Center(
-                            child: Text(
-                              '📧',
-                              style: TextStyle(fontSize: 12.w),
-                            ),
+                            child: Text('📧', style: TextStyle(fontSize: 12.w)),
                           ),
                         ),
 
@@ -225,9 +220,9 @@ class VerificationScreen extends StatelessWidget {
                                         onCompleted: (pin) {
                                           if (!isLoading) {
                                             context.read<AuthCubit>().verifyOtp(
-                                                  email: email,
-                                                  token: pin,
-                                                );
+                                              email: email,
+                                              token: pin,
+                                            );
                                           }
                                         },
                                       );
@@ -287,8 +282,8 @@ class VerificationScreen extends StatelessWidget {
                                   ElevatedButton.icon(
                                     onPressed: () {
                                       context.read<AuthCubit>().signIn(
-                                            email: email,
-                                          );
+                                        email: email,
+                                      );
                                     },
                                     icon: const Icon(Icons.refresh),
                                     label: const Text('إعادة إرسال الرمز'),
@@ -312,7 +307,7 @@ class VerificationScreen extends StatelessWidget {
                                     ),
                                     decoration: BoxDecoration(
                                       color: AppColors.categoryChipBackground
-                                          .withOpacity(0.5),
+                                          .withValues(alpha: .5),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Row(
