@@ -241,9 +241,10 @@ class LoginScreen extends StatelessWidget {
                               child: Text(
                                 'إنشاء حساب',
                                 style: TextStyle(
-                                  color: AppColors.accent,
+                                  color: AppColors.textPrimary,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12.dp,
+                                  fontSize: 13.dp,
+                                  decoration: TextDecoration.underline,
                                 ),
                               ),
                             ),
