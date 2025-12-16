@@ -16,6 +16,9 @@ class GameLoaded extends GamesState {
   final String? selectedLetter;
   final int? selectedNumber;
   final String? selectedColor;
+  final String? selectedMatch;
+  final List<String>? selectedMatches;
+  final List<int>? selectedIndices;
   final bool showResult;
   final bool isCorrect;
 
@@ -27,6 +30,9 @@ class GameLoaded extends GamesState {
     this.selectedLetter,
     this.selectedNumber,
     this.selectedColor,
+    this.selectedMatch,
+    this.selectedMatches,
+    this.selectedIndices,
     required this.showResult,
     required this.isCorrect,
   });
