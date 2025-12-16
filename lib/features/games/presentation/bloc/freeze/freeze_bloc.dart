@@ -26,6 +26,10 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
     on<PoseDetected>(_onPoseDetected);
     on<SwitchPhase>(_onSwitchPhase);
 
+    on<EndGracePeriod>((event, emit) {
+      emit(state.copyWith(isGracePeriod: false));
+    });
+
     final savedScore = _storage.read<int>('freeze_high_score') ?? 0;
     emit(state.copyWith(highScore: savedScore));
   }
@@ -37,6 +41,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
         phase: FreezePhase.dancing,
         score: 0,
         message: "تحرك! (Move!)",
+        isGracePeriod: false,
       ),
     );
     _scheduleMakeFreeze();
@@ -66,8 +71,17 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
     if (state.phase == FreezePhase.dancing) {
       // Switch to Freeze
       emit(
-        state.copyWith(phase: FreezePhase.freezing, message: "تجمد! (Freeze!)"),
+        state.copyWith(
+          phase: FreezePhase.freezing,
+          message: "تجمد! (Freeze!)",
+          isGracePeriod: true, // Enable grace period
+        ),
       );
+      // Schedule end of grace period after 2 seconds
+      Timer(const Duration(seconds: 2), () {
+        if (!isClosed) add(EndGracePeriod());
+      });
+
       _scheduleMakeDance();
     } else if (state.phase == FreezePhase.freezing) {
       // Switch to Dance (Success survival)
@@ -77,6 +91,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
           phase: FreezePhase.dancing,
           score: state.score + 10,
           message: "تحرك! (Move!)",
+          isGracePeriod: false,
         ),
       );
       _scheduleMakeFreeze();
@@ -93,6 +108,9 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
     emit(state.copyWith(currentMovement: movement));
 
     if (state.phase == FreezePhase.freezing) {
+      // If in grace period, ignore movement
+      if (state.isGracePeriod) return;
+
       // Check if moved
       if (movement > _freezeThreshold) {
         _gameOver(emit);

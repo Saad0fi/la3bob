@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import '../../domain/usecases/detect_jump.dart';
 import 'jump_event.dart';
 import 'jump_state.dart';
@@ -58,13 +59,14 @@ class JumpBloc extends Bloc<JumpEvent, JumpState> {
   static const int _minJumpDurationMs = 500; // 500ms min jump time
 
   void _onPoseDetected(PoseDetected event, Emitter<JumpState> emit) {
-    if (state.status != JumpGameStatus.active) return;
+    // If game is not active, we run calibration
+    if (state.status != JumpGameStatus.active) {
+      _checkCalibration(event.pose, emit);
+      return;
+    }
 
     // We only care if we are in air or not.
-    final pJumping = _detectJump(event.pose);
-
-    // If null (no body), ignore or assume grounded.
-    if (pJumping == null) return;
+    final pJumping = _detectJump(event.pose) ?? false;
 
     final now = DateTime.now();
     bool effectiveJumping = pJumping;
@@ -154,6 +156,85 @@ class JumpBloc extends Bloc<JumpEvent, JumpState> {
     }
 
     emit(state.copyWith(obstacles: newObstacles, score: newScore));
+  }
+
+  void _checkCalibration(Pose pose, Emitter<JumpState> emit) {
+    if (pose.landmarks.isEmpty) {
+      emit(
+        state.copyWith(
+          isCalibrated: false,
+          calibrationMessage: "لا أراك! قف أمام الكاميرا",
+        ),
+      );
+      return;
+    }
+
+    final landmarks = pose.landmarks;
+    final leftAnkle = landmarks[PoseLandmarkType.leftAnkle];
+    final rightAnkle = landmarks[PoseLandmarkType.rightAnkle];
+    final nose = landmarks[PoseLandmarkType.nose];
+
+    if (leftAnkle == null || rightAnkle == null || nose == null) {
+      emit(
+        state.copyWith(
+          isCalibrated: false,
+          calibrationMessage: "تأكد من ظهور جسمك بالكامل",
+        ),
+      );
+      return;
+    }
+
+    // Check visibility / likelihood if available, or just presence
+    // Also check if they are actually on screen (coordinates 0..1 or inside image size)
+    // We already know they are not null.
+
+    // Check if feet are visible (sometimes they are cut off at bottom)
+    // Y increases downwards. If Y is very large (near image height), might be cut off?
+    // Let's just assume if detected, they are fine.
+
+    // Calculate body size (approximate height in pixels)
+    // Note: Y coordinates are in image space.
+    // If we assume a normalized coordinate system (0..1) or absolute pixels?
+    // ML Kit returns absolute pixels based on image size.
+    // Let's rely on relative difference.
+
+    final bodyHeight = (leftAnkle.y + rightAnkle.y) / 2 - nose.y;
+
+    // We need some reference. If the image is e.g. 640x480 (typical detection res).
+    // Let's assume a "good" height is roughly 1/3 to 2/3 of the screen.
+    // If bodyHeight < 150 (too small) -> Come closer
+    // If bodyHeight > 400 (too big) -> Step back
+
+    // Note: This depends on camera resolution.
+    // A safer way might be checking the ratio if we knew image height.
+    // But for now let's try raw values assuming standard preview feed.
+
+    if (bodyHeight < 200) {
+      emit(
+        state.copyWith(
+          isCalibrated: false,
+          calibrationMessage: "اقترب قليلاً للكاميرا ⬆️", // Come closer
+        ),
+      );
+      return;
+    }
+
+    if (bodyHeight > 500) {
+      emit(
+        state.copyWith(
+          isCalibrated: false,
+          calibrationMessage: "ابتعد قليلاً عن الكاميرا ⬇️", // Step back
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        isCalibrated: true,
+        calibrationMessage: "ممتاز! ابدأ اللعبة ✅",
+      ),
+    );
   }
 
   @override

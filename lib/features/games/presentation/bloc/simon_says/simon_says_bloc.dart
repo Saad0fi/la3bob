@@ -14,6 +14,8 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
   Timer? _commandTimer;
   Timer? _gameTimer;
 
+  DateTime? _lastPoseTime;
+
   // Map moves to Arabic text
   final Map<SimonMove, String> _moveDescriptions = {
     SimonMove.raiseRightHand: "ارفع يدك اليمنى",
@@ -57,6 +59,17 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
   }
 
   void _onTick(Tick event, Emitter<SimonSaysState> emit) {
+    // Check for neutral timeout
+    if (state.isWaitingForNeutral &&
+        state.status == SimonGameStatus.active &&
+        _lastPoseTime != null) {
+      final diff = DateTime.now().difference(_lastPoseTime!);
+      if (diff.inMilliseconds > 1500) {
+        // Timeout! Assume neutral or lost track, move on.
+        add(NextCommand());
+      }
+    }
+
     if (event.remainingTime > 0) {
       emit(state.copyWith(remainingTime: event.remainingTime));
     } else {
@@ -108,6 +121,7 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
 
   void _onPoseDetected(PoseDetected event, Emitter<SimonSaysState> emit) {
     if (state.status != SimonGameStatus.active) return;
+    _lastPoseTime = DateTime.now();
 
     final detected = _detectSimonMove(event.pose);
 
@@ -115,12 +129,7 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
     if (state.isWaitingForNeutral) {
       if (detected == null || detected == SimonMove.nothing) {
         // Player is back to neutral, trigger next command
-        // Debounce slightly to avoid instant flipping?
-        // For now, immediate is fine or maybe small delay.
         add(NextCommand());
-      } else {
-        // Still holding a pose, show warning
-        // emit(state.copyWith(message: "قف باعتدال!"));
       }
       return;
     }
