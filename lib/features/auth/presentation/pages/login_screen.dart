@@ -132,6 +132,10 @@ class LoginScreen extends StatelessWidget {
                                 SizedBox(height: 1.5.h),
 
                                 TextFormField(
+                                  onTapUpOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
                                   keyboardType: TextInputType.emailAddress,
                                   style: TextStyle(fontSize: 14.dp),
                                   decoration: InputDecoration(

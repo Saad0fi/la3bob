@@ -19,7 +19,8 @@ class AddChildScreen extends StatelessWidget {
     final Set<String> selectedInterests = <String>{};
 
     return BlocProvider(
-      create: (context) => PorfileBloc(getIt<ProfileUsecase>(), getIt<AuthUseCases>()),
+      create: (context) =>
+          PorfileBloc(getIt<ProfileUsecase>(), getIt<AuthUseCases>()),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: AppColors.accent,
@@ -46,7 +47,11 @@ class AddChildScreen extends StatelessWidget {
         body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColors.backgroundStart, AppColors.backgroundMiddle, AppColors.backgroundEnd],
+              colors: [
+                AppColors.backgroundStart,
+                AppColors.backgroundMiddle,
+                AppColors.backgroundEnd,
+              ],
               begin: Alignment.bottomRight,
               end: Alignment.topLeft,
             ),
@@ -61,7 +66,10 @@ class AddChildScreen extends StatelessWidget {
                   context.go('/tabs/videos');
                 }
               } else if (state is PorfileError) {
-                showAppToast(message: state.failure.message, type: ToastType.failure);
+                showAppToast(
+                  message: state.failure.message,
+                  type: ToastType.failure,
+                );
               }
             },
             child: BlocBuilder<PorfileBloc, PorfileState>(
@@ -74,9 +82,18 @@ class AddChildScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircularProgressIndicator(color: AppColors.accent, strokeWidth: 3),
+                        CircularProgressIndicator(
+                          color: AppColors.accent,
+                          strokeWidth: 3,
+                        ),
                         SizedBox(height: 2.h),
-                        Text('جاري الإضافة...', style: TextStyle(fontSize: 12.dp, color: AppColors.textSecondary)),
+                        Text(
+                          'جاري الإضافة...',
+                          style: TextStyle(
+                            fontSize: 12.dp,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -93,7 +110,9 @@ class AddChildScreen extends StatelessWidget {
                         Card(
                           elevation: 4,
                           shadowColor: AppColors.accent.withValues(alpha: .2),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           child: Padding(
                             padding: EdgeInsets.all(4.w),
                             child: Column(
@@ -101,20 +120,33 @@ class AddChildScreen extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.all(4.w),
                                   decoration: BoxDecoration(
-                                    color: AppColors.accent.withValues(alpha: .15),
+                                    color: AppColors.accent.withValues(
+                                      alpha: .15,
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(Icons.child_care, size: 12.w, color: AppColors.accent),
+                                  child: Icon(
+                                    Icons.child_care,
+                                    size: 12.w,
+                                    color: AppColors.accent,
+                                  ),
                                 ),
                                 SizedBox(height: 2.h),
                                 Text(
                                   'معلومات الطفل',
-                                  style: TextStyle(fontSize: 16.dp, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                                  style: TextStyle(
+                                    fontSize: 16.dp,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary,
+                                  ),
                                 ),
                                 SizedBox(height: 0.5.h),
                                 Text(
                                   'أدخل بيانات الطفل لإضافته',
-                                  style: TextStyle(fontSize: 10.dp, color: AppColors.textSecondary),
+                                  style: TextStyle(
+                                    fontSize: 10.dp,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ],
                             ),
@@ -122,6 +154,9 @@ class AddChildScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 3.h),
                         TextFormField(
+                          onTapOutside: (event) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
                           controller: bloc.nameController,
                           enabled: !isLoading,
                           decoration: InputDecoration(
@@ -131,17 +166,27 @@ class AddChildScreen extends StatelessWidget {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.accent, width: 2),
+                              borderSide: BorderSide(
+                                color: AppColors.accent,
+                                width: 2,
+                              ),
                             ),
-                            prefixIcon: Icon(Icons.person, color: AppColors.accent),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: AppColors.accent,
+                            ),
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -152,6 +197,9 @@ class AddChildScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 2.h),
                         TextFormField(
+                          onTapOutside: (event) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
                           controller: bloc.ageController,
                           enabled: !isLoading,
                           decoration: InputDecoration(
@@ -161,17 +209,27 @@ class AddChildScreen extends StatelessWidget {
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: AppColors.accent, width: 2),
+                              borderSide: BorderSide(
+                                color: AppColors.accent,
+                                width: 2,
+                              ),
                             ),
-                            prefixIcon: Icon(Icons.cake, color: AppColors.accent),
+                            prefixIcon: Icon(
+                              Icons.cake,
+                              color: AppColors.accent,
+                            ),
                           ),
                           keyboardType: TextInputType.number,
                           validator: (value) {
@@ -202,17 +260,24 @@ class AddChildScreen extends StatelessWidget {
                                   if (formKey.currentState!.validate()) {
                                     if (selectedInterests.isEmpty) {
                                       showAppToast(
-                                        message: 'الرجاء اختيار اهتمام واحد على الأقل',
+                                        message:
+                                            'الرجاء اختيار اهتمام واحد على الأقل',
                                         type: ToastType.failure,
                                       );
                                       return;
                                     }
-                                    bloc.intersetsController.text = selectedInterests.join(', ');
+                                    bloc.intersetsController.text =
+                                        selectedInterests.join(', ');
                                     bloc.add(
                                       SubmitChildForm(
-                                        childName: bloc.nameController.text.trim(),
-                                        childAge: bloc.ageController.text.trim(),
-                                        childIntersets: bloc.intersetsController.text.trim(),
+                                        childName: bloc.nameController.text
+                                            .trim(),
+                                        childAge: bloc.ageController.text
+                                            .trim(),
+                                        childIntersets: bloc
+                                            .intersetsController
+                                            .text
+                                            .trim(),
                                       ),
                                     );
                                   }
@@ -223,14 +288,22 @@ class AddChildScreen extends StatelessWidget {
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             elevation: 4,
                             shadowColor: AppColors.accent.withValues(alpha: .4),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.add_circle_outline, size: 6.w),
                               SizedBox(width: 2.w),
-                              Text('إضافة الطفل', style: TextStyle(fontSize: 14.dp, fontWeight: FontWeight.bold)),
+                              Text(
+                                'إضافة الطفل',
+                                style: TextStyle(
+                                  fontSize: 14.dp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                         ),

@@ -153,6 +153,9 @@ class UpdateChildScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 3.h),
                         TextFormField(
+                          onTapOutside: (event) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
                           controller: bloc.nameController,
                           enabled: !isLoading,
                           decoration: InputDecoration(
@@ -193,6 +196,9 @@ class UpdateChildScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 2.h),
                         TextFormField(
+                          onTapOutside: (event) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
                           controller: bloc.ageController,
                           enabled: !isLoading,
                           decoration: InputDecoration(

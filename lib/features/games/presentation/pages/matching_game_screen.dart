@@ -130,9 +130,7 @@ class MatchingGameScreen extends StatelessWidget {
                           SizedBox(height: 4.h),
                           Text(
                             question['item'] as String,
-                            style: const TextStyle(
-                              fontSize: 80,
-                            ),
+                            style: const TextStyle(fontSize: 80),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 2.h),
@@ -150,11 +148,11 @@ class MatchingGameScreen extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 4.w,
-                              mainAxisSpacing: 4.h,
-                              childAspectRatio: 1.5,
-                            ),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 4.w,
+                                  mainAxisSpacing: 4.h,
+                                  childAspectRatio: 1.5,
+                                ),
                             itemCount: (question['options'] as List).length,
                             itemBuilder: (context, index) {
                               final match =
@@ -239,9 +237,7 @@ class MatchingGameScreen extends StatelessWidget {
                         const SizedBox(height: 40),
                         Text(
                           question['item'] as String,
-                          style: const TextStyle(
-                            fontSize: 80,
-                          ),
+                          style: const TextStyle(fontSize: 80),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 2.h),
@@ -259,19 +255,21 @@ class MatchingGameScreen extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 4.w,
-                              mainAxisSpacing: 4.h,
-                              childAspectRatio: 1.5,
-                            ),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 4.w,
+                                  mainAxisSpacing: 4.h,
+                                  childAspectRatio: 1.5,
+                                ),
                             itemCount: (question['options'] as List).length,
                             itemBuilder: (context, index) {
                               final match =
                                   (question['options'] as List)[index]
                                       as String;
-                              final selectedMatches = gameState.selectedMatches ?? [];
-                              final selectedIndices = gameState.selectedIndices ?? [];
-                              final isSelected = selectedIndices.contains(index);
+                              final selectedIndices =
+                                  gameState.selectedIndices ?? [];
+                              final isSelected = selectedIndices.contains(
+                                index,
+                              );
                               final selectedCount = selectedIndices.length;
 
                               return GestureDetector(
@@ -280,8 +278,8 @@ class MatchingGameScreen extends StatelessWidget {
                                   if (selectedCount >= 2) return;
                                   if (!selectedIndices.contains(index)) {
                                     context.read<GamesBloc>().add(
-                                          SelectMatch(match, index),
-                                        );
+                                      SelectMatch(match, index),
+                                    );
                                   }
                                 },
                                 child: GameOptionTile(
@@ -331,4 +329,3 @@ class MatchingGameScreen extends StatelessWidget {
     );
   }
 }
-
