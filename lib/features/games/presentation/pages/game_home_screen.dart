@@ -228,25 +228,25 @@ class _PhysicalGamesTab extends StatelessWidget {
     final List<Map<String, dynamic>> phyGames = [
       {
         'title': ' القرفصاء',
-        'isPhysical': true,
+        'route': '/games/squat',
         'image': 'assets/images/squat.png',
         'color': const Color(0xFFF1F8E9),
       },
       {
         'title': ' القفز',
-        'route': '/tabs/games/jump',
+        'route': '/games/jump',
         'image': 'assets/images/running.png',
         'color': const Color(0xFFE3F2FD),
       },
       {
         'title': 'أوامر القائد',
-        'route': '/tabs/games/simon_says',
+        'route': '/games/simon_says',
         'image': 'assets/images/simon.png',
         'color': const Color(0xFFF3E5F5),
       },
       {
         'title': ' حركة حركة ستوب',
-        'route': '/tabs/games/freeze',
+        'route': '/games/freeze',
         'image': 'assets/images/freeze.png',
         'color': const Color(0xFFFFEBEE),
       },
@@ -267,7 +267,6 @@ class _PhysicalGamesTab extends StatelessWidget {
           route: game['route'],
           imagePath: game['image'],
           backgroundColor: game['color'],
-          isPhysical: game['isPhysical'] ?? false,
         );
       },
     );

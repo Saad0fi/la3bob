@@ -141,7 +141,7 @@ class _FreezeGamePageState extends State<FreezeGamePage>
                 ),
               ),
               onPressed: () => context.read<FreezeBloc>().add(StartGame()),
-              child: const Text("ابدأ الرقص", style: TextStyle(fontSize: 20)),
+              child: const Text("ابدأ اللعب", style: TextStyle(fontSize: 20)),
             ),
           ],
         ),
@@ -160,7 +160,7 @@ class _FreezeGamePageState extends State<FreezeGamePage>
       mainColor = Colors.green;
       mainIcon = Icons.directions_run;
     } else if (state.phase == FreezePhase.freezing) {
-      mainText = "تجمد! ✋";
+      mainText = "قف! ✋";
       mainColor = Colors.red;
       mainIcon = Icons.pan_tool;
     }
