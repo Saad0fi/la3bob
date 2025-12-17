@@ -1,7 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:la3bob/features/games/data/services/wave_detector_service.dart';
-import 'package:la3bob/features/games/domain/repositories/wave_repository.dart';
-import 'package:la3bob/features/games/domain/usecases/detect_wave.dart';
 import 'package:la3bob/features/games/domain/repositories/squat_repository.dart';
 import 'package:la3bob/features/games/data/services/squat_detector_service.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_squat.dart';
@@ -18,14 +15,6 @@ import 'package:la3bob/features/games/domain/usecases/detect_movement.dart';
 final getIt = GetIt.instance;
 
 void setupGames() {
-  if (!getIt.isRegistered<WaveRepository>()) {
-    getIt.registerLazySingleton<WaveRepository>(() => WaveDetectorService());
-  }
-
-  if (!getIt.isRegistered<DetectWave>()) {
-    getIt.registerFactory(() => DetectWave(getIt<WaveRepository>()));
-  }
-
   if (!getIt.isRegistered<SquatRepository>()) {
     getIt.registerLazySingleton<SquatRepository>(() => SquatDetectorService());
   }
