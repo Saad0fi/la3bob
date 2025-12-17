@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../../core/comon/theme/app_color.dart';
 import '../../../../../core/di/injection.dart';
 import '../../../../../core/widgets/camera_denied_screen.dart';
 import '../../../domain/usecases/detect_squat.dart';
@@ -67,15 +68,15 @@ class _SquatGamePageState extends State<SquatGamePage>
                 // Start Screen
                 if (state.status == SquatGameStatus.initial)
                   Container(
-                    color: Colors.black54,
+                    color: AppColors.textPrimary.withValues(alpha: .54),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.fitness_center,
-                            size: 80,
-                            color: Colors.white,
+                          Image.asset(
+                            'assets/images/gamer.png',
+                            height: 100,
+                            fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 20),
                           const Text(
@@ -146,7 +147,7 @@ class _SquatGamePageState extends State<SquatGamePage>
                             decoration: BoxDecoration(
                               color: state.remainingTime <= 10
                                   ? Colors.red.withValues(alpha: .8)
-                                  : Colors.black45,
+                                  : AppColors.textPrimary.withValues(alpha: .45),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -166,7 +167,8 @@ class _SquatGamePageState extends State<SquatGamePage>
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.black45,
+                            color:
+                                AppColors.textPrimary.withValues(alpha: .45),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Column(
@@ -200,7 +202,10 @@ class _SquatGamePageState extends State<SquatGamePage>
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
                               shadows: [
-                                Shadow(blurRadius: 10, color: Colors.black),
+                                Shadow(
+                                  blurRadius: 10,
+                                  color: AppColors.textPrimary,
+                                ),
                               ],
                             ),
                           ),
@@ -211,7 +216,7 @@ class _SquatGamePageState extends State<SquatGamePage>
                 // Game Over Screen
                 if (state.status == SquatGameStatus.gameOver)
                   Container(
-                    color: Colors.black87,
+                    color: AppColors.textPrimary.withValues(alpha: .87),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

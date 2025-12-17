@@ -102,7 +102,11 @@ class _FreezeGamePageState extends State<FreezeGamePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("🧊", style: TextStyle(fontSize: 86)),
+            Image.asset(
+              'assets/images/running.png',
+              height: 100,
+              fit: BoxFit.contain,
+            ),
             const SizedBox(height: 20),
             const Text(
               "لعبة حركة ستوب",
