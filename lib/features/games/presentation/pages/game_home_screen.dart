@@ -31,7 +31,7 @@ class GameCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.dp),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: .05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -126,8 +126,8 @@ class GameHomeScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(
-                      0.2,
+                    color: Colors.white.withValues(
+                      alpha: 0.2,
                     ), // خلفية خفيفة للتاب بار نفسه
                     borderRadius: BorderRadius.circular(15.dp),
                   ),
@@ -226,7 +226,8 @@ class _PhysicalGamesTab extends StatelessWidget {
     final List<Map<String, dynamic>> phyGames = [
       {
         'title': 'لعبة القرفصاء',
-        'isPhysical': true,
+        'route': '/tabs/games/squat',
+
         'image': 'assets/images/squat.png',
         'color': const Color(0xFFF1F8E9),
       },

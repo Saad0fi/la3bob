@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
-import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
-import 'package:la3bob/features/games/presentation/widgets/game_option_tile.dart';
+import '../../bloc/games_bloc.dart';
+import '../../widgets/game_option_tile.dart';
 
 class LettersGameScreen extends StatelessWidget {
   const LettersGameScreen({super.key});
@@ -320,3 +320,4 @@ class LettersGameScreen extends StatelessWidget {
     );
   }
 }
+

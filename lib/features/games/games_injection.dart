@@ -1,18 +1,18 @@
 import 'package:get_it/get_it.dart';
-import 'package:la3bob/features/games/data/models/wave_detector_service.dart';
+import 'package:la3bob/features/games/data/services/wave_detector_service.dart';
 import 'package:la3bob/features/games/domain/repositories/wave_repository.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_wave.dart';
 import 'package:la3bob/features/games/domain/repositories/squat_repository.dart';
-import 'package:la3bob/features/games/data/models/squat_detector_service.dart';
+import 'package:la3bob/features/games/data/services/squat_detector_service.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_squat.dart';
 import 'package:la3bob/features/games/domain/repositories/jump_repository.dart';
-import 'package:la3bob/features/games/data/models/jump_detector_service.dart';
+import 'package:la3bob/features/games/data/services/jump_detector_service.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_jump.dart';
 import 'package:la3bob/features/games/domain/repositories/simon_says_repository.dart';
-import 'package:la3bob/features/games/data/models/simon_says_detector_service.dart';
+import 'package:la3bob/features/games/data/services/simon_says_detector_service.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_simon_move.dart';
 import 'package:la3bob/features/games/domain/repositories/freeze_repository.dart';
-import 'package:la3bob/features/games/data/models/freeze_detector_service.dart';
+import 'package:la3bob/features/games/data/services/freeze_detector_service.dart';
 import 'package:la3bob/features/games/domain/usecases/detect_movement.dart';
 
 final getIt = GetIt.instance;

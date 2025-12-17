@@ -3,15 +3,15 @@ import 'package:go_router/go_router.dart';
 import 'package:la3bob/features/auth/presentation/pages/login_screen.dart';
 import 'package:la3bob/features/auth/presentation/pages/signup_screen.dart';
 import 'package:la3bob/features/auth/presentation/pages/verification_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/colors_game_screen.dart';
+import 'package:la3bob/features/games/presentation/pages/educational/colors_game_screen.dart';
 import 'package:la3bob/features/games/presentation/pages/game_home_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/letters_game_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/matching_game_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dart';
-import 'package:la3bob/features/games/presentation/pages/jump_page.dart';
-import 'package:la3bob/features/games/presentation/pages/simon_says_page.dart';
-import 'package:la3bob/features/games/presentation/pages/freeze_page.dart';
-import 'package:la3bob/features/games/presentation/pages/squat_page.dart';
+import 'package:la3bob/features/games/presentation/pages/educational/letters_game_screen.dart';
+import 'package:la3bob/features/games/presentation/pages/educational/matching_game_screen.dart';
+import 'package:la3bob/features/games/presentation/pages/educational/numbers_game_screen.dart';
+import 'package:la3bob/features/games/presentation/pages/physical/jump_page.dart';
+import 'package:la3bob/features/games/presentation/pages/physical/simon_says_page.dart';
+import 'package:la3bob/features/games/presentation/pages/physical/freeze_page.dart';
+import 'package:la3bob/features/games/presentation/pages/physical/squat_page.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 import 'package:la3bob/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
@@ -73,6 +73,7 @@ final GoRouter appRouter = GoRouter(
           path: '/tabs/games',
           builder: (context, state) => const GameHomeScreen(),
           routes: [
+            // Educational Games
             GoRoute(
               path: 'letters',
               builder: (context, state) => const LettersGameScreen(),
@@ -89,6 +90,7 @@ final GoRouter appRouter = GoRouter(
               path: 'matching',
               builder: (context, state) => const MatchingGameScreen(),
             ),
+            // Physical Games
             GoRoute(
               path: 'jump',
               builder: (context, state) => const JumpGamePage(),
