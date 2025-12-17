@@ -76,19 +76,21 @@ class VerificationScreen extends StatelessWidget {
           ),
           actions: [SizedBox(width: 12.w)],
         ),
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.backgroundStart,
-                AppColors.backgroundMiddle,
-                AppColors.backgroundEnd,
-              ],
-              begin: Alignment.bottomRight,
-              end: Alignment.topLeft,
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.backgroundStart,
+                  AppColors.backgroundMiddle,
+                  AppColors.backgroundEnd,
+                ],
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
+              ),
             ),
-          ),
-          child: BlocListener<AuthCubit, AuthState>(
+            child: BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthenticatedWithChildren) {
                 context.go('/tabs/videos');
@@ -211,10 +213,6 @@ class VerificationScreen extends StatelessWidget {
                                     builder: (context, state) {
                                       final isLoading = state is AuthLoading;
                                       return Pinput(
-                                        onTapOutside: (event) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
                                         length: 6,
                                         defaultPinTheme: defaultPinTheme,
                                         focusedPinTheme: focusedPinTheme,
@@ -343,6 +341,7 @@ class VerificationScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
             ),
           ),
         ),
