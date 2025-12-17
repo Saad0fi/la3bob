@@ -12,6 +12,6 @@ class AppColors {
   static const Color textPrimary = Color(0xFF1F2937); // Gray-800
   static const Color textSecondary = Color(0xFF4B5563); // Gray-600
   static const Color cardBackground = Color(0xFFFFFFFF); // White
-  static const Color categoryChipBackground = Color(0xFFE9D5FF); // Purple-100
+  static const Color categoryChipBackground = Color(0xFFFFF3E0); // Purple-100
   static const Color error = Color(0xFFF44336);
 }

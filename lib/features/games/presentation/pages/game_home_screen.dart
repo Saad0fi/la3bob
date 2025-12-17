@@ -5,59 +5,58 @@ import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/comon/theme/app_color.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 
-class _GameCard extends StatelessWidget {
-  final String route;
+class GameCard extends StatelessWidget {
+  final String? route;
   final String title;
-  final String subtitle;
-  final Color color;
+  final String imagePath;
+  final Color backgroundColor;
+  final bool isPhysical;
 
-  const _GameCard({
-    required this.route,
+  const GameCard({
+    super.key,
+    this.route,
     required this.title,
-    required this.subtitle,
-    required this.color,
+    required this.imagePath,
+    required this.backgroundColor,
+    this.isPhysical = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(route),
+      onTap: () => context.push(route!),
       child: Container(
-        padding: const EdgeInsets.all(25),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(20.dp),
           boxShadow: [
             BoxShadow(
-              color: color.withValues(alpha: .3),
-              blurRadius: 20,
-              spreadRadius: 5,
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    subtitle,
-                    style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
-                  ),
-                ],
+            Image.asset(
+              imagePath,
+              height: 10.h,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) =>
+                  Icon(Icons.videogame_asset, size: 40.dp, color: Colors.grey),
+            ),
+            SizedBox(height: 1.h),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16.dp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: color),
           ],
         ),
       ),
@@ -121,22 +120,35 @@ class GameHomeScreen extends StatelessWidget {
               end: Alignment.topLeft,
             ),
           ),
-
           child: Column(
             children: [
-              TabBar(
-                indicatorColor: AppColors.accent,
-                labelColor: AppColors.accent,
-                unselectedLabelColor: AppColors.textPrimary,
-                labelStyle: TextStyle(
-                  fontSize: 12.dp,
-                  fontWeight: FontWeight.bold,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(
+                      0.2,
+                    ), // خلفية خفيفة للتاب بار نفسه
+                    borderRadius: BorderRadius.circular(15.dp),
+                  ),
+                  child: TabBar(
+                    indicator: BoxDecoration(
+                      color: AppColors.accent,
+                      borderRadius: BorderRadius.circular(15.dp),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black54,
+                    labelStyle: TextStyle(
+                      fontSize: 14.dp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    tabs: const [
+                      Tab(text: 'ألعاب تعليمية'),
+                      Tab(text: 'ألعاب حركية'),
+                    ],
+                  ),
                 ),
-                unselectedLabelStyle: TextStyle(fontSize: 11.dp),
-                tabs: const [
-                  Tab(text: 'ألعاب تعليمية', icon: Icon(Icons.school)),
-                  Tab(text: 'ألعاب حركية', icon: Icon(Icons.sports)),
-                ],
               ),
 
               const Expanded(
@@ -157,61 +169,51 @@ class _EducationalGamesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            const Text(
-              'اختر لعبة',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurple,
-              ),
-            ),
-            const SizedBox(height: 50),
+    final List<Map<String, dynamic>> eduGames = [
+      {
+        'title': 'لعبة الحروف',
+        'route': '/tabs/games/letters',
+        'image': 'assets/images/letters.png',
+        'color': const Color(0xFFFFF3E0), // بيج فاتح
+      },
+      {
+        'title': 'لعبة الأرقام',
+        'route': '/tabs/games/numbers',
+        'image': 'assets/images/numbers.png',
+        'color': const Color(0xFFEBF6F0), // بنفسجي فاتح
+      },
+      {
+        'title': 'لعبة الألوان',
+        'route': '/tabs/games/colors',
+        'image': 'assets/images/color.png',
+        'color': const Color(0xFFE8F5E9), // أخضر فاتح
+      },
+      {
+        'title': 'لعبة التطابق',
+        'route': '/tabs/games/matching',
+        'image': 'assets/images/matching.png',
+        'color': const Color(0xFFE1F5FE), // أزرق فاتح
+      },
+    ];
 
-            // لعبة الحروف
-            _GameCard(
-              route: '/tabs/games/letters',
-              title: 'لعبة الحروف',
-              subtitle: 'تعلم الحروف العربية مع الكلمات',
-              color: Colors.purple,
-            ),
-
-            const SizedBox(height: 30),
-
-            // لعبة الأرقام
-            _GameCard(
-              route: '/tabs/games/numbers',
-              title: 'لعبة الأرقام',
-              subtitle: 'تعلم الأرقام والعد',
-              color: Colors.blue,
-            ),
-
-            const SizedBox(height: 30),
-
-            // لعبة الألوان
-            _GameCard(
-              route: '/tabs/games/colors',
-              title: 'لعبة الألوان',
-              subtitle: 'تعلم أسماء الألوان العربية',
-              color: Colors.orange,
-            ),
-
-            const SizedBox(height: 30),
-
-            // لعبة التطابق
-            _GameCard(
-              route: '/tabs/games/matching',
-              title: 'لعبة التطابق',
-              subtitle: 'اختر الشكلين المتطابقين',
-              color: Colors.teal,
-            ),
-          ],
-        ),
+    return GridView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 4.w,
+        mainAxisSpacing: 4.w,
+        childAspectRatio: 0.9,
       ),
+      itemCount: eduGames.length,
+      itemBuilder: (context, index) {
+        final game = eduGames[index];
+        return GameCard(
+          title: game['title'],
+          route: game['route'],
+          imagePath: game['image'],
+          backgroundColor: game['color'],
+        );
+      },
     );
   }
 }
@@ -221,60 +223,52 @@ class _PhysicalGamesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            const Text(
-              'اختر لعبة',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepOrange,
-              ),
-            ),
-            const SizedBox(height: 50),
+    final List<Map<String, dynamic>> phyGames = [
+      {
+        'title': 'لعبة القرفصاء',
+        'isPhysical': true,
+        'image': 'assets/images/squat.png',
+        'color': const Color(0xFFF1F8E9),
+      },
+      {
+        'title': 'لعبة القفز',
+        'route': '/tabs/games/jump',
+        'image': 'assets/images/jump.png',
+        'color': const Color(0xFFE3F2FD),
+      },
+      {
+        'title': 'أوامر القائد',
+        'route': '/tabs/games/simon_says',
+        'image': 'assets/images/simon.png',
+        'color': const Color(0xFFF3E5F5),
+      },
+      {
+        'title': 'لعبة التجمد',
+        'route': '/tabs/games/freeze',
+        'image': 'assets/images/freeze.png',
+        'color': const Color(0xFFFFEBEE),
+      },
+    ];
 
-            const _GameCard(
-              route: '/tabs/games/squat',
-              title: 'لعبة القرفصاء',
-              subtitle: 'تمرين القرفصاء مع الكاميرا',
-              color: Colors.green,
-            ),
-
-            const SizedBox(height: 30),
-
-            // لعبة القفز (Jump)
-            const _GameCard(
-              route: '/tabs/games/jump',
-              title: 'لعبة القفز',
-              subtitle: 'اقفز لتتجاوز العقبات!',
-              color: Colors.blue,
-            ),
-
-            const SizedBox(height: 30),
-
-            // لعبة أوامر القائد (Simon Says)
-            const _GameCard(
-              route: '/tabs/games/simon_says',
-              title: 'أوامر القائد',
-              subtitle: 'نفذ الأوامر بسرعة!',
-              color: Colors.purple,
-            ),
-
-            const SizedBox(height: 30),
-
-            // لعبة التجمد (Freeze)
-            const _GameCard(
-              route: '/tabs/games/freeze',
-              title: 'لعبة التجمد',
-              subtitle: 'تحرك ثم تجمد!',
-              color: Colors.red,
-            ),
-          ],
-        ),
+    return GridView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 4.w,
+        mainAxisSpacing: 4.w,
+        childAspectRatio: 0.9,
       ),
+      itemCount: phyGames.length,
+      itemBuilder: (context, index) {
+        final game = phyGames[index];
+        return GameCard(
+          title: game['title'],
+          route: game['route'],
+          imagePath: game['image'],
+          backgroundColor: game['color'],
+          isPhysical: game['isPhysical'] ?? false,
+        );
+      },
     );
   }
 }
