@@ -11,6 +11,7 @@ import 'package:la3bob/features/games/presentation/pages/numbers_game_screen.dar
 import 'package:la3bob/features/games/presentation/pages/jump_page.dart';
 import 'package:la3bob/features/games/presentation/pages/simon_says_page.dart';
 import 'package:la3bob/features/games/presentation/pages/freeze_page.dart';
+import 'package:la3bob/features/games/presentation/pages/squat_page.dart';
 import 'package:la3bob/features/navigation_bar/presentation/screens/navigation_bar.dart';
 import 'package:la3bob/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:la3bob/features/profiles/domain/entities/child_entity.dart';
@@ -99,6 +100,10 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: 'freeze',
               builder: (context, state) => const FreezeGamePage(),
+            ),
+            GoRoute(
+              path: 'squat',
+              builder: (context, state) => const SquatGamePage(),
             ),
           ],
         ),

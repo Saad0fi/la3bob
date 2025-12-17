@@ -11,6 +11,7 @@ class FreezeState {
   final int highScore;
   final String message;
   final double currentMovement; // For debug/visual feedback
+  final bool isGracePeriod;
 
   const FreezeState({
     this.phase = FreezePhase.initial,
@@ -18,6 +19,7 @@ class FreezeState {
     this.highScore = 0,
     this.message = "استعد للرقص!",
     this.currentMovement = 0.0,
+    this.isGracePeriod = false,
   });
 
   FreezeState copyWith({
@@ -26,6 +28,7 @@ class FreezeState {
     int? highScore,
     String? message,
     double? currentMovement,
+    bool? isGracePeriod,
   }) {
     return FreezeState(
       phase: phase ?? this.phase,
@@ -33,6 +36,7 @@ class FreezeState {
       highScore: highScore ?? this.highScore,
       message: message ?? this.message,
       currentMovement: currentMovement ?? this.currentMovement,
+      isGracePeriod: isGracePeriod ?? this.isGracePeriod,
     );
   }
 }

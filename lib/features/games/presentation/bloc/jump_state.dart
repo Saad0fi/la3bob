@@ -26,6 +26,8 @@ class JumpState extends Equatable {
   final List<Obstacle> obstacles;
   final PlayerState playerState; // Visual only? Logic handled by bloc.
   final String? feedback;
+  final bool isCalibrated; // Can start game?
+  final String? calibrationMessage; // Feedback for user (e.g. "Step back")
 
   const JumpState({
     this.status = JumpGameStatus.initial,
@@ -34,6 +36,8 @@ class JumpState extends Equatable {
     this.obstacles = const [],
     this.playerState = PlayerState.grounded,
     this.feedback,
+    this.isCalibrated = false,
+    this.calibrationMessage,
   });
 
   JumpState copyWith({
@@ -43,6 +47,8 @@ class JumpState extends Equatable {
     List<Obstacle>? obstacles,
     PlayerState? playerState,
     String? feedback,
+    bool? isCalibrated,
+    String? calibrationMessage,
   }) {
     return JumpState(
       status: status ?? this.status,
@@ -50,8 +56,9 @@ class JumpState extends Equatable {
       highScore: highScore ?? this.highScore,
       obstacles: obstacles ?? this.obstacles,
       playerState: playerState ?? this.playerState,
-      feedback:
-          feedback, // Nullable update logic requires wrapper or just explicit null
+      feedback: feedback,
+      isCalibrated: isCalibrated ?? this.isCalibrated,
+      calibrationMessage: calibrationMessage ?? this.calibrationMessage,
     );
   }
 

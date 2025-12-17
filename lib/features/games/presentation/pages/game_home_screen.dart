@@ -3,37 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:la3bob/core/comon/theme/app_color.dart';
-
-import 'package:la3bob/features/games/presentation/pages/squat_page.dart';
 import 'package:la3bob/features/profiles/presentation/bloc/porfile_bloc.dart';
 
 class _GameCard extends StatelessWidget {
-  final String? route;
+  final String route;
   final String title;
   final String subtitle;
   final Color color;
-  final bool isPhysical;
 
   const _GameCard({
-    this.route,
+    required this.route,
     required this.title,
     required this.subtitle,
     required this.color,
-    this.isPhysical = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (isPhysical && route == null) {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (_) => const SquatGamePage()));
-        } else if (route != null) {
-          context.push(route!);
-        }
-      },
+      onTap: () => context.push(route),
       child: Container(
         padding: const EdgeInsets.all(25),
         decoration: BoxDecoration(
@@ -248,12 +236,11 @@ class _PhysicalGamesTab extends StatelessWidget {
             ),
             const SizedBox(height: 50),
 
-            // لعبة القرفصاء (Squat) - تستخدم isPhysical لتجنب الـ route
-            _GameCard(
+            const _GameCard(
+              route: '/tabs/games/squat',
               title: 'لعبة القرفصاء',
               subtitle: 'تمرين القرفصاء مع الكاميرا',
               color: Colors.green,
-              isPhysical: true,
             ),
 
             const SizedBox(height: 30),
