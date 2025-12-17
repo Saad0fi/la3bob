@@ -45,10 +45,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _finishOnboarding() {
-    // Save state
     final box = GetStorage();
     box.write('seen_onboarding', true);
-    // Navigate to Login
     context.go('/login');
   }
 
@@ -84,26 +82,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Image (Top)
                         Expanded(
-                          // Use Flexible/Expanded to prevent overflow
                           flex: 3,
                           child: Padding(
                             padding: EdgeInsets.all(4.w),
                             child: Image.asset(item.image, fit: BoxFit.contain),
                           ),
                         ),
-                        // Title
                         Text(
                           item.title,
                           style: TextStyle(
                             fontSize: 24.dp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF4C1D95), // Deep Purple Text
+                            color: const Color(0xFF4C1D95),
                           ),
                         ),
                         SizedBox(height: 2.h),
-                        // Description
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.w),
                           child: Text(
@@ -123,7 +117,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
               SizedBox(height: 2.h),
-              // Dots Indicator
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(_items.length, (dotIndex) {
@@ -136,13 +129,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       color: _currentPage == dotIndex
                           ? const Color(
                               0xFF8B5CF6,
-                            ) // Purple for active dot (matching mockup)
+                            ) 
                           : Colors.grey.shade300,
                     ),
                   );
                 }),
               ),
-              // Buttons
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
                 child: Column(
@@ -154,7 +146,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onPressed: _onNext,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          elevation: 4, // Shadow
+                          elevation: 4,
                           shadowColor: AppColors.primary.withValues(alpha: 0.5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
