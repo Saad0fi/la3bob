@@ -200,19 +200,41 @@ class _JumpGamePageState extends State<JumpGamePage> {
               "أعلى نتيجة: ${state.highScore}",
               style: const TextStyle(color: Colors.yellow, fontSize: 24),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
+            // Calibration Feedback
+            if (state.calibrationMessage != null)
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: state.isCalibrated ? Colors.green : Colors.red,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  state.calibrationMessage!,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 40,
                   vertical: 20,
                 ),
-                backgroundColor: Colors.orangeAccent,
+                backgroundColor: state.isCalibrated
+                    ? Colors.orangeAccent
+                    : Colors.grey,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              onPressed: () => context.read<JumpBloc>().add(StartGame()),
+              onPressed: state.isCalibrated
+                  ? () => context.read<JumpBloc>().add(StartGame())
+                  : null,
               child: const Text("ابدأ اللعبة", style: TextStyle(fontSize: 20)),
             ),
           ],

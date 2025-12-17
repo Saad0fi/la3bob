@@ -14,3 +14,5 @@ class PoseDetected extends FreezeEvent {
 class Tick extends FreezeEvent {}
 
 class SwitchPhase extends FreezeEvent {}
+
+class EndGracePeriod extends FreezeEvent {}
