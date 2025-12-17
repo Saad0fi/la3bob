@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import '../../../../core/mixins/camera_permission_mixin.dart';
+import '../../../../core/widgets/camera_denied_screen.dart';
 import '../../../../core/di/injection.dart';
 import '../../domain/usecases/detect_movement.dart';
 import '../bloc/freeze/freeze_bloc.dart';
@@ -27,9 +28,9 @@ class _FreezeGamePageState extends State<FreezeGamePage>
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // If permission denied or no camera, mixin handles dialog, but we show fallback or nothing here.
+    // If permission denied or no camera, show camera denied screen
     if (frontCamera == null) {
-      return const Scaffold(body: Center(child: Text("Waiting for camera...")));
+      return const CameraDeniedScreen();
     }
 
     return BlocProvider(

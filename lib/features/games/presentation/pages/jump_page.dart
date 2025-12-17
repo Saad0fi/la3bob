@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
-import '../../../../core/mixins/camera_permission_mixin.dart'; // Import correctly
+import '../../../../core/mixins/camera_permission_mixin.dart';
+import '../../../../core/widgets/camera_denied_screen.dart';
 import '../../../../core/di/injection.dart';
 import '../../domain/usecases/detect_jump.dart';
 import '../bloc/jump_bloc.dart';
@@ -56,8 +57,7 @@ class _JumpGamePageState extends State<JumpGamePage>
     }
 
     if (frontCamera == null) {
-      // Logic handled by mixin dialog, but we show a fallback here just in case
-      return const Scaffold(body: Center(child: Text('No camera found')));
+      return const CameraDeniedScreen();
     }
 
     // Creating Bloc locally since we don't have it in main provider list (optional)

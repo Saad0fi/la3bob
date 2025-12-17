@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import '../../../../core/di/injection.dart';
+import '../../../../core/widgets/camera_denied_screen.dart';
 import '../../domain/usecases/detect_squat.dart';
 import '../bloc/squat_bloc.dart';
 import '../bloc/squat_event.dart';
@@ -26,7 +27,7 @@ class _SquatGamePageState extends State<SquatGamePage>
     }
 
     if (frontCamera == null) {
-      return const Scaffold(body: Center(child: Text('Waiting for camera...')));
+      return const CameraDeniedScreen();
     }
 
     return BlocProvider(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import '../../../../core/mixins/camera_permission_mixin.dart';
+import '../../../../core/widgets/camera_denied_screen.dart';
 import '../../../../core/di/injection.dart';
 import '../../domain/usecases/detect_simon_move.dart';
 import '../bloc/simon_says/simon_says_bloc.dart';
@@ -26,7 +27,7 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
     }
 
     if (frontCamera == null) {
-      return const Scaffold(body: Center(child: Text('Waiting for camera...')));
+      return const CameraDeniedScreen();
     }
 
     return BlocProvider(
