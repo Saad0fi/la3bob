@@ -54,7 +54,7 @@ class GameCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.dp,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: AppColors.textSecondary,
               ),
             ),
           ],
@@ -132,13 +132,14 @@ class GameHomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.dp),
                   ),
                   child: TabBar(
+                    dividerColor: Colors.transparent,
                     indicator: BoxDecoration(
                       color: AppColors.accent,
                       borderRadius: BorderRadius.circular(15.dp),
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
                     labelColor: Colors.white,
-                    unselectedLabelColor: Colors.black54,
+                    unselectedLabelColor: AppColors.textSecondary,
                     labelStyle: TextStyle(
                       fontSize: 14.dp,
                       fontWeight: FontWeight.bold,
@@ -150,6 +151,7 @@ class GameHomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 15.w),
 
               const Expanded(
                 child: TabBarView(
@@ -171,10 +173,10 @@ class _EducationalGamesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> eduGames = [
       {
-        'title': 'لعبة الحروف',
-        'route': '/tabs/games/letters',
-        'image': 'assets/images/letters.png',
-        'color': const Color(0xFFFFF3E0), // بيج فاتح
+        'title': 'لعبة الألوان',
+        'route': '/tabs/games/colors',
+        'image': 'assets/images/color.png',
+        'color': const Color(0xFFF1F8E9), // أخضر فاتح
       },
       {
         'title': 'لعبة الأرقام',
@@ -183,10 +185,10 @@ class _EducationalGamesTab extends StatelessWidget {
         'color': const Color(0xFFF7F1FF), // بنفسجي فاتح
       },
       {
-        'title': 'لعبة الألوان',
-        'route': '/tabs/games/colors',
-        'image': 'assets/images/color.png',
-        'color': const Color(0xFFE8F5E9), // أخضر فاتح
+        'title': 'لعبة الحروف',
+        'route': '/tabs/games/letters',
+        'image': 'assets/images/letters.png',
+        'color': const Color(0xFFFFF3E0), // بيج فاتح
       },
       {
         'title': 'لعبة التطابق',
@@ -225,16 +227,15 @@ class _PhysicalGamesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> phyGames = [
       {
-        'title': 'لعبة القرفصاء',
-        'route': '/tabs/games/squat',
-
+        'title': ' القرفصاء',
+        'isPhysical': true,
         'image': 'assets/images/squat.png',
         'color': const Color(0xFFF1F8E9),
       },
       {
-        'title': 'لعبة القفز',
+        'title': ' القفز',
         'route': '/tabs/games/jump',
-        'image': 'assets/images/jump.png',
+        'image': 'assets/images/running.png',
         'color': const Color(0xFFE3F2FD),
       },
       {
@@ -244,13 +245,12 @@ class _PhysicalGamesTab extends StatelessWidget {
         'color': const Color(0xFFF3E5F5),
       },
       {
-        'title': 'لعبة التجمد',
+        'title': ' حركة حركة ستوب',
         'route': '/tabs/games/freeze',
         'image': 'assets/images/freeze.png',
         'color': const Color(0xFFFFEBEE),
       },
     ];
-
     return GridView.builder(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
