@@ -77,8 +77,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
           isGracePeriod: true, // Enable grace period
         ),
       );
-      // Schedule end of grace period after 2 seconds
-      Timer(const Duration(seconds: 2), () {
+      Timer(const Duration(seconds: 1), () {
         if (!isClosed) add(EndGracePeriod());
       });
 

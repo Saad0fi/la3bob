@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../core/mixins/camera_permission_mixin.dart';
 import '../../../../../core/widgets/camera_denied_screen.dart';
 import '../../../../../core/di/injection.dart';
@@ -34,7 +35,12 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
       create: (_) => SimonSaysBloc(getIt<DetectSimonMove>()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('أوامر القائد (Simon Says)'),
+          leading: IconButton(
+            onPressed: () {
+              context.go("/tabs/games");
+            },
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+          ),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -62,7 +68,11 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.directions_run, size: 80, color: Colors.white),
+                          const Icon(
+                            Icons.directions_run,
+                            size: 80,
+                            color: Colors.white,
+                          ),
                           const SizedBox(height: 20),
                           const Text(
                             "أوامر القائد",
@@ -76,20 +86,42 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                             const SizedBox(height: 10),
                             Text(
                               "أعلى نتيجة: ${state.highScore}",
-                              style: const TextStyle(color: Colors.amber, fontSize: 24),
+                              style: const TextStyle(
+                                color: Colors.amber,
+                                fontSize: 24,
+                              ),
                             ),
                           ],
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 10),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              "نفذ الأوامر التي تظهر على الشاشة بسرعة!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 30),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 20,
+                              ),
                               backgroundColor: Colors.blueAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            onPressed: () => context.read<SimonSaysBloc>().add(StartGame()),
-                            child: const Text("ابدأ اللعبة", style: TextStyle(fontSize: 20)),
+                            onPressed: () =>
+                                context.read<SimonSaysBloc>().add(StartGame()),
+                            child: const Text(
+                              "ابدأ اللعبة",
+                              style: TextStyle(fontSize: 20),
+                            ),
                           ),
                         ],
                       ),
@@ -154,7 +186,9 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                                 color: Colors.greenAccent,
                                 fontSize: 48,
                                 fontWeight: FontWeight.bold,
-                                shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                                shadows: [
+                                  Shadow(blurRadius: 10, color: Colors.black),
+                                ],
                               ),
                             ),
                           ),
@@ -172,7 +206,10 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                             children: [
                               const Text(
                                 "النقاط",
-                                style: TextStyle(color: Colors.white70, fontSize: 14),
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
                               ),
                               Text(
                                 "${state.score}",
@@ -207,23 +244,33 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                           const SizedBox(height: 20),
                           Text(
                             "النتيجة: ${state.score}",
-                            style: const TextStyle(color: Colors.white, fontSize: 30),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           Text(
                             "أعلى نتيجة: ${state.highScore}",
-                            style: const TextStyle(color: Colors.amber, fontSize: 24),
+                            style: const TextStyle(
+                              color: Colors.amber,
+                              fontSize: 24,
+                            ),
                           ),
                           const SizedBox(height: 40),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 20,
+                              ),
                               backgroundColor: Colors.green,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            onPressed: () => context.read<SimonSaysBloc>().add(StartGame()),
+                            onPressed: () =>
+                                context.read<SimonSaysBloc>().add(StartGame()),
                             child: const Text(
                               "العب مرة أخرى",
                               style: TextStyle(fontSize: 20),
@@ -234,7 +281,10 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                             onPressed: () => Navigator.pop(context),
                             child: const Text(
                               "خروج",
-                              style: TextStyle(color: Colors.white70, fontSize: 18),
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ],

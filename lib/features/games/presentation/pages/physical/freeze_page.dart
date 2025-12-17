@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../core/mixins/camera_permission_mixin.dart';
 import '../../../../../core/widgets/camera_denied_screen.dart';
 import '../../../../../core/di/injection.dart';
@@ -37,7 +38,12 @@ class _FreezeGamePageState extends State<FreezeGamePage>
       create: (_) => FreezeBloc(getIt<DetectMovement>()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('لعبة التجمد (Freeze Dance)'),
+          leading: IconButton(
+            onPressed: () {
+              context.go("/tabs/games");
+            },
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+          ),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -96,10 +102,10 @@ class _FreezeGamePageState extends State<FreezeGamePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.music_note, size: 80, color: Colors.white),
+            const Text("🧊", style: TextStyle(fontSize: 86)),
             const SizedBox(height: 20),
             const Text(
-              "لعبة التجمد",
+              "لعبة حركة ستوب",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
@@ -117,7 +123,7 @@ class _FreezeGamePageState extends State<FreezeGamePage>
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                "تحرك عندما يكون الضوء أخضر.\nتجمد تماماً عندما يصبح أحمر!",
+                "تحرك عندما يكون الضوء أخضر.\nتوقف تماماً عندما يصبح أحمر!",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white70, fontSize: 18),
               ),
@@ -288,4 +294,3 @@ class _FreezeGamePageState extends State<FreezeGamePage>
     );
   }
 }
-
