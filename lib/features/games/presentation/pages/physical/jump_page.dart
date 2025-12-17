@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../core/mixins/camera_permission_mixin.dart';
 import '../../../../../core/widgets/camera_denied_screen.dart';
 import '../../../../../core/di/injection.dart';
@@ -34,7 +35,12 @@ class _JumpGamePageState extends State<JumpGamePage>
       create: (_) => JumpBloc(getIt<DetectJump>()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('🦘 تحدي القفز'),
+          leading: IconButton(
+            onPressed: () {
+              context.go("/tabs/games");
+            },
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+          ),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -93,7 +99,10 @@ class _JumpGamePageState extends State<JumpGamePage>
                                   color: Colors.red,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.bolt, color: Colors.white),
+                                child: const Icon(
+                                  Icons.bolt,
+                                  color: Colors.white,
+                                ),
                               ),
                             );
                           }),
@@ -106,7 +115,9 @@ class _JumpGamePageState extends State<JumpGamePage>
                                 color: Colors.white,
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
-                                shadows: [Shadow(blurRadius: 5, color: Colors.black)],
+                                shadows: [
+                                  Shadow(blurRadius: 5, color: Colors.black),
+                                ],
                               ),
                             ),
                           ),
@@ -122,7 +133,11 @@ class _JumpGamePageState extends State<JumpGamePage>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.fitness_center, size: 80, color: Colors.white),
+                          const Icon(
+                            Icons.fitness_center,
+                            size: 80,
+                            color: Colors.white,
+                          ),
                           const SizedBox(height: 20),
                           const Text(
                             "تحدي القفز",
@@ -135,14 +150,31 @@ class _JumpGamePageState extends State<JumpGamePage>
                           const SizedBox(height: 10),
                           Text(
                             "أعلى نتيجة: ${state.highScore}",
-                            style: const TextStyle(color: Colors.yellow, fontSize: 24),
+                            style: const TextStyle(
+                              color: Colors.yellow,
+                              fontSize: 24,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              "اقفز لتتجنب العوائق القادمة نحوك!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 18,
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 20),
                           if (state.calibrationMessage != null)
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: state.isCalibrated ? Colors.green : Colors.red,
+                                color: state.isCalibrated
+                                    ? Colors.green
+                                    : Colors.red,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -157,14 +189,21 @@ class _JumpGamePageState extends State<JumpGamePage>
                           const SizedBox(height: 20),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 20,
+                              ),
                               backgroundColor: Colors.orangeAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            onPressed: () => context.read<JumpBloc>().add(StartGame()),
-                            child: const Text("ابدأ اللعبة", style: TextStyle(fontSize: 20)),
+                            onPressed: () =>
+                                context.read<JumpBloc>().add(StartGame()),
+                            child: const Text(
+                              "ابدأ اللعبة",
+                              style: TextStyle(fontSize: 20),
+                            ),
                           ),
                         ],
                       ),
@@ -189,14 +228,21 @@ class _JumpGamePageState extends State<JumpGamePage>
                           const SizedBox(height: 20),
                           Text(
                             "النقاط: ${state.score}",
-                            style: const TextStyle(color: Colors.white, fontSize: 28),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                            ),
                           ),
                           const SizedBox(height: 40),
                           ElevatedButton(
-                            onPressed: () => context.read<JumpBloc>().add(StartGame()),
+                            onPressed: () =>
+                                context.read<JumpBloc>().add(StartGame()),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orangeAccent,
-                              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 30,
+                                vertical: 15,
+                              ),
                             ),
                             child: const Text(
                               "حاول مرة أخرى",
@@ -205,7 +251,8 @@ class _JumpGamePageState extends State<JumpGamePage>
                           ),
                           const SizedBox(height: 20),
                           TextButton(
-                            onPressed: () => context.read<JumpBloc>().add(ResetGame()),
+                            onPressed: () =>
+                                context.read<JumpBloc>().add(ResetGame()),
                             child: const Text(
                               "العودة للقائمة",
                               style: TextStyle(color: Colors.white70),

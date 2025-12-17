@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../core/di/injection.dart';
 import '../../../../../core/widgets/camera_denied_screen.dart';
 import '../../../domain/usecases/detect_squat.dart';
@@ -34,7 +35,12 @@ class _SquatGamePageState extends State<SquatGamePage>
       create: (_) => SquatBloc(getIt<DetectSquat>()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('🏋️ تحدي القرفصاء '),
+          leading: IconButton(
+            onPressed: () {
+              context.go("/tabs/games");
+            },
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+          ),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -66,7 +72,11 @@ class _SquatGamePageState extends State<SquatGamePage>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.fitness_center, size: 80, color: Colors.white),
+                          const Icon(
+                            Icons.fitness_center,
+                            size: 80,
+                            color: Colors.white,
+                          ),
                           const SizedBox(height: 20),
                           const Text(
                             "تحدي القرفصاء",
@@ -79,18 +89,37 @@ class _SquatGamePageState extends State<SquatGamePage>
                           const SizedBox(height: 10),
                           Text(
                             "أعلى نتيجة: ${state.highScore}",
-                            style: const TextStyle(color: Colors.yellow, fontSize: 24),
+                            style: const TextStyle(
+                              color: Colors.yellow,
+                              fontSize: 24,
+                            ),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 10),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              "قم بأكبر عدد من القرفصاء خلال 60 ثانية!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 30),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 20,
+                              ),
                               backgroundColor: Colors.blueAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            onPressed: () => context.read<SquatBloc>().add(StartGame()),
+                            onPressed: () =>
+                                context.read<SquatBloc>().add(StartGame()),
                             child: const Text(
                               "ابدأ اللعبة (60 ثانية)",
                               style: TextStyle(fontSize: 20),
@@ -110,7 +139,10 @@ class _SquatGamePageState extends State<SquatGamePage>
                         right: 0,
                         child: Center(
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
                             decoration: BoxDecoration(
                               color: state.remainingTime <= 10
                                   ? Colors.red.withValues(alpha: .8)
@@ -141,7 +173,10 @@ class _SquatGamePageState extends State<SquatGamePage>
                             children: [
                               const Text(
                                 "النقاط",
-                                style: TextStyle(color: Colors.white70, fontSize: 14),
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
                               ),
                               Text(
                                 "${state.score}",
@@ -164,7 +199,9 @@ class _SquatGamePageState extends State<SquatGamePage>
                               color: Colors.greenAccent,
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
-                              shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                              shadows: [
+                                Shadow(blurRadius: 10, color: Colors.black),
+                              ],
                             ),
                           ),
                         ),
@@ -190,29 +227,41 @@ class _SquatGamePageState extends State<SquatGamePage>
                           const SizedBox(height: 20),
                           Text(
                             "النتيجة النهائية: ${state.score}",
-                            style: const TextStyle(color: Colors.white, fontSize: 28),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           Text(
                             "أعلى نتيجة: ${state.highScore}",
-                            style: const TextStyle(color: Colors.yellow, fontSize: 20),
+                            style: const TextStyle(
+                              color: Colors.yellow,
+                              fontSize: 20,
+                            ),
                           ),
                           const SizedBox(height: 40),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton.icon(
-                                onPressed: () => context.read<SquatBloc>().add(ResetGame()),
+                                onPressed: () =>
+                                    context.read<SquatBloc>().add(ResetGame()),
                                 icon: const Icon(Icons.home),
                                 label: const Text("القائمة"),
-                                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey,
+                                ),
                               ),
                               const SizedBox(width: 20),
                               ElevatedButton.icon(
-                                onPressed: () => context.read<SquatBloc>().add(StartGame()),
+                                onPressed: () =>
+                                    context.read<SquatBloc>().add(StartGame()),
                                 icon: const Icon(Icons.refresh),
                                 label: const Text("حاول مرة أخرى"),
-                                style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                ),
                               ),
                             ],
                           ),

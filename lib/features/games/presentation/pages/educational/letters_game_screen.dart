@@ -60,7 +60,7 @@ class LettersGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الحروف'),
-                  backgroundColor: Colors.purple.shade300,
+                  backgroundColor: Colors.orange.shade400,
                 ),
                 body: const Center(child: CircularProgressIndicator()),
               );
@@ -73,15 +73,15 @@ class LettersGameScreen extends StatelessWidget {
 
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('לعبة الحروف'),
-                  backgroundColor: Colors.purple.shade300,
+                  title: const Text('لعبة الحروف'),
+                  backgroundColor: Colors.orange.shade400,
                 ),
                 body: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.purple.shade100, Colors.pink.shade100],
+                      colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)],
                     ),
                   ),
                   child: SafeArea(
@@ -93,7 +93,7 @@ class LettersGameScreen extends StatelessWidget {
                             value: progress,
                             backgroundColor: Colors.white,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.purple.shade400,
+                              Colors.orange.shade400,
                             ),
                             minHeight: 2.h,
                           ),
@@ -121,10 +121,10 @@ class LettersGameScreen extends StatelessWidget {
                           SizedBox(height: 4.h),
                           Text(
                             question['word'] as String,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
-                              color: Colors.purple,
+                              color: Colors.orange.shade700,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -158,7 +158,7 @@ class LettersGameScreen extends StatelessWidget {
                                 isSelected: false,
                                 isCorrectOption: letter == question['letter'],
                                 showResult: true,
-                                primaryColor: Colors.purple,
+                                primaryColor: Colors.orange,
                               );
                             },
                           ),
@@ -185,14 +185,14 @@ class LettersGameScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('لعبة الحروف'),
-                backgroundColor: Colors.purple.shade300,
+                backgroundColor: Colors.orange.shade400,
               ),
               body: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.purple.shade100, Colors.pink.shade100],
+                    colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)],
                   ),
                 ),
                 child: SafeArea(
@@ -204,7 +204,7 @@ class LettersGameScreen extends StatelessWidget {
                           value: progress,
                           backgroundColor: Colors.white,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.purple.shade400,
+                            Colors.orange.shade400,
                           ),
                           minHeight: 10,
                         ),
@@ -235,7 +235,7 @@ class LettersGameScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 28.dp,
                             fontWeight: FontWeight.bold,
-                            color: Colors.purple,
+                            color: Colors.orange.shade700,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -278,7 +278,7 @@ class LettersGameScreen extends StatelessWidget {
                                   isSelected: isSelected,
                                   isCorrectOption: letter == question['letter'],
                                   showResult: gameState.showResult,
-                                  primaryColor: Colors.purple,
+                                  primaryColor: Colors.orange,
                                 ),
                               );
                             },

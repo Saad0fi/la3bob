@@ -68,7 +68,7 @@ class MatchingGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة التطابق'),
-                  backgroundColor: Colors.teal.shade300,
+                  backgroundColor: Colors.lightBlue.shade400,
                 ),
                 body: const Center(child: CircularProgressIndicator()),
               );
@@ -82,14 +82,14 @@ class MatchingGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة التطابق'),
-                  backgroundColor: Colors.teal.shade300,
+                  backgroundColor: Colors.lightBlue.shade400,
                 ),
                 body: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.teal.shade100, Colors.cyan.shade100],
+                      colors: [Color(0xFFE1F5FE), Color(0xFFB3E5FC)],
                     ),
                   ),
                   child: SafeArea(
@@ -101,7 +101,7 @@ class MatchingGameScreen extends StatelessWidget {
                             value: progress,
                             backgroundColor: Colors.white,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.teal.shade400,
+                              Colors.lightBlue.shade400,
                             ),
                             minHeight: 2.h,
                           ),
@@ -162,7 +162,7 @@ class MatchingGameScreen extends StatelessWidget {
                                 isSelected: false,
                                 isCorrectOption: match == question['item'],
                                 showResult: true,
-                                primaryColor: Colors.teal,
+                                primaryColor: Colors.lightBlue,
                               );
                             },
                           ),
@@ -189,14 +189,14 @@ class MatchingGameScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('لعبة التطابق'),
-                backgroundColor: Colors.teal.shade300,
+                backgroundColor: Colors.lightBlue.shade400,
               ),
               body: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.teal.shade100, Colors.cyan.shade100],
+                    colors: [Color(0xFFE1F5FE), Color(0xFFB3E5FC)],
                   ),
                 ),
                 child: SafeArea(
@@ -208,7 +208,7 @@ class MatchingGameScreen extends StatelessWidget {
                           value: progress,
                           backgroundColor: Colors.white,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.teal.shade400,
+                            Colors.lightBlue.shade400,
                           ),
                           minHeight: 10,
                         ),
@@ -286,7 +286,7 @@ class MatchingGameScreen extends StatelessWidget {
                                   isSelected: isSelected,
                                   isCorrectOption: match == question['item'],
                                   showResult: gameState.showResult,
-                                  primaryColor: Colors.teal,
+                                  primaryColor: Colors.lightBlue,
                                 ),
                               );
                             },
