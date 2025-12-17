@@ -108,6 +108,9 @@ class _YoutubePlayerWidgetState extends State<_YoutubePlayerWidget> {
           playedColor: Colors.amber,
           handleColor: Colors.amberAccent,
         ),
+        onReady: () {
+          _controller?.toggleFullScreenMode();
+        },
       ),
       builder: (context, player) {
         return Scaffold(

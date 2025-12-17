@@ -6,7 +6,8 @@ import '../../presentation/bloc/wave_event.dart';
 import '../../presentation/bloc/wave_state.dart';
 import '../../presentation/widgets/camera_preview.dart';
 import '../../domain/usecases/detect_wave.dart';
-import '../../../../../../core/di/injection.dart'; // import getIt
+import '../../../../../../core/di/injection.dart';
+import '../../../../../../core/mixins/camera_permission_mixin.dart';
 
 class WaveGamePage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -40,48 +41,16 @@ class WaveGameView extends StatefulWidget {
   State<WaveGameView> createState() => _WaveGameViewState();
 }
 
-class _WaveGameViewState extends State<WaveGameView> {
-  CameraDescription? _frontCamera;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _initCameras();
-  }
-
-  Future<void> _initCameras() async {
-    List<CameraDescription> cams = widget.cameras ?? [];
-    if (cams.isEmpty) {
-      try {
-        cams = await availableCameras();
-      } catch (e) {
-        debugPrint('Error fetching cameras: $e');
-      }
-    }
-
-    if (cams.isNotEmpty) {
-      _frontCamera = cams.firstWhere(
-        (c) => c.lensDirection == CameraLensDirection.front,
-        orElse: () => cams.first,
-      );
-    }
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
+class _WaveGameViewState extends State<WaveGameView>
+    with WidgetsBindingObserver, CameraPermissionMixin {
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+    if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (_frontCamera == null) {
-      return const Scaffold(body: Center(child: Text('No camera found')));
+    if (frontCamera == null) {
+      return const Scaffold(body: Center(child: Text('Waiting for camera...')));
     }
 
     return Scaffold(
@@ -91,7 +60,7 @@ class _WaveGameViewState extends State<WaveGameView> {
           // Camera Preview
           SizedBox.expand(
             child: CameraPreviewWidget(
-              camera: _frontCamera!,
+              camera: frontCamera!,
               onPoseDetected: (pose) {
                 // Now 'context' is from _WaveGameViewState, which is a child of BlocProvider
                 context.read<WaveBloc>().add(PoseReceived(pose));

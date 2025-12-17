@@ -7,6 +7,7 @@ import '../bloc/squat_bloc.dart';
 import '../bloc/squat_event.dart';
 import '../bloc/squat_state.dart';
 import '../widgets/camera_preview.dart';
+import '../../../../core/mixins/camera_permission_mixin.dart';
 
 class SquatGamePage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -16,48 +17,16 @@ class SquatGamePage extends StatefulWidget {
   State<SquatGamePage> createState() => _SquatGamePageState();
 }
 
-class _SquatGamePageState extends State<SquatGamePage> {
-  CameraDescription? _frontCamera;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _initCameras();
-  }
-
-  Future<void> _initCameras() async {
-    List<CameraDescription> cams = widget.cameras ?? [];
-    if (cams.isEmpty) {
-      try {
-        cams = await availableCameras();
-      } catch (e) {
-        debugPrint('Error fetching cameras: $e');
-      }
-    }
-
-    if (cams.isNotEmpty) {
-      _frontCamera = cams.firstWhere(
-        (c) => c.lensDirection == CameraLensDirection.front,
-        orElse: () => cams.first,
-      );
-    }
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
+class _SquatGamePageState extends State<SquatGamePage>
+    with WidgetsBindingObserver, CameraPermissionMixin {
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+    if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (_frontCamera == null) {
-      return const Scaffold(body: Center(child: Text('No camera found')));
+    if (frontCamera == null) {
+      return const Scaffold(body: Center(child: Text('Waiting for camera...')));
     }
 
     return BlocProvider(
@@ -84,7 +53,7 @@ class _SquatGamePageState extends State<SquatGamePage> {
                   builder: (context) {
                     return SizedBox.expand(
                       child: CameraPreviewWidget(
-                        camera: _frontCamera!,
+                        camera: frontCamera!,
                         onPoseDetected: (pose) {
                           context.read<SquatBloc>().add(PoseDetected(pose));
                         },
