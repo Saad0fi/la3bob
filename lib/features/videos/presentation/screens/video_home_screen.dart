@@ -49,7 +49,7 @@ class VideoHomeScreen extends StatelessWidget {
               ),
               actions: [
                 Padding(
-                  padding: EdgeInsets.all(2.w),
+                  padding: .all(2.w),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12.w),
                     onLongPress: () async {
@@ -502,13 +502,21 @@ Widget _buildInterestChips(
           selected: selectedInterest == null,
           selectedColor: AppColors.accent.withValues(alpha: .8),
           labelStyle: TextStyle(
-            color: selectedInterest == null ? Colors.white : Colors.white,
+            color: selectedInterest == null
+                ? AppColors.textPrimary
+                : AppColors.textSecondary,
             fontWeight: FontWeight.w600,
             fontSize: 10.dp,
           ),
-          backgroundColor: AppColors.categoryChipBackground,
+          backgroundColor: Colors.grey.shade100,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: selectedInterest == null
+                  ? AppColors.accent
+                  : Colors.grey.shade300,
+              width: selectedInterest == null ? 2 : 1,
+            ),
           ),
           onSelected: (_) {
             context.read<VideosBloc>().add(const SelectInterest(null));
@@ -523,13 +531,19 @@ Widget _buildInterestChips(
             selected: isSelected,
             selectedColor: AppColors.accent.withValues(alpha: .8),
             labelStyle: TextStyle(
-              color: isSelected ? Colors.white : Colors.white,
+              color: isSelected
+                  ? AppColors.textPrimary
+                  : AppColors.textSecondary,
               fontWeight: FontWeight.w600,
               fontSize: 10.dp,
             ),
-            backgroundColor: AppColors.categoryChipBackground,
+            backgroundColor: Colors.grey.shade100,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
+              side: BorderSide(
+                color: isSelected ? AppColors.accent : Colors.grey.shade300,
+                width: isSelected ? 2 : 1,
+              ),
             ),
             onSelected: (_) {
               context.read<VideosBloc>().add(SelectInterest(interest));
