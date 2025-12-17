@@ -29,7 +29,7 @@ class VerificationScreen extends StatelessWidget {
         color: AppColors.textPrimary,
       ),
       decoration: BoxDecoration(
-        color: AppColors.categoryChipBackground.withValues(alpha: .3),
+        color: AppColors.primary.withValues(alpha: .3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.categoryChipBackground),
       ),
@@ -42,7 +42,7 @@ class VerificationScreen extends StatelessWidget {
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
-        color: AppColors.categoryChipBackground.withValues(alpha: .5),
+        color: AppColors.categoryChipBackground,
         border: Border.all(color: AppColors.primary),
       ),
     );
@@ -50,7 +50,7 @@ class VerificationScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => GetIt.I<AuthCubit>()),
-        //  هنا التايمر كيوبت المسؤول عن التايمر TimerCubit وبدء العداد
+        //  هنا التايمر كيوبت المسؤول عن التايمر TimerCubit وبداية العداد
         BlocProvider(create: (context) => TimerCubit()..startTimer()),
       ],
       child: Scaffold(
@@ -121,31 +121,6 @@ class VerificationScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                        // الأيقونة
-                          Container(
-                            width: 25.w,
-                            height: 25.w,
-                            decoration: BoxDecoration(
-                              color: AppColors.cardBackground,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary.withValues(
-                                    alpha: .3,
-                                  ),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                '📧',
-                                style: TextStyle(fontSize: 12.w),
-                              ),
-                            ),
-                          ),
-
                           SizedBox(height: 3.h),
 
                           Text(
@@ -175,7 +150,7 @@ class VerificationScreen extends StatelessWidget {
                               vertical: 1.h,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.categoryChipBackground,
+                              color: AppColors.primary,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
@@ -190,7 +165,7 @@ class VerificationScreen extends StatelessWidget {
 
                           SizedBox(height: 4.h),
 
-                        // كارت إدخال الرمز
+                          // كارت إدخال الرمز
                           Card(
                             elevation: 6,
                             shape: RoundedRectangleBorder(
@@ -205,13 +180,12 @@ class VerificationScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 14.dp,
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.textPrimary,
+                                      color: AppColors.textSecondary,
                                     ),
                                   ),
 
                                   SizedBox(height: 3.h),
 
-                                //  فيلد ال Pinput (يستمع لحالة التحميل من AuthCubit)
                                   Directionality(
                                     textDirection: TextDirection.ltr,
                                     child: BlocBuilder<AuthCubit, AuthState>(
@@ -226,7 +200,9 @@ class VerificationScreen extends StatelessWidget {
                                               PinputAutovalidateMode.onSubmit,
                                           onCompleted: (pin) {
                                             if (!isLoading) {
-                                            context.read<AuthCubit>().verifyOtp(
+                                              context
+                                                  .read<AuthCubit>()
+                                                  .verifyOtp(
                                                     email: email,
                                                     token: pin,
                                                   );
@@ -268,10 +244,8 @@ class VerificationScreen extends StatelessWidget {
 
                           SizedBox(height: 4.h),
 
-                        //  زر إعادة الإرسال والمؤقت (يستمع لـ TimerCubit)
                           BlocBuilder<TimerCubit, TimerState>(
                             builder: (context, timerState) {
-                            // التحقق من حالة انتهاء العداد
                               final canResend = timerState is TimerFinished;
                               final seconds = timerState.duration;
 
@@ -302,7 +276,9 @@ class VerificationScreen extends StatelessWidget {
                                           vertical: 1.5.h,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                       ),
                                     )
@@ -313,8 +289,7 @@ class VerificationScreen extends StatelessWidget {
                                         vertical: 1.5.h,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppColors.categoryChipBackground
-                                            .withValues(alpha: .5),
+                                        color: AppColors.primary,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Row(

@@ -32,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
           child: Text(
             "الملف الشخصي",
             style: TextStyle(
-              fontSize: 18.dp,
+              fontSize: 25.dp,
               fontWeight: FontWeight.w700,
               color: Colors.white,
             ),
@@ -273,7 +273,9 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.5.h),
                   Card(
                     elevation: 3,
-                    shadowColor: AppColors.accent.withValues(alpha: .1),
+                    shadowColor: AppColors.accent.withValues(alpha: .3),
+                    color: AppColors.cardBackground,
+
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -462,15 +464,15 @@ class ProfileScreen extends StatelessWidget {
                             vertical: 0.5.h,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.accent.withValues(alpha: .15),
+                            color: AppColors.accent,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
                             '${children.length}',
                             style: TextStyle(
-                              fontSize: 11.dp,
+                              fontSize: 12.dp,
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -480,7 +482,9 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.5.h),
                   Card(
                     elevation: 3,
-                    shadowColor: AppColors.accent.withValues(alpha: .1),
+                    color: AppColors.cardBackground,
+
+                    shadowColor: AppColors.accent.withValues(alpha: .3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -793,8 +797,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 1.5.h),
                   Card(
+                    color: AppColors.cardBackground,
                     elevation: 3,
-                    shadowColor: AppColors.error.withValues(alpha: .1),
+                    shadowColor: AppColors.error.withValues(alpha: .3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),

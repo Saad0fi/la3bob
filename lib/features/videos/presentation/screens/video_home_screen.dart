@@ -412,7 +412,7 @@ class VideoHomeScreen extends StatelessWidget {
                                               style: TextStyle(
                                                 fontSize: 13.dp,
                                                 fontWeight: FontWeight.w800,
-                                                color: AppColors.textPrimary,
+                                                color: AppColors.textSecondary,
                                               ),
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
@@ -500,10 +500,10 @@ Widget _buildInterestChips(
         ChoiceChip(
           label: const Text('الكل'),
           selected: selectedInterest == null,
-          selectedColor: AppColors.accent.withValues(alpha: .25),
+          selectedColor: AppColors.accent,
           labelStyle: TextStyle(
             color: selectedInterest == null
-                ? AppColors.textPrimary
+                ? AppColors.cardBackground
                 : AppColors.textSecondary,
             fontWeight: FontWeight.w600,
             fontSize: 10.dp,
@@ -532,7 +532,7 @@ Widget _buildInterestChips(
             selectedColor: AppColors.accent.withValues(alpha: .8),
             labelStyle: TextStyle(
               color: isSelected
-                  ? AppColors.textPrimary
+                  ? AppColors.cardBackground
                   : AppColors.textSecondary,
               fontWeight: FontWeight.w600,
               fontSize: 10.dp,
