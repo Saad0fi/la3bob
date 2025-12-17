@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../../../../core/comon/helper_function/audio_helper.dart';
 import '../../../domain/repositories/simon_says_repository.dart';
 import '../../../domain/usecases/detect_simon_move.dart';
 import 'simon_says_event.dart';
@@ -25,6 +26,14 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
     SimonMove.squat: "قرفصاء (Squat)",
   };
 
+  final Map<SimonMove, String> _moveAudioFiles = {
+    SimonMove.raiseRightHand: "ارفع يدك اليمنى",
+    SimonMove.raiseLeftHand: "اربع يدك اليسرى",
+    SimonMove.standOnRightLeg: "قف على رجلك اليمنى",
+    SimonMove.standOnLeftLeg: "قف على رجلك اليسرى",
+    SimonMove.squat: "قرفصاء",
+  };
+
   SimonSaysBloc(this._detectSimonMove) : super(const SimonSaysState()) {
     on<StartGame>(_onStartGame);
     on<ResetGame>(_onResetGame);
@@ -33,50 +42,56 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
     on<Tick>(_onTick);
 
     final savedScore = _storage.read<int>('simon_high_score') ?? 0;
-    emit(state.copyWith(highScore: savedScore));
+    emit(SimonSaysState(highScore: savedScore));
   }
 
   void _onStartGame(StartGame event, Emitter<SimonSaysState> emit) {
-    emit(
-      state.copyWith(
-        status: SimonGameStatus.active,
-        score: 0,
-        remainingTime: 60,
-        message: "استعد...",
-        feedback: null,
-      ),
-    );
-
     _gameTimer?.cancel();
+
+    emit(SimonSaysState(
+      status: SimonGameStatus.active,
+      score: 0,
+      highScore: state.highScore,
+      remainingTime: 60,
+      message: "استعد...",
+    ));
+
     _gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       add(Tick(60 - timer.tick));
     });
 
-    // Wait a brief moment then give first command
     Future.delayed(const Duration(seconds: 2), () {
       add(NextCommand());
     });
   }
 
   void _onTick(Tick event, Emitter<SimonSaysState> emit) {
-    // Check for neutral timeout
     if (state.isWaitingForNeutral &&
         state.status == SimonGameStatus.active &&
         _lastPoseTime != null) {
       final diff = DateTime.now().difference(_lastPoseTime!);
       if (diff.inMilliseconds > 1500) {
-        // Timeout! Assume neutral or lost track, move on.
         add(NextCommand());
       }
     }
 
     if (event.remainingTime > 0) {
-      emit(state.copyWith(remainingTime: event.remainingTime));
+      emit(SimonSaysState(
+        status: state.status,
+        currentCommand: state.currentCommand,
+        score: state.score,
+        highScore: state.highScore,
+        remainingTime: event.remainingTime,
+        isWaitingForNeutral: state.isWaitingForNeutral,
+        message: state.message,
+        feedback: state.feedback,
+      ));
     } else {
       _gameTimer?.cancel();
       _commandTimer?.cancel();
 
-      // Game Over
+      AudioHelper.playSimonTimeUp();
+
       final currentScore = state.score;
       int newHigh = state.highScore;
       if (currentScore > newHigh) {
@@ -84,22 +99,20 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
         _storage.write('simon_high_score', newHigh);
       }
 
-      emit(
-        state.copyWith(
-          status: SimonGameStatus.gameOver,
-          highScore: newHigh,
-          remainingTime: 0,
-          message: "انتهى الوقت!",
-          feedback: "النتيجة: $currentScore",
-        ),
-      );
+      emit(SimonSaysState(
+        status: SimonGameStatus.gameOver,
+        score: currentScore,
+        highScore: newHigh,
+        remainingTime: 0,
+        message: "انتهى الوقت!",
+        feedback: "النتيجة: $currentScore",
+      ));
     }
   }
 
   void _onNextCommand(NextCommand event, Emitter<SimonSaysState> emit) {
     if (state.status != SimonGameStatus.active) return;
 
-    // Pick random move
     final moves = [
       SimonMove.raiseRightHand,
       SimonMove.raiseLeftHand,
@@ -109,14 +122,17 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
     ];
     final nextMove = moves[_random.nextInt(moves.length)];
 
-    emit(
-      state.copyWith(
-        currentCommand: nextMove,
-        message: _moveDescriptions[nextMove]!,
-        clearFeedback: true,
-        isWaitingForNeutral: false,
-      ),
-    );
+    AudioHelper.playSimonCommand(_moveAudioFiles[nextMove]!);
+
+    emit(SimonSaysState(
+      status: state.status,
+      currentCommand: nextMove,
+      score: state.score,
+      highScore: state.highScore,
+      remainingTime: state.remainingTime,
+      isWaitingForNeutral: false,
+      message: _moveDescriptions[nextMove]!,
+    ));
   }
 
   void _onPoseDetected(PoseDetected event, Emitter<SimonSaysState> emit) {
@@ -125,36 +141,33 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
 
     final detected = _detectSimonMove(event.pose);
 
-    // 1. If waiting for neutral (player must return to standing/nothing)
     if (state.isWaitingForNeutral) {
       if (detected == null || detected == SimonMove.nothing) {
-        // Player is back to neutral, trigger next command
         add(NextCommand());
       }
       return;
     }
 
-    // 2. Normal gameplay: checking against current command
     if (state.currentCommand == null) return;
 
     if (detected == state.currentCommand) {
-      // Success!
-      emit(
-        state.copyWith(
-          feedback: "صحيح! ✅",
-          score: state.score + 1,
-          clearCurrentCommand: true,
-          isWaitingForNeutral: true,
-          message: "قف باعتدال...", // Tell user to stand neutral
-        ),
-      );
+      AudioHelper.playSimonCorrect();
+      emit(SimonSaysState(
+        status: state.status,
+        score: state.score + 1,
+        highScore: state.highScore,
+        remainingTime: state.remainingTime,
+        isWaitingForNeutral: true,
+        message: "قف باعتدال...",
+        feedback: "صحيح! ✅",
+      ));
     }
   }
 
   void _onResetGame(ResetGame event, Emitter<SimonSaysState> emit) {
     _commandTimer?.cancel();
     _gameTimer?.cancel();
-    emit(state.copyWith(status: SimonGameStatus.initial));
+    emit(SimonSaysState(highScore: state.highScore));
   }
 
   @override

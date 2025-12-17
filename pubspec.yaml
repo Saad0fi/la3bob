@@ -55,7 +55,8 @@ flutter:
   assets:
     - .env
     - assets/images/
-    - assets/audio/
+    - assets/audio/letters/
+    - assets/audio/simons_say/
 
 flutter_native_splash:
   color: "#FFFFFF"
