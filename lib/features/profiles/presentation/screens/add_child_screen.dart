@@ -36,7 +36,7 @@ class AddChildScreen extends StatelessWidget {
             child: Text(
               'إضافة طفل',
               style: TextStyle(
-                fontSize: 18.dp,
+                fontSize: 25.dp,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
               ),
@@ -106,8 +106,9 @@ class AddChildScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(height: 2.h),
+                        SizedBox(height: 7.h),
                         Card(
+                          color: AppColors.cardBackground,
                           elevation: 4,
                           shadowColor: AppColors.accent.withValues(alpha: .2),
                           shape: RoundedRectangleBorder(
@@ -133,19 +134,11 @@ class AddChildScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 2.h),
                                 Text(
-                                  'معلومات الطفل',
+                                  'أدخل بيانات طفلك لإضافته',
                                   style: TextStyle(
-                                    fontSize: 16.dp,
+                                    fontSize: 17.dp,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.textPrimary,
-                                  ),
-                                ),
-                                SizedBox(height: 0.5.h),
-                                Text(
-                                  'أدخل بيانات الطفل لإضافته',
-                                  style: TextStyle(
-                                    fontSize: 10.dp,
-                                    color: AppColors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -160,7 +153,6 @@ class AddChildScreen extends StatelessWidget {
                           controller: bloc.nameController,
                           enabled: !isLoading,
                           decoration: InputDecoration(
-                            labelText: 'اسم الطفل',
                             hintText: 'أدخل اسم الطفل',
                             filled: true,
                             fillColor: Colors.white,
@@ -203,8 +195,8 @@ class AddChildScreen extends StatelessWidget {
                           controller: bloc.ageController,
                           enabled: !isLoading,
                           decoration: InputDecoration(
-                            labelText: 'عمر الطفل',
-                            hintText: 'أدخل عمر الطفل (3-12)',
+                            hintText:
+                                'أدخل عمر الطفل يجب ان يكون بين (3-12) سنة',
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(

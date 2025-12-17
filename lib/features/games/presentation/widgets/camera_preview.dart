@@ -26,10 +26,10 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
   bool _isInitialized = false;
   bool _isProcessing = false;
 
-  int _framesProcessed = 0;
-  String _lastError = "None";
-  int _posesFound = 0;
-  int _lastFormatRaw = 0;
+  int framesProcessed = 0;
+  String lastError = "None";
+  int posesFound = 0;
+  int lastFormatRaw = 0;
 
   @override
   void initState() {
@@ -65,10 +65,10 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
 
           if (mounted) {
             setState(() {
-              _framesProcessed++;
-              _posesFound = poses.length;
-              _lastError = "OK";
-              _lastFormatRaw = rawFmt;
+              framesProcessed++;
+              posesFound = poses.length;
+              lastError = "OK";
+              lastFormatRaw = rawFmt;
             });
 
             if (poses.isNotEmpty) {
@@ -77,7 +77,7 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
             } else {}
           }
         } catch (e) {
-          if (mounted) setState(() => _lastError = e.toString());
+          if (mounted) setState(() => lastError = e.toString());
         } finally {
           _isProcessing = false;
         }
@@ -87,7 +87,7 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
         _isInitialized = true;
       });
     } catch (e) {
-      if (mounted) setState(() => _lastError = "Init Fail: $e");
+      if (mounted) setState(() => lastError = "Init Fail: $e");
     }
   }
 
@@ -104,7 +104,7 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
   @override
   Widget build(BuildContext context) {
     if (!_isInitialized) {
-      return Center(child: Text("Initializing Camera... Error: $_lastError"));
+      return Center(child: Text("Initializing Camera... Error: $lastError"));
     }
 
     return Stack(fit: StackFit.expand, children: [CameraPreview(_controller)]);

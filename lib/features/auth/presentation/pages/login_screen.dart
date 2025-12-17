@@ -69,8 +69,8 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         // الشعار
                         Container(
-                          width: 30.w,
-                          height: 30.w,
+                          width: 50.w,
+                          height: 35.w,
                           decoration: BoxDecoration(
                             color: AppColors.cardBackground,
                             shape: BoxShape.circle,
@@ -83,7 +83,11 @@ class LoginScreen extends StatelessWidget {
                             ],
                           ),
                           child: Center(
-                            child: Text('🎮', style: TextStyle(fontSize: 15.w)),
+                            child: Image.asset(
+                              'assets/images/logo_la3bob.png',
+                              width: 50.w,
+                              height: 35.w,
+                            ),
                           ),
                         ),
 
@@ -92,9 +96,9 @@ class LoginScreen extends StatelessWidget {
                         Text(
                           'لعبوب',
                           style: TextStyle(
-                            fontSize: 32.dp,
+                            fontSize: 27.dp,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.textPrimary,
+                            color: AppColors.primary,
                           ),
                         ),
 
@@ -103,8 +107,9 @@ class LoginScreen extends StatelessWidget {
                         Text(
                           'أدخل بريدك الإلكتروني لتسجيل الدخول',
                           style: TextStyle(
-                            fontSize: 12.dp,
+                            fontSize: 16.dp,
                             color: AppColors.textSecondary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
 
@@ -233,8 +238,10 @@ class LoginScreen extends StatelessWidget {
                             Text(
                               'ليس لديك حساب؟',
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
+
                                 color: AppColors.textSecondary,
-                                fontSize: 12.dp,
+                                fontSize: 16.dp,
                               ),
                             ),
                             TextButton(
@@ -242,10 +249,9 @@ class LoginScreen extends StatelessWidget {
                               child: Text(
                                 'إنشاء حساب',
                                 style: TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13.dp,
-                                  decoration: TextDecoration.underline,
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16.dp,
                                 ),
                               ),
                             ),

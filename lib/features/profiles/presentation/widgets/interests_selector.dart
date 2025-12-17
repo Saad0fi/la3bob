@@ -64,7 +64,11 @@ class _InterestsSelectorWidgetState extends State<InterestsSelector> {
                 ),
                 child: Text(
                   '${_localInterests.length}',
-                  style: TextStyle(fontSize: 9.dp, color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 9.dp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -72,12 +76,17 @@ class _InterestsSelectorWidgetState extends State<InterestsSelector> {
         ),
         SizedBox(height: 1.5.h),
         Card(
+          color: AppColors.cardBackground,
           elevation: 2,
-          shadowColor: _localInterests.isEmpty ? Colors.red.withValues(alpha: .3) : Colors.grey.withValues(alpha: .2),
+          shadowColor: _localInterests.isEmpty
+              ? Colors.red.withValues(alpha: .3)
+              : Colors.grey.withValues(alpha: .2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
             side: BorderSide(
-              color: _localInterests.isEmpty ? Colors.red.shade300 : Colors.transparent,
+              color: _localInterests.isEmpty
+                  ? Colors.red.shade300
+                  : Colors.transparent,
               width: 1,
             ),
           ),
@@ -99,12 +108,16 @@ class _InterestsSelectorWidgetState extends State<InterestsSelector> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                     side: BorderSide(
-                      color: isSelected ? AppColors.accent : Colors.grey.shade300,
+                      color: isSelected
+                          ? AppColors.accent
+                          : Colors.grey.shade300,
                       width: isSelected ? 2 : 1,
                     ),
                   ),
                   labelStyle: TextStyle(
-                    color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                    color: isSelected
+                        ? AppColors.textPrimary
+                        : AppColors.textSecondary,
                     fontSize: 10.dp,
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.w),

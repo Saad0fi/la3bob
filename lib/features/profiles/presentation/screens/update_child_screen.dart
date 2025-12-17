@@ -39,7 +39,7 @@ class UpdateChildScreen extends StatelessWidget {
             child: Text(
               'تعديل بيانات الطفل',
               style: TextStyle(
-                fontSize: 18.dp,
+                fontSize: 25.dp,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
               ),
@@ -107,6 +107,7 @@ class UpdateChildScreen extends StatelessWidget {
                       children: [
                         SizedBox(height: 2.h),
                         Card(
+                          color: AppColors.cardBackground,
                           elevation: 4,
                           shadowColor: AppColors.accent.withValues(alpha: .2),
                           shape: RoundedRectangleBorder(
@@ -134,19 +135,12 @@ class UpdateChildScreen extends StatelessWidget {
                                 Text(
                                   'تعديل بيانات ${child.name}',
                                   style: TextStyle(
-                                    fontSize: 16.dp,
+                                    fontSize: 17.dp,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.textPrimary,
                                   ),
                                 ),
                                 SizedBox(height: 0.5.h),
-                                Text(
-                                  'قم بتحديث معلومات الطفل',
-                                  style: TextStyle(
-                                    fontSize: 10.dp,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -159,7 +153,6 @@ class UpdateChildScreen extends StatelessWidget {
                           controller: bloc.nameController,
                           enabled: !isLoading,
                           decoration: InputDecoration(
-                            labelText: 'اسم الطفل',
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -202,7 +195,6 @@ class UpdateChildScreen extends StatelessWidget {
                           controller: bloc.ageController,
                           enabled: !isLoading,
                           decoration: InputDecoration(
-                            labelText: 'عمر الطفل',
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -295,8 +287,6 @@ class UpdateChildScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.save_outlined, size: 6.w),
-                              SizedBox(width: 2.w),
                               Text(
                                 'حفظ التعديلات',
                                 style: TextStyle(

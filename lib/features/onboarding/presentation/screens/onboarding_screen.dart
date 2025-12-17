@@ -16,20 +16,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   final List<OnboardingItem> _items = [
+    // الصفحة الأولى (التعريفية - البيانات هنا لا تهم لأننا سنخصص تصميمها في الأسفل)
+    OnboardingItem(
+      image: 'assets/images/logo_la3bob.png',
+      title: 'WELCOME',
+      description: '',
+    ),
     OnboardingItem(
       image: 'assets/images/onboarding1.png',
       title: 'انمو',
-      description: 'ألعاب مثيرة تنمي الأطفال فكريا وتحفزهم',
+      description:
+          'ألعاب مثيرة تنمي الأطفال فكريا وتحفزهم على الإبداع والاكتشاف.',
     ),
     OnboardingItem(
       image: 'assets/images/onboarding2.png',
       title: 'تحرك',
-      description: 'ألعاب تفاعلية حركية مرحة وجميلة مناسبة للأطفال',
+      description:
+          'ألعاب تفاعلية حركية مرحة تشجع الطفل على النشاط البدني بطريقة ذكية.',
     ),
     OnboardingItem(
       image: 'assets/images/onboarding3.png',
       title: 'تابع',
-      description: 'يمكن للأطفال متابعة المقاطع بكل امان ويسر وسهولة',
+      description:
+          'يمكن للأطفال متابعة المقاطع بكل أمان ويسر تحت إشراف كامل من الوالدين.',
     ),
   ];
 
@@ -79,34 +88,125 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   itemCount: _items.length,
                   itemBuilder: (context, index) {
                     final item = _items[index];
+
+                    if (index == 0) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              item.image,
+                              width: 50.w,
+                              fit: BoxFit.contain,
+                            ),
+                            SizedBox(height: 3.h),
+
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'أهلاً بك في ',
+                                    style: TextStyle(
+                                      fontSize: 24.dp,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'لعبوب',
+                                    style: TextStyle(
+                                      fontSize: 26.dp,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 1.h),
+                            Text(
+                              "منصتك الآمنة للترفيه والتعليم",
+                              style: TextStyle(
+                                fontSize: 17.dp,
+                                color: AppColors.textSecondary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+
+                            Container(
+                              padding: EdgeInsets.all(5.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: .6),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildFeatureRow(
+                                    icon: Icons.video_library_rounded,
+                                    text: "مكتبة فيديوهات آمنة ومفلترة",
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  _buildFeatureRow(
+                                    icon: Icons.games_rounded,
+                                    text: "ألعاب تعليمية وتفاعلية للمهارات",
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  _buildFeatureRow(
+                                    icon: Icons.admin_panel_settings_rounded,
+                                    text: "لوحة تحكم شاملة للوالدين",
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  _buildFeatureRow(
+                                    icon: Icons.category_rounded,
+                                    text: "محتوى متنوع (ديني، قيمي، ترفيهي)",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    // ---------------------------------------------------------
+                    // تصميم باقي الصفحات (انمو، تحرك، تابع) - كما هي
+                    // ---------------------------------------------------------
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
                           flex: 3,
                           child: Padding(
-                            padding: EdgeInsets.all(4.w),
+                            padding: EdgeInsets.all(8.w),
                             child: Image.asset(item.image, fit: BoxFit.contain),
                           ),
                         ),
                         Text(
                           item.title,
                           style: TextStyle(
-                            fontSize: 24.dp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF4C1D95),
+                            fontSize: 26.dp,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.primary,
                           ),
                         ),
                         SizedBox(height: 2.h),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
                           child: Text(
                             item.description,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 16.dp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimary,
+                              fontSize: 17.dp,
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w600,
+                              height: 1.4,
                             ),
                           ),
                         ),
@@ -116,25 +216,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 2.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(_items.length, (dotIndex) {
-                  return Container(
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
                     margin: EdgeInsets.symmetric(horizontal: 1.w),
-                    width: _currentPage == dotIndex ? 3.w : 2.w,
-                    height: _currentPage == dotIndex ? 3.w : 2.w,
+                    width: _currentPage == dotIndex ? 8.w : 2.w,
+                    height: 2.w,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(10),
                       color: _currentPage == dotIndex
-                          ? const Color(
-                              0xFF8B5CF6,
-                            ) 
+                          ? AppColors.primary
                           : Colors.grey.shade300,
                     ),
                   );
                 }),
               ),
+
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
                 child: Column(
@@ -146,14 +246,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onPressed: _onNext,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          elevation: 4,
-                          shadowColor: AppColors.primary.withValues(alpha: 0.5),
+                          elevation: 5,
+                          shadowColor: AppColors.primary.withValues(alpha: .4),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                         child: Text(
-                          'التالي',
+                          _currentPage == _items.length - 1
+                              ? 'انطلق الآن'
+                              : 'التالي',
                           style: TextStyle(
                             fontSize: 18.dp,
                             fontWeight: FontWeight.bold,
@@ -162,13 +264,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 1.5.h),
                     TextButton(
                       onPressed: _finishOnboarding,
                       child: Text(
-                        'تخطي',
+                        'تخطي المقدمة',
                         style: TextStyle(
-                          fontSize: 16.dp,
+                          fontSize: 15.dp,
                           color: AppColors.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
@@ -181,6 +283,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFeatureRow({required IconData icon, required String text}) {
+    return Row(
+      textDirection: TextDirection.rtl,
+      children: [
+        Container(
+          padding: EdgeInsets.all(2.w),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: .1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: AppColors.primary, size: 5.w),
+        ),
+        SizedBox(width: 3.w),
+        Expanded(
+          child: Text(
+            text,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(
+              fontSize: 14.dp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

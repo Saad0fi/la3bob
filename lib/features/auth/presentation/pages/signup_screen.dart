@@ -75,8 +75,8 @@ class SignupScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 25.w,
-                          height: 25.w,
+                          width: 55.w,
+                          height: 35.w,
                           decoration: BoxDecoration(
                             color: AppColors.cardBackground,
                             shape: BoxShape.circle,
@@ -89,7 +89,11 @@ class SignupScreen extends StatelessWidget {
                             ],
                           ),
                           child: Center(
-                            child: Text('👋', style: TextStyle(fontSize: 12.w)),
+                            child: Image.asset(
+                              'assets/images/logo_la3bob.png',
+                              width: 50.w,
+                              height: 35.w,
+                            ),
                           ),
                         ),
 
@@ -98,7 +102,7 @@ class SignupScreen extends StatelessWidget {
                         Text(
                           'انضم إلى لعبوب!',
                           style: TextStyle(
-                            fontSize: 24.dp,
+                            fontSize: 27.dp,
                             fontWeight: FontWeight.w900,
                             color: AppColors.primary,
                           ),
@@ -107,7 +111,7 @@ class SignupScreen extends StatelessWidget {
                         SizedBox(height: 1.h),
 
                         Text(
-                          'سجّل الآن واستمتع بالبيئة التعليمية',
+                          'سجّل الآن ودع طفلك يستمتع بعالم لعبوب الآمن',
                           style: TextStyle(
                             fontSize: 16.dp,
                             color: AppColors.textSecondary,
