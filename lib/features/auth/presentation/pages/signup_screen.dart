@@ -9,7 +9,6 @@ import 'package:la3bob/features/auth/presentation/bloc/auth_bloc/cubit/auth_cubi
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-// بيانات المدخلات
 String _name = '';
 String _email = '';
 
@@ -35,7 +34,7 @@ class SignupScreen extends StatelessWidget {
             child: Text(
               "إنشاء حساب",
               style: TextStyle(
-                fontSize: 18.dp,
+                fontSize: 25.dp,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
               ),
@@ -110,8 +109,9 @@ class SignupScreen extends StatelessWidget {
                         Text(
                           'سجّل الآن واستمتع بالبيئة التعليمية',
                           style: TextStyle(
-                            fontSize: 12.dp,
+                            fontSize: 16.dp,
                             color: AppColors.textSecondary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
 
@@ -292,19 +292,20 @@ class SignupScreen extends StatelessWidget {
                             Text(
                               'لديك حساب بالفعل؟',
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
+
                                 color: AppColors.textSecondary,
-                                fontSize: 12.dp,
+                                fontSize: 16.dp,
                               ),
                             ),
                             TextButton(
                               onPressed: () => context.go('/login'),
                               child: Text(
-                                'تسجيل الدخول',
+                                'سجل دخول من هنا',
                                 style: TextStyle(
                                   color: AppColors.primary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13.dp,
-                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16.dp,
                                 ),
                               ),
                             ),
