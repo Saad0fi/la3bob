@@ -21,15 +21,12 @@ class FreezeGamePage extends StatefulWidget {
 
 class _FreezeGamePageState extends State<FreezeGamePage>
     with WidgetsBindingObserver, CameraPermissionMixin {
-  // frontCamera and isLoading managed by mixin
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // If permission denied or no camera, show camera denied screen
     if (frontCamera == null) {
       return const CameraDeniedScreen();
     }
@@ -60,7 +57,6 @@ class _FreezeGamePageState extends State<FreezeGamePage>
             return Stack(
               fit: StackFit.expand,
               children: [
-                // 1. Camera Layer
                 CameraPreviewWidget(
                   camera: frontCamera!,
                   onPoseDetected: (pose) {
@@ -68,7 +64,6 @@ class _FreezeGamePageState extends State<FreezeGamePage>
                   },
                 ),
 
-                // 2. Border/Overlay for Phases
                 IgnorePointer(
                   child: Container(
                     decoration: BoxDecoration(
@@ -77,7 +72,6 @@ class _FreezeGamePageState extends State<FreezeGamePage>
                   ),
                 ),
 
-                // 3. Game UI
                 if (state.phase == FreezePhase.initial)
                   _buildStartScreen(context, state),
 
@@ -102,7 +96,11 @@ class _FreezeGamePageState extends State<FreezeGamePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("🧊", style: TextStyle(fontSize: 86)),
+            Image.asset(
+              'assets/images/running.png',
+              height: 100,
+              fit: BoxFit.contain,
+            ),
             const SizedBox(height: 20),
             const Text(
               "لعبة حركة ستوب",
@@ -150,7 +148,6 @@ class _FreezeGamePageState extends State<FreezeGamePage>
   }
 
   Widget _buildActiveGame(BuildContext context, FreezeState state) {
-    // Determine status text/color
     String mainText = "";
     Color mainColor = Colors.white;
     IconData mainIcon = Icons.question_mark;
@@ -167,7 +164,6 @@ class _FreezeGamePageState extends State<FreezeGamePage>
 
     return Stack(
       children: [
-        // Top Center Status
         Align(
           alignment: Alignment.topCenter,
           child: Container(
@@ -202,7 +198,6 @@ class _FreezeGamePageState extends State<FreezeGamePage>
           ),
         ),
 
-        // Score
         Positioned(
           top: 50,
           right: 20,
@@ -244,7 +239,7 @@ class _FreezeGamePageState extends State<FreezeGamePage>
             const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 20),
             Text(
-              state.message, // "You moved!"
+              state.message,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.white,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../../core/comon/theme/app_color.dart';
 import '../../../../../core/mixins/camera_permission_mixin.dart';
 import '../../../../../core/widgets/camera_denied_screen.dart';
 import '../../../../../core/di/injection.dart';
@@ -63,15 +64,15 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
 
                 if (state.status == SimonGameStatus.initial)
                   Container(
-                    color: Colors.black54,
+                    color: AppColors.textPrimary.withValues(alpha: .54),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.directions_run,
-                            size: 80,
-                            color: Colors.white,
+                          Image.asset(
+                            'assets/images/command.png',
+                            height: 100,
+                            fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 20),
                           const Text(
@@ -128,6 +129,41 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                     ),
                   ),
 
+                if (state.status == SimonGameStatus.heightCheck)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.accessibility_new,
+                            size: 60,
+                            color: Colors.amber,
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            state.message,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const CircularProgressIndicator(color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
+
                 if (state.status == SimonGameStatus.active)
                   Stack(
                     children: [
@@ -137,7 +173,8 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.black45,
+                            color:
+                                AppColors.textPrimary.withValues(alpha: .45),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Column(
@@ -161,7 +198,8 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                           padding: const EdgeInsets.all(20),
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           decoration: BoxDecoration(
-                            color: Colors.black54,
+                            color:
+                                AppColors.textPrimary.withValues(alpha: .54),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -187,7 +225,10 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                                 fontSize: 48,
                                 fontWeight: FontWeight.bold,
                                 shadows: [
-                                  Shadow(blurRadius: 10, color: Colors.black),
+                                  Shadow(
+                                    blurRadius: 10,
+                                    color: AppColors.textPrimary,
+                                  ),
                                 ],
                               ),
                             ),
@@ -199,7 +240,8 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.black45,
+                            color:
+                                AppColors.textPrimary.withValues(alpha: .45),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Column(
@@ -228,7 +270,7 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
 
                 if (state.status == SimonGameStatus.gameOver)
                   Container(
-                    color: Colors.black87,
+                    color: AppColors.textPrimary.withValues(alpha: .87),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

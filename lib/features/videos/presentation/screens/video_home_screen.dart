@@ -500,7 +500,7 @@ Widget _buildInterestChips(
         ChoiceChip(
           label: const Text('الكل'),
           selected: selectedInterest == null,
-          selectedColor: AppColors.accent.withValues(alpha: .8),
+          selectedColor: AppColors.accent.withValues(alpha: .25),
           labelStyle: TextStyle(
             color: selectedInterest == null
                 ? AppColors.textPrimary

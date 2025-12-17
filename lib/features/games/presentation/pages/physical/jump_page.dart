@@ -133,10 +133,10 @@ class _JumpGamePageState extends State<JumpGamePage>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.fitness_center,
-                            size: 80,
-                            color: Colors.white,
+                          Image.asset(
+                            'assets/images/long-jump.png',
+                            height: 100,
+                            fit: BoxFit.contain,
                           ),
                           const SizedBox(height: 20),
                           const Text(

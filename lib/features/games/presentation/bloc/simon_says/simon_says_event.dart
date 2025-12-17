@@ -11,7 +11,7 @@ class PoseDetected extends SimonSaysEvent {
   PoseDetected(this.pose);
 }
 
-class NextCommand extends SimonSaysEvent {} // Trigger next move
+class NextCommand extends SimonSaysEvent {}
 
 class Tick extends SimonSaysEvent {
   final int remainingTime;

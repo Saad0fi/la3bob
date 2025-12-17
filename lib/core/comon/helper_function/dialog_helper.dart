@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-// تأكيد الحذف
 Future<void> showDeleteConfirmationDialog({
   required BuildContext context,
-  required String itemName, // اسم العنصر المراد حذفه
-  required VoidCallback onConfirm, // الدالة التي سيتم تنفيذها عند التأكيد
+  required String itemName,
+  required VoidCallback onConfirm,
 }) async {
   return showDialog(
     context: context,
@@ -32,8 +31,6 @@ Future<void> showDeleteConfirmationDialog({
     },
   );
 }
-
-// تسجيل الخروج
 
 Future<void> showLogoutConfirmationDialog({
   required BuildContext context,
