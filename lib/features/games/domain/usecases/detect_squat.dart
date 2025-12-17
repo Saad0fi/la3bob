@@ -6,7 +6,6 @@ class DetectSquat {
 
   DetectSquat(this.repository);
 
-  // Returns true if a squat is completed
   bool? call(Pose pose) => repository.detectSquat(pose);
 
   void reset() => repository.reset();

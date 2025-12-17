@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import '../../data/providers/pose_provider.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'dart:async';
-import 'pose_painter.dart';
 
 class CameraPreviewWidget extends StatefulWidget {
   final CameraDescription camera;
@@ -27,15 +26,10 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
   bool _isInitialized = false;
   bool _isProcessing = false;
 
-  // Debug stats
   int _framesProcessed = 0;
   String _lastError = "None";
   int _posesFound = 0;
   int _lastFormatRaw = 0;
-
-  // Painter state
-  CustomPaint? _customPaint;
-  Size? _cameraImageSize;
 
   @override
   void initState() {
@@ -63,13 +57,8 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
         if (_isProcessing) return;
 
         _isProcessing = true;
-        _cameraImageSize = Size(
-          image.width.toDouble(),
-          image.height.toDouble(),
-        );
 
         try {
-          // Capture raw format for debug
           final rawFmt = image.format.raw;
 
           final poses = await _poseProvider.processImage(image, rotation);
@@ -85,14 +74,7 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
             if (poses.isNotEmpty) {
               final pose = poses.first;
               widget.onPoseDetected(pose);
-
-              final painter = PosePainter([pose], _cameraImageSize!, rotation);
-              setState(() {
-                _customPaint = CustomPaint(painter: painter);
-              });
-            } else {
-              setState(() => _customPaint = null);
-            }
+            } else {}
           }
         } catch (e) {
           if (mounted) setState(() => _lastError = e.toString());
@@ -125,14 +107,7 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
       return Center(child: Text("Initializing Camera... Error: $_lastError"));
     }
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        CameraPreview(_controller),
-        // if (_customPaint != null) _customPaint!,
-        // Debug info removed as per user request
-      ],
-    );
+    return Stack(fit: StackFit.expand, children: [CameraPreview(_controller)]);
   }
 
   InputImageRotation _getRotation() {

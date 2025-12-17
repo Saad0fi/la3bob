@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../../domain/repositories/simon_says_repository.dart';
 
-enum SimonGameStatus { initial, active, gameOver }
+enum SimonGameStatus { initial, heightCheck, active, gameOver }
 
 class SimonSaysState extends Equatable {
   final SimonGameStatus status;
