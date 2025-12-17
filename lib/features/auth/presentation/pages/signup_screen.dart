@@ -137,6 +137,10 @@ class SignupScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 1.h),
                                 TextFormField(
+                                  onTapOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
                                   style: TextStyle(fontSize: 14.dp),
                                   decoration: InputDecoration(
                                     hintText: 'أدخل اسمك',
@@ -187,6 +191,10 @@ class SignupScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 1.h),
                                 TextFormField(
+                                  onTapUpOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
                                   keyboardType: TextInputType.emailAddress,
                                   style: TextStyle(fontSize: 14.dp),
                                   decoration: InputDecoration(
