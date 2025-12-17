@@ -101,7 +101,7 @@ class SignupScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 24.dp,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.textPrimary,
+                            color: AppColors.primary,
                           ),
                         ),
 
@@ -301,7 +301,7 @@ class SignupScreen extends StatelessWidget {
                               child: Text(
                                 'تسجيل الدخول',
                                 style: TextStyle(
-                                  color: AppColors.textPrimary,
+                                  color: AppColors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13.dp,
                                   decoration: TextDecoration.underline,
