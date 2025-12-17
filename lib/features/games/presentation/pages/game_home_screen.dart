@@ -229,26 +229,27 @@ class _PhysicalGamesTab extends StatelessWidget {
       {
         'title': ' القرفصاء',
         'route': '/games/squat',
-        'image': 'assets/images/squat.png',
+
+        'image': 'assets/images/gamer.png',
         'color': const Color(0xFFF1F8E9),
       },
       {
         'title': ' القفز',
         'route': '/games/jump',
-        'image': 'assets/images/running.png',
-        'color': const Color(0xFFE3F2FD),
+        'image': 'assets/images/long-jump.png',
+        'color': const Color(0xFFF7F1FF),
       },
       {
         'title': 'أوامر القائد',
         'route': '/games/simon_says',
-        'image': 'assets/images/simon.png',
-        'color': const Color(0xFFF3E5F5),
+        'image': 'assets/images/command.png',
+        'color': const Color(0xFFFFF3E0),
       },
       {
         'title': ' حركة حركة ستوب',
         'route': '/games/freeze',
-        'image': 'assets/images/freeze.png',
-        'color': const Color(0xFFFFEBEE),
+        'image': 'assets/images/running.png',
+        'color': const Color(0xFFE1F5FE),
       },
     ];
     return GridView.builder(
