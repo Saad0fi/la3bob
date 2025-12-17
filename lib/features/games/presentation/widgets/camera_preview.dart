@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import '../../data/providers/pose_provider.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'dart:async';
-import 'pose_painter.dart';
 
 class CameraPreviewWidget extends StatefulWidget {
   final CameraDescription camera;
@@ -32,9 +31,6 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
   int _posesFound = 0;
   int _lastFormatRaw = 0;
 
-  CustomPaint? _customPaint;
-  Size? _cameraImageSize;
-
   @override
   void initState() {
     super.initState();
@@ -61,10 +57,6 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
         if (_isProcessing) return;
 
         _isProcessing = true;
-        _cameraImageSize = Size(
-          image.width.toDouble(),
-          image.height.toDouble(),
-        );
 
         try {
           final rawFmt = image.format.raw;
@@ -82,14 +74,7 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
             if (poses.isNotEmpty) {
               final pose = poses.first;
               widget.onPoseDetected(pose);
-
-              final painter = PosePainter([pose], _cameraImageSize!, rotation);
-              setState(() {
-                _customPaint = CustomPaint(painter: painter);
-              });
-            } else {
-              setState(() => _customPaint = null);
-            }
+            } else {}
           }
         } catch (e) {
           if (mounted) setState(() => _lastError = e.toString());
