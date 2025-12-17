@@ -28,10 +28,8 @@ mixin CameraPermissionMixin<T extends StatefulWidget> on State<T>
   }
 
   Future<void> initCameras() async {
-    // 1. Check Permissions
     var status = await Permission.camera.status;
 
-    // Only request if first run and not granted
     if (isLoading && !status.isGranted) {
       status = await Permission.camera.request();
     }
@@ -46,7 +44,6 @@ mixin CameraPermissionMixin<T extends StatefulWidget> on State<T>
       return;
     }
 
-    // 2. Initialize Cameras
     try {
       final cameras = await availableCameras();
       if (cameras.isNotEmpty) {

@@ -1,5 +1,3 @@
-// lib/features/auth/presentation/cubit/timer_state.dart
-
 import 'package:equatable/equatable.dart';
 
 abstract class TimerState extends Equatable {
