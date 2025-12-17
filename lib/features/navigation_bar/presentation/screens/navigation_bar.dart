@@ -34,40 +34,79 @@ class NavigationBarScreen extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
-            child: BottomNavigationBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: currentIndex,
-              selectedItemColor: AppColors.primary,
-              unselectedItemColor: AppColors.textSecondary,
-              showUnselectedLabels: true,
-              selectedFontSize: 12,
-              unselectedFontSize: 11,
-              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w400,
+            child: Container(
+              color: Colors.white,
+              height: 85,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    context,
+                    index: 0,
+                    currentIndex: currentIndex,
+                    icon: Icons.videocam_outlined,
+                    activeIcon: Icons.videocam_rounded,
+                    label: "فيديوهات",
+                    onTap: () => context.go('/tabs/videos'),
+                  ),
+                  _buildNavItem(
+                    context,
+                    index: 1,
+                    currentIndex: currentIndex,
+                    icon: Icons.sports_esports_outlined,
+                    activeIcon: Icons.sports_esports_rounded,
+                    label: "ألعاب",
+                    onTap: () => context.go('/tabs/games'),
+                  ),
+                ],
               ),
-              onTap: (index) {
-                if (index == 0) {
-                  context.go('/tabs/videos');
-                } else {
-                  context.go('/tabs/games');
-                }
-              },
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.videocam_outlined),
-                  activeIcon: Icon(Icons.videocam_rounded),
-                  label: "فيديوهات",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.sports_esports_outlined),
-                  activeIcon: Icon(Icons.sports_esports_rounded),
-                  label: "ألعاب",
-                ),
-              ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(
+    BuildContext context, {
+    required int index,
+    required int currentIndex,
+    required IconData icon,
+    required IconData activeIcon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final isSelected = index == currentIndex;
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+          child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isSelected ? activeIcon : icon,
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.textSecondary,
+                size: 26,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: isSelected ? 13 : 12,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                  color: isSelected
+                      ? AppColors.primary
+                      : AppColors.textSecondary,
+                ),
+
+              ),
+            ],
           ),
         ),
       ),

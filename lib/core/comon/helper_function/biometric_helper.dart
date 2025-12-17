@@ -54,7 +54,6 @@ class BiometricHelper {
   }
 
   static Future<void> goToProfilePage(BuildContext context) async {
- 
     final bool didAuthenticate = await BiometricHelper.authenticate();
     if (didAuthenticate && context.mounted) {
       Navigator.of(

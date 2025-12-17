@@ -67,7 +67,7 @@ class GameHomeScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: .2),
                     borderRadius: BorderRadius.circular(15.dp),
                   ),
                   child: TabBar(

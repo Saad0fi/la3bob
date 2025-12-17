@@ -139,7 +139,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Container(
                               padding: EdgeInsets.all(5.w),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: .6),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
                                   color: Colors.white,
@@ -247,7 +247,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           elevation: 5,
-                          shadowColor: AppColors.primary.withOpacity(0.4),
+                          shadowColor: AppColors.primary.withValues(alpha: .4),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -293,7 +293,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Container(
           padding: EdgeInsets.all(2.w),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: .1),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: AppColors.primary, size: 5.w),

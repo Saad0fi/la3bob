@@ -307,7 +307,7 @@ class VideoHomeScreen extends StatelessWidget {
                               left: 4.w,
                               right: 4.w,
                               top: interests.isNotEmpty ? 0 : 4.w,
-                              bottom: 4.w,
+                              bottom: 10.h,
                             ),
                             itemCount: filteredVideos.length,
                             itemBuilder: (context, index) {

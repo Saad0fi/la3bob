@@ -3,7 +3,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:la3bob/features/games/presentation/widgets/game_card.dart';
 
 class EducationalGamesTab extends StatelessWidget {
-  const EducationalGamesTab();
+  const EducationalGamesTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class EducationalGamesTab extends StatelessWidget {
 }
 
 class PhysicalGamesTab extends StatelessWidget {
-  const PhysicalGamesTab();
+  const PhysicalGamesTab({super.key});
 
   @override
   Widget build(BuildContext context) {
