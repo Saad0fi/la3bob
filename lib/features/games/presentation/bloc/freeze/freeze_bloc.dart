@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../../../../core/comon/helper_function/audio_helper.dart';
 import '../../../domain/usecases/detect_movement.dart';
 import 'freeze_event.dart';
 import 'freeze_state.dart';
@@ -11,6 +12,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
   final GetStorage _storage = GetStorage();
   final Random _random = Random();
   Timer? _phaseTimer;
+  Timer? _voiceTimer;
 
   // Thresholds
   // If movement > this during Freeze phase -> Game Over
@@ -44,7 +46,23 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
         isGracePeriod: false,
       ),
     );
+    _startMoveVoice();
     _scheduleMakeFreeze();
+  }
+
+  void _startMoveVoice() {
+    _voiceTimer?.cancel();
+    AudioHelper.playFreezeMove();
+    _voiceTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (state.phase == FreezePhase.dancing) {
+        AudioHelper.playFreezeMove();
+      }
+    });
+  }
+
+  void _stopVoice() {
+    _voiceTimer?.cancel();
+    AudioHelper.stopFreezeAudio();
   }
 
   void _scheduleMakeFreeze() {
@@ -70,10 +88,13 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
 
     if (state.phase == FreezePhase.dancing) {
       // Switch to Freeze
+      _stopVoice();
+      AudioHelper.playFreezeStop();
+
       emit(
         state.copyWith(
           phase: FreezePhase.freezing,
-          message: "تجمد! (Freeze!)",
+          message: "توقف! ",
           isGracePeriod: true, // Enable grace period
         ),
       );
@@ -89,10 +110,11 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
         state.copyWith(
           phase: FreezePhase.dancing,
           score: state.score + 10,
-          message: "تحرك! (Move!)",
+          message: "تحرك! ",
           isGracePeriod: false,
         ),
       );
+      _startMoveVoice();
       _scheduleMakeFreeze();
     }
   }
@@ -123,6 +145,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
 
   void _gameOver(Emitter<FreezeState> emit) {
     _phaseTimer?.cancel();
+    _stopVoice();
 
     int newHigh = state.highScore;
     if (state.score > newHigh) {
@@ -134,20 +157,22 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
       state.copyWith(
         phase: FreezePhase.gameOver,
         highScore: newHigh,
-        message: "خسرت! (تحركت أثناء التجمد)",
+        message: "خسرت! (تحركت أثناء التوقف)",
       ),
     );
   }
 
   void _onResetGame(ResetGame event, Emitter<FreezeState> emit) {
     _phaseTimer?.cancel();
+    _stopVoice();
     _detectMovement.reset();
-    emit(state.copyWith(phase: FreezePhase.initial, message: "استعد للرقص!"));
+    emit(state.copyWith(phase: FreezePhase.initial, message: "استعد للعب!"));
   }
 
   @override
   Future<void> close() {
     _phaseTimer?.cancel();
+    _stopVoice();
     return super.close();
   }
 }

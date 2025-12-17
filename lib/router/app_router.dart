@@ -61,6 +61,22 @@ final GoRouter appRouter = GoRouter(
         return VideoPlayerScreen(video: video);
       },
     ),
+    GoRoute(
+      path: '/games/jump',
+      builder: (context, state) => const JumpGamePage(),
+    ),
+    GoRoute(
+      path: '/games/simon_says',
+      builder: (context, state) => const SimonSaysGamePage(),
+    ),
+    GoRoute(
+      path: '/games/freeze',
+      builder: (context, state) => const FreezeGamePage(),
+    ),
+    GoRoute(
+      path: '/games/squat',
+      builder: (context, state) => const SquatGamePage(),
+    ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) => NavigationBarScreen(child: child),
@@ -89,23 +105,6 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: 'matching',
               builder: (context, state) => const MatchingGameScreen(),
-            ),
-            // Physical Games
-            GoRoute(
-              path: 'jump',
-              builder: (context, state) => const JumpGamePage(),
-            ),
-            GoRoute(
-              path: 'simon_says',
-              builder: (context, state) => const SimonSaysGamePage(),
-            ),
-            GoRoute(
-              path: 'freeze',
-              builder: (context, state) => const FreezeGamePage(),
-            ),
-            GoRoute(
-              path: 'squat',
-              builder: (context, state) => const SquatGamePage(),
             ),
           ],
         ),

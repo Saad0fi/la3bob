@@ -57,6 +57,7 @@ flutter:
     - assets/images/
     - assets/audio/letters/
     - assets/audio/simons_say/
+    - assets/audio/freeze/
 
 flutter_native_splash:
   color: "#FFFFFF"

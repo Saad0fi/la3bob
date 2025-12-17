@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 class AudioHelper {
   static final AudioPlayer _player = AudioPlayer();
   static final AudioPlayer _simonPlayer = AudioPlayer();
+  static final AudioPlayer _freezePlayer = AudioPlayer();
 
   static Future<void> playWordAudio(String word) async {
     await _player.stop();
@@ -38,13 +39,29 @@ class AudioHelper {
     await _simonPlayer.play(AssetSource('audio/simons_say/انتهى الوقت.ogg'));
   }
 
+  static Future<void> playFreezeMove() async {
+    await _freezePlayer.stop();
+    await _freezePlayer.play(AssetSource('audio/freeze/تحرك.mp4'));
+  }
+
+  static Future<void> playFreezeStop() async {
+    await _freezePlayer.stop();
+    await _freezePlayer.play(AssetSource('audio/freeze/قف.mp4'));
+  }
+
+  static Future<void> stopFreezeAudio() async {
+    await _freezePlayer.stop();
+  }
+
   static Future<void> stopAudio() async {
     await _player.stop();
     await _simonPlayer.stop();
+    await _freezePlayer.stop();
   }
 
   static void dispose() {
     _player.dispose();
     _simonPlayer.dispose();
+    _freezePlayer.dispose();
   }
 }
