@@ -211,6 +211,10 @@ class VerificationScreen extends StatelessWidget {
                                     builder: (context, state) {
                                       final isLoading = state is AuthLoading;
                                       return Pinput(
+                                        onTapOutside: (event) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                        },
                                         length: 6,
                                         defaultPinTheme: defaultPinTheme,
                                         focusedPinTheme: focusedPinTheme,
