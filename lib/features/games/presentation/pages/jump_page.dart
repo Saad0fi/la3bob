@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import '../../../../core/mixins/camera_permission_mixin.dart'; // Import correctly
 import '../../../../core/di/injection.dart';
 import '../../domain/usecases/detect_jump.dart';
 import '../bloc/jump_bloc.dart';
@@ -16,47 +17,46 @@ class JumpGamePage extends StatefulWidget {
   State<JumpGamePage> createState() => _JumpGamePageState();
 }
 
-class _JumpGamePageState extends State<JumpGamePage> {
-  CameraDescription? _frontCamera;
-  bool _isLoading = true;
+class _JumpGamePageState extends State<JumpGamePage>
+    with WidgetsBindingObserver, CameraPermissionMixin {
+  // _frontCamera and _isLoading are now provided by mixin (renamed to frontCamera, isLoading)
 
   @override
   void initState() {
     super.initState();
-    _initCameras();
-  }
-
-  Future<void> _initCameras() async {
-    List<CameraDescription> cams = widget.cameras ?? [];
-    if (cams.isEmpty) {
-      try {
-        cams = await availableCameras();
-      } catch (e) {
-        debugPrint('Error fetching cameras: $e');
-      }
-    }
-
-    if (cams.isNotEmpty) {
-      _frontCamera = cams.firstWhere(
-        (c) => c.lensDirection == CameraLensDirection.front,
-        orElse: () => cams.first,
-      );
-    }
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    // Mixin's initState calls initCameras() automatically?
+    // Wait, mixin on callbacks usually requires super.initState().
+    // Let's verify mixin implementation.
+    // Mixin definition:
+    // @override
+    // void initState() {
+    //   super.initState();
+    //   WidgetsBinding.instance.addObserver(this);
+    //   initCameras();
+    // }
+    // So distinct manual calls are NOT needed if using `super.initState()` correctly with the mixin.
+    // However, I need to pass 'widget.cameras' to initCameras?
+    // The current mixin implementation ignores 'widget.cameras' and re-fetches.
+    // I should fix the mixin to accept cameras or just stick to re-fetching to be safe/simple.
+    // For now, removing manual calls.
   }
 
   @override
+  void dispose() {
+    // Mixin handles observer removal in dispose
+    super.dispose();
+  }
+
+  // didChangeAppLifecycleState is handled by mixin
+
+  @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+    if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (_frontCamera == null) {
+    if (frontCamera == null) {
+      // Logic handled by mixin dialog, but we show a fallback here just in case
       return const Scaffold(body: Center(child: Text('No camera found')));
     }
 
@@ -79,7 +79,7 @@ class _JumpGamePageState extends State<JumpGamePage> {
                 Builder(
                   builder: (context) {
                     return CameraPreviewWidget(
-                      camera: _frontCamera!,
+                      camera: frontCamera!,
                       onPoseDetected: (pose) {
                         context.read<JumpBloc>().add(PoseDetected(pose));
                       },

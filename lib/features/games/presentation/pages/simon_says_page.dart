@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
-import 'package:permission_handler/permission_handler.dart';
+import '../../../../core/mixins/camera_permission_mixin.dart';
 import '../../../../core/di/injection.dart';
 import '../../domain/usecases/detect_simon_move.dart';
 import '../bloc/simon_says/simon_says_bloc.dart';
@@ -17,88 +17,16 @@ class SimonSaysGamePage extends StatefulWidget {
   State<SimonSaysGamePage> createState() => _SimonSaysGamePageState();
 }
 
-class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
-  CameraDescription? _frontCamera;
-  bool _isLoading = true;
-  bool _permissionDenied = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initCameras();
-  }
-
-  Future<void> _initCameras() async {
-    // Check Permission first
-    final status = await Permission.camera.request();
-    if (status.isDenied || status.isPermanentlyDenied) {
-      if (mounted) {
-        setState(() {
-          _permissionDenied = true;
-          _isLoading = false;
-        });
-      }
-      return;
-    }
-
-    List<CameraDescription> cams = widget.cameras ?? [];
-    if (cams.isEmpty) {
-      try {
-        cams = await availableCameras();
-      } catch (e) {
-        debugPrint('Error fetching cameras: $e');
-      }
-    }
-
-    if (cams.isNotEmpty) {
-      _frontCamera = cams.firstWhere(
-        (c) => c.lensDirection == CameraLensDirection.front,
-        orElse: () => cams.first,
-      );
-    }
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
+class _SimonSaysGamePageState extends State<SimonSaysGamePage>
+    with WidgetsBindingObserver, CameraPermissionMixin {
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+    if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (_permissionDenied) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.videocam_off, size: 64, color: Colors.grey),
-              const SizedBox(height: 16),
-              const Text(
-                "يرجى السماح بالوصول للكاميرا للعب",
-                style: TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => openAppSettings(),
-                child: const Text("فتح الإعدادات"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("رجوع"),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (_frontCamera == null) {
-      return const Scaffold(body: Center(child: Text('No camera found')));
+    if (frontCamera == null) {
+      return const Scaffold(body: Center(child: Text('Waiting for camera...')));
     }
 
     return BlocProvider(
@@ -119,7 +47,7 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage> {
                 Builder(
                   builder: (context) {
                     return CameraPreviewWidget(
-                      camera: _frontCamera!,
+                      camera: frontCamera!,
                       onPoseDetected: (pose) {
                         context.read<SimonSaysBloc>().add(PoseDetected(pose));
                       },
