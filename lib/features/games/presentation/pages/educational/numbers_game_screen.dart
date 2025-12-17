@@ -79,7 +79,7 @@ class NumbersGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الأرقام'),
-                  backgroundColor: Colors.teal.shade400,
+                  backgroundColor: Colors.purple.shade300,
                 ),
                 body: const Center(child: CircularProgressIndicator()),
               );
@@ -94,16 +94,10 @@ class NumbersGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الأرقام'),
-                  backgroundColor: Colors.teal.shade400,
+                  backgroundColor: Colors.purple.shade300,
                 ),
                 body: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xFFEBF6F0), Color(0xFFB2DFDB)],
-                    ),
-                  ),
+                  color: const Color(0xFFF7F1FF),
                   child: SafeArea(
                     child: Padding(
                       padding: EdgeInsets.all(5.w),
@@ -113,7 +107,7 @@ class NumbersGameScreen extends StatelessWidget {
                             value: progress,
                             backgroundColor: Colors.white,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.teal.shade400,
+                              Colors.purple.shade400,
                             ),
                             minHeight: 2.h,
                           ),
@@ -146,7 +140,7 @@ class NumbersGameScreen extends StatelessWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.teal.withValues(alpha: 0.3),
+                                  color: Colors.purple.withValues(alpha: 0.3),
                                   blurRadius: 5.w,
                                   spreadRadius: 1.w,
                                 ),
@@ -160,7 +154,7 @@ class NumbersGameScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 14.dp,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.teal,
+                                    color: Colors.purple,
                                   ),
                                 ),
                                 SizedBox(height: 2.h),
@@ -207,7 +201,7 @@ class NumbersGameScreen extends StatelessWidget {
                                   isSelected: false,
                                   isCorrectOption: number == count,
                                   showResult: true,
-                                  primaryColor: Colors.teal,
+                                  primaryColor: Colors.purple,
                                 );
                               },
                             ),
@@ -235,16 +229,10 @@ class NumbersGameScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('لعبة الأرقام'),
-                backgroundColor: Colors.teal.shade400,
+                backgroundColor: Colors.purple.shade300,
               ),
               body: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFFEBF6F0), Color(0xFFB2DFDB)],
-                  ),
-                ),
+                color: const Color(0xFFF7F1FF),
                 child: SafeArea(
                   child: Padding(
                     padding: EdgeInsets.all(5.w),
@@ -254,7 +242,7 @@ class NumbersGameScreen extends StatelessWidget {
                           value: progress,
                           backgroundColor: Colors.white,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.teal.shade400,
+                            Colors.purple.shade400,
                           ),
                           minHeight: 10,
                         ),
@@ -287,7 +275,7 @@ class NumbersGameScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.teal.withValues(alpha: 0.3),
+                                color: Colors.purple.withValues(alpha: 0.3),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               ),
@@ -296,12 +284,12 @@ class NumbersGameScreen extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text(
+                              Text(
                                 'كم عدد النجوم؟',
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
+                                  color: Colors.purple.shade700,
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -353,7 +341,7 @@ class NumbersGameScreen extends StatelessWidget {
                                   isSelected: isSelected,
                                   isCorrectOption: number == count,
                                   showResult: gameState.showResult,
-                                  primaryColor: Colors.teal,
+                                  primaryColor: Colors.purple,
                                 ),
                               );
                             },
