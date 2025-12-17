@@ -225,16 +225,13 @@ class _JumpGamePageState extends State<JumpGamePage>
                   horizontal: 40,
                   vertical: 20,
                 ),
-                backgroundColor: state.isCalibrated
-                    ? Colors.orangeAccent
-                    : Colors.grey,
+                backgroundColor: Colors.orangeAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              onPressed: state.isCalibrated
-                  ? () => context.read<JumpBloc>().add(StartGame())
-                  : null,
+              onPressed: () => context.read<JumpBloc>().add(StartGame()),
+
               child: const Text("ابدأ اللعبة", style: TextStyle(fontSize: 20)),
             ),
           ],
