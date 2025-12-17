@@ -128,6 +128,41 @@ class _SimonSaysGamePageState extends State<SimonSaysGamePage>
                     ),
                   ),
 
+                if (state.status == SimonGameStatus.heightCheck)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.accessibility_new,
+                            size: 60,
+                            color: Colors.amber,
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            state.message,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const CircularProgressIndicator(color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
+
                 if (state.status == SimonGameStatus.active)
                   Stack(
                     children: [

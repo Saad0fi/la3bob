@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../../../../core/comon/helper_function/audio_helper.dart';
@@ -17,7 +18,6 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
 
   DateTime? _lastPoseTime;
 
-  // Map moves to Arabic text
   final Map<SimonMove, String> _moveDescriptions = {
     SimonMove.raiseRightHand: "ارفع يدك اليمنى",
     SimonMove.raiseLeftHand: "ارفع يدك اليسرى",
@@ -48,21 +48,19 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
   void _onStartGame(StartGame event, Emitter<SimonSaysState> emit) {
     _gameTimer?.cancel();
 
-    emit(SimonSaysState(
-      status: SimonGameStatus.active,
-      score: 0,
-      highScore: state.highScore,
-      remainingTime: 60,
-      message: "استعد...",
-    ));
+    emit(
+      SimonSaysState(
+        status: SimonGameStatus.heightCheck, 
+        score: 0,
+        highScore: state.highScore,
+        remainingTime: 60,
+        message:
+            "تراجع للخلف حتى يظهر جسمك بالكامل", 
+        feedback: null,
+      ),
+    );
 
-    _gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      add(Tick(60 - timer.tick));
-    });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      add(NextCommand());
-    });
+  
   }
 
   void _onTick(Tick event, Emitter<SimonSaysState> emit) {
@@ -76,16 +74,18 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
     }
 
     if (event.remainingTime > 0) {
-      emit(SimonSaysState(
-        status: state.status,
-        currentCommand: state.currentCommand,
-        score: state.score,
-        highScore: state.highScore,
-        remainingTime: event.remainingTime,
-        isWaitingForNeutral: state.isWaitingForNeutral,
-        message: state.message,
-        feedback: state.feedback,
-      ));
+      emit(
+        SimonSaysState(
+          status: state.status,
+          currentCommand: state.currentCommand,
+          score: state.score,
+          highScore: state.highScore,
+          remainingTime: event.remainingTime,
+          isWaitingForNeutral: state.isWaitingForNeutral,
+          message: state.message,
+          feedback: state.feedback,
+        ),
+      );
     } else {
       _gameTimer?.cancel();
       _commandTimer?.cancel();
@@ -99,14 +99,16 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
         _storage.write('simon_high_score', newHigh);
       }
 
-      emit(SimonSaysState(
-        status: SimonGameStatus.gameOver,
-        score: currentScore,
-        highScore: newHigh,
-        remainingTime: 0,
-        message: "انتهى الوقت!",
-        feedback: "النتيجة: $currentScore",
-      ));
+      emit(
+        SimonSaysState(
+          status: SimonGameStatus.gameOver,
+          score: currentScore,
+          highScore: newHigh,
+          remainingTime: 0,
+          message: "انتهى الوقت!",
+          feedback: "النتيجة: $currentScore",
+        ),
+      );
     }
   }
 
@@ -124,20 +126,78 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
 
     AudioHelper.playSimonCommand(_moveAudioFiles[nextMove]!);
 
-    emit(SimonSaysState(
-      status: state.status,
-      currentCommand: nextMove,
-      score: state.score,
-      highScore: state.highScore,
-      remainingTime: state.remainingTime,
-      isWaitingForNeutral: false,
-      message: _moveDescriptions[nextMove]!,
-    ));
+    emit(
+      SimonSaysState(
+        status: state.status,
+        currentCommand: nextMove,
+        score: state.score,
+        highScore: state.highScore,
+        remainingTime: state.remainingTime,
+        isWaitingForNeutral: false,
+        message: _moveDescriptions[nextMove]!,
+      ),
+    );
   }
 
   void _onPoseDetected(PoseDetected event, Emitter<SimonSaysState> emit) {
-    if (state.status != SimonGameStatus.active) return;
     _lastPoseTime = DateTime.now();
+
+  
+    if (state.status == SimonGameStatus.heightCheck) {
+      final pose = event.pose;
+
+     
+      final nose = pose.landmarks[PoseLandmarkType.nose];
+      final leftAnkle = pose.landmarks[PoseLandmarkType.leftAnkle];
+      final rightAnkle = pose.landmarks[PoseLandmarkType.rightAnkle];
+
+      bool isFullBodyVisible = false;
+      if (nose != null && leftAnkle != null && rightAnkle != null) {
+        if (nose.likelihood > 0.5 &&
+            leftAnkle.likelihood > 0.5 &&
+            rightAnkle.likelihood > 0.5) {
+          isFullBodyVisible = true;
+        }
+      }
+
+      if (isFullBodyVisible) {
+      
+        emit(
+          SimonSaysState(
+            status: SimonGameStatus.active,
+            score: 0,
+            highScore: state.highScore,
+            remainingTime: 60,
+            message: "ممتاز! استعد...", 
+            feedback: "✅",
+          ),
+        );
+
+       
+        _gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          add(Tick(60 - timer.tick));
+        });
+
+      
+        Future.delayed(const Duration(seconds: 2), () {
+          add(NextCommand());
+        });
+      } else {
+
+        if (state.message != "تراجع للخلف حتى يظهر جسمك بالكامل") {
+          emit(
+            SimonSaysState(
+              status: SimonGameStatus.heightCheck,
+              highScore: state.highScore,
+              message: "تراجع للخلف حتى يظهر جسمك بالكامل",
+            ),
+          );
+        }
+      }
+      return;
+    }
+
+    if (state.status != SimonGameStatus.active) return;
 
     final detected = _detectSimonMove(event.pose);
 
@@ -152,15 +212,17 @@ class SimonSaysBloc extends Bloc<SimonSaysEvent, SimonSaysState> {
 
     if (detected == state.currentCommand) {
       AudioHelper.playSimonCorrect();
-      emit(SimonSaysState(
-        status: state.status,
-        score: state.score + 1,
-        highScore: state.highScore,
-        remainingTime: state.remainingTime,
-        isWaitingForNeutral: true,
-        message: "قف باعتدال...",
-        feedback: "صحيح! ✅",
-      ));
+      emit(
+        SimonSaysState(
+          status: state.status,
+          score: state.score + 1,
+          highScore: state.highScore,
+          remainingTime: state.remainingTime,
+          isWaitingForNeutral: true,
+          message: "قف باعتدال...",
+          feedback: "صحيح! ✅",
+        ),
+      );
     }
   }
 

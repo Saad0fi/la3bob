@@ -64,7 +64,6 @@ class _SquatGamePageState extends State<SquatGamePage>
                   },
                 ),
 
-                // Start Screen
                 if (state.status == SquatGameStatus.initial)
                   Container(
                     color: Colors.black54,
@@ -208,7 +207,6 @@ class _SquatGamePageState extends State<SquatGamePage>
                     ],
                   ),
 
-                // Game Over Screen
                 if (state.status == SquatGameStatus.gameOver)
                   Container(
                     color: Colors.black87,

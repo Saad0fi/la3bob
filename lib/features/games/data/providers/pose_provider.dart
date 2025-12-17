@@ -17,7 +17,7 @@ class PoseProvider {
     try {
       final inputImage = MLKitUtils.inputImageFromCameraImage(
         image,
-        null, // CameraDescription not used in new utils
+        null,
         rotation,
       );
 

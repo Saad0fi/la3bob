@@ -6,7 +6,6 @@ class DetectJump {
 
   DetectJump(this.repository);
 
-  // Returns true if jumping
   bool? call(Pose pose) => repository.detectJump(pose);
 
   void reset() => repository.reset();

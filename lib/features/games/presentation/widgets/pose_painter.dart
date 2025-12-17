@@ -47,7 +47,6 @@ class PosePainter extends CustomPainter {
         );
       }
 
-      // Draw arms
       paintLine(
         PoseLandmarkType.leftShoulder,
         PoseLandmarkType.leftElbow,
@@ -65,7 +64,6 @@ class PosePainter extends CustomPainter {
         paint,
       );
 
-      // Draw Body
       paintLine(PoseLandmarkType.leftShoulder, PoseLandmarkType.leftHip, paint);
       paintLine(
         PoseLandmarkType.rightShoulder,
@@ -73,7 +71,6 @@ class PosePainter extends CustomPainter {
         paint,
       );
 
-      // Draw legs
       paintLine(PoseLandmarkType.leftHip, PoseLandmarkType.leftKnee, paint);
       paintLine(PoseLandmarkType.leftKnee, PoseLandmarkType.leftAnkle, paint);
       paintLine(PoseLandmarkType.rightHip, PoseLandmarkType.rightKnee, paint);

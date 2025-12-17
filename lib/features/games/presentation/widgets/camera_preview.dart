@@ -27,13 +27,11 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
   bool _isInitialized = false;
   bool _isProcessing = false;
 
-  // Debug stats
   int _framesProcessed = 0;
   String _lastError = "None";
   int _posesFound = 0;
   int _lastFormatRaw = 0;
 
-  // Painter state
   CustomPaint? _customPaint;
   Size? _cameraImageSize;
 
@@ -69,7 +67,6 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
         );
 
         try {
-          // Capture raw format for debug
           final rawFmt = image.format.raw;
 
           final poses = await _poseProvider.processImage(image, rotation);
@@ -125,14 +122,7 @@ class _CameraPreviewWidgetState extends State<CameraPreviewWidget> {
       return Center(child: Text("Initializing Camera... Error: $_lastError"));
     }
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        CameraPreview(_controller),
-        // if (_customPaint != null) _customPaint!,
-        // Debug info removed as per user request
-      ],
-    );
+    return Stack(fit: StackFit.expand, children: [CameraPreview(_controller)]);
   }
 
   InputImageRotation _getRotation() {
