@@ -17,22 +17,6 @@ class SquatState extends Equatable {
     this.highScore = 0,
   });
 
-  SquatState copyWith({
-    SquatGameStatus? status,
-    int? score,
-    String? feedback,
-    int? remainingTime,
-    int? highScore,
-  }) {
-    return SquatState(
-      status: status ?? this.status,
-      score: score ?? this.score,
-      feedback: feedback ?? this.feedback,
-      remainingTime: remainingTime ?? this.remainingTime,
-      highScore: highScore ?? this.highScore,
-    );
-  }
-
   @override
   List<Object?> get props => [
     status,

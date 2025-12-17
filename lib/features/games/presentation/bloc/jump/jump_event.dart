@@ -21,3 +21,4 @@ class PoseDetected extends JumpEvent {
 }
 
 class GameTick extends JumpEvent {}
+

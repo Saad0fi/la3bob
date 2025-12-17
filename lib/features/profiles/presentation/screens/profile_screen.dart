@@ -557,7 +557,7 @@ class ProfileScreen extends StatelessWidget {
                                                   : null,
                                             ),
                                             child: Icon(
-                                              CupertinoIcons.person_fill,
+                                              Icons.child_care,
                                               color: isSelected
                                                   ? AppColors.accent
                                                   : Colors.grey,

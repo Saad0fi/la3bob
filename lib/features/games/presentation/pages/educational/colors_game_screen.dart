@@ -2,39 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
-import 'package:la3bob/features/games/presentation/bloc/games_bloc.dart';
-import 'package:la3bob/features/games/presentation/widgets/game_option_tile.dart';
+import '../../bloc/games_bloc.dart';
+import '../../widgets/game_option_tile.dart';
 
-class NumbersGameScreen extends StatelessWidget {
-  const NumbersGameScreen({super.key});
+class ColorsGameScreen extends StatelessWidget {
+  const ColorsGameScreen({super.key});
 
-  String _getArabicNumber(int number) {
-    const arabicNumbers = [
-      'صفر',
-      'واحد',
-      'اثنان',
-      'ثلاثة',
-      'أربعة',
-      'خمسة',
-      'ستة',
-      'سبعة',
-      'ثمانية',
-      'تسعة',
-      'عشرة',
-      'أحد عشر',
-      'اثنا عشر',
-    ];
-    return arabicNumbers[number];
+  Color _getColorFromValue(int colorValue) {
+    return Color(colorValue);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GamesBloc()..add(const InitializeNumbersGame()),
+      create: (context) => GamesBloc()..add(const InitializeColorsGame()),
       child: BlocListener<GamesBloc, GamesState>(
         listener: (context, state) {
           if (state is GameLoaded &&
-              state.gameType == GameType.numbers &&
+              state.gameType == GameType.colors &&
               state.showResult) {
             Future.delayed(const Duration(seconds: 2), () {
               if (context.mounted) {
@@ -42,7 +27,7 @@ class NumbersGameScreen extends StatelessWidget {
               }
             });
           } else if (state is GameCompleted &&
-              state.gameType == GameType.numbers) {
+              state.gameType == GameType.colors) {
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -78,30 +63,29 @@ class NumbersGameScreen extends StatelessWidget {
             if (state is GamesInitial) {
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('لعبة الأرقام'),
-                  backgroundColor: Colors.blue.shade300,
+                  title: const Text('لعبة الألوان'),
+                  backgroundColor: Colors.orange.shade300,
                 ),
                 body: const Center(child: CircularProgressIndicator()),
               );
             }
 
-            if (state is GameCompleted && state.gameType == GameType.numbers) {
+            if (state is GameCompleted && state.gameType == GameType.colors) {
               final completedState = state;
               final question = completedState.lastQuestion;
-              final count = question['count'] as int;
               final progress = 1.0;
 
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('لعبة الأرقام'),
-                  backgroundColor: Colors.blue.shade300,
+                  title: const Text('لعبة الألوان'),
+                  backgroundColor: Colors.orange.shade300,
                 ),
                 body: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.blue.shade100, Colors.cyan.shade100],
+                      colors: [Colors.orange.shade100, Colors.red.shade100],
                     ),
                   ),
                   child: SafeArea(
@@ -113,13 +97,13 @@ class NumbersGameScreen extends StatelessWidget {
                             value: progress,
                             backgroundColor: Colors.white,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.blue.shade400,
+                              Colors.orange.shade400,
                             ),
                             minHeight: 2.h,
                           ),
                           SizedBox(height: 2.h),
                           Row(
-                            mainAxisAlignment: .spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'السؤال: ${completedState.totalQuestions}/${completedState.totalQuestions}',
@@ -140,78 +124,49 @@ class NumbersGameScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Container(
-                            padding: .all(8.w),
+                            width: 150,
+                            height: 150,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: _getColorFromValue(question['colorValue'] as int),
                               shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.blue.withValues(alpha: 0.3),
-                                  blurRadius: 5.w,
-                                  spreadRadius: 1.w,
-                                ),
-                              ],
                             ),
-                            child: Column(
-                              mainAxisSize: .min,
-                              children: [
-                                Text(
-                                  'كم عدد النجوم؟',
-                                  style: TextStyle(
-                                    fontSize: 14.dp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                                SizedBox(height: 2.h),
-                                Wrap(
-                                  spacing: 10,
-                                  runSpacing: 10,
-                                  alignment: WrapAlignment.center,
-                                  children: List.generate(
-                                    10,
-                                    (index) => index < count
-                                        ? const Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                            size: 40,
-                                          )
-                                        : const SizedBox(
-                                            width: 40,
-                                            height: 40,
-                                          ),
-                                  ),
-                                ),
-                              ],
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            'ما اسم هذا اللون؟',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 4.h),
-                          Expanded(
-                            child: GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 4.w,
-                                mainAxisSpacing: 4.h,
-                                childAspectRatio: 1.5,
-                              ),
-                              itemCount: (question['options'] as List).length,
-                              itemBuilder: (context, index) {
-                                final number =
-                                    (question['options'] as List)[index] as int;
-
-                                return GameOptionTile(
-                                  mainText: number.toString(),
-                                  subText: _getArabicNumber(number),
-                                  isSelected: false,
-                                  isCorrectOption: number == count,
-                                  showResult: true,
-                                  primaryColor: Colors.blue,
-                                );
-                              },
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 4.w,
+                              mainAxisSpacing: 4.h,
+                              childAspectRatio: 1.5,
                             ),
+                            itemCount: (question['options'] as List).length,
+                            itemBuilder: (context, index) {
+                              final colorName =
+                                  (question['options'] as List)[index]
+                                      as String;
+                              return GameOptionTile(
+                                mainText: colorName,
+                                isSelected: false,
+                                isCorrectOption:
+                                    colorName == question['colorName'],
+                                showResult: true,
+                                primaryColor: Colors.orange,
+                              );
+                            },
                           ),
+                          SizedBox(height: 2.h),
                         ],
                       ),
                     ),
@@ -220,41 +175,40 @@ class NumbersGameScreen extends StatelessWidget {
               );
             }
 
-            if (state is! GameLoaded || state.gameType != GameType.numbers) {
+            if (state is! GameLoaded || state.gameType != GameType.colors) {
               return const SizedBox.shrink();
             }
 
             final gameState = state;
             final question =
                 gameState.questions[gameState.currentQuestionIndex];
-            final count = question['count'] as int;
             final progress =
                 (gameState.currentQuestionIndex + 1) /
                 gameState.questions.length;
 
             return Scaffold(
               appBar: AppBar(
-                title: const Text('لعبة الأرقام'),
-                backgroundColor: Colors.blue.shade300,
+                title: const Text('لعبة الألوان'),
+                backgroundColor: Colors.orange.shade300,
               ),
               body: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.blue.shade100, Colors.cyan.shade100],
+                    colors: [Colors.orange.shade100, Colors.red.shade100],
                   ),
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: .all(5.w),
+                    padding: EdgeInsets.all(5.w),
                     child: Column(
                       children: [
                         LinearProgressIndicator(
                           value: progress,
                           backgroundColor: Colors.white,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.blue.shade400,
+                            Colors.orange.shade400,
                           ),
                           minHeight: 10,
                         ),
@@ -281,47 +235,21 @@ class NumbersGameScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 40),
                         Container(
-                          padding: .all(8.w),
+                          width: 150,
+                          height: 150,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: _getColorFromValue(question['colorValue'] as int),
                             shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.blue.withValues(alpha: 0.3),
-                                blurRadius: 20,
-                                spreadRadius: 5,
-                              ),
-                            ],
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'كم عدد النجوم؟',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                alignment: WrapAlignment.center,
-                                children: List.generate(
-                                  10,
-                                  (index) => index < count
-                                      ? const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                          size: 40,
-                                        )
-                                      : const SizedBox(width: 40, height: 40),
-                                ),
-                              ),
-                            ],
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          'ما اسم هذا اللون؟',
+                          style: TextStyle(
+                            fontSize: 12.dp,
+                            fontWeight: FontWeight.w500,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 4.h),
                         Expanded(
@@ -336,24 +264,25 @@ class NumbersGameScreen extends StatelessWidget {
                             ),
                             itemCount: (question['options'] as List).length,
                             itemBuilder: (context, index) {
-                              final number =
-                                  (question['options'] as List)[index] as int;
+                              final colorName =
+                                  (question['options'] as List)[index]
+                                      as String;
                               final isSelected =
-                                  gameState.selectedNumber == number;
+                                  gameState.selectedColor == colorName;
 
                               return GestureDetector(
                                 onTap: () {
                                   context.read<GamesBloc>().add(
-                                    SelectNumber(number),
-                                  );
+                                        SelectColor(colorName),
+                                      );
                                 },
                                 child: GameOptionTile(
-                                  mainText: number.toString(),
-                                  subText: _getArabicNumber(number),
+                                  mainText: colorName,
                                   isSelected: isSelected,
-                                  isCorrectOption: number == count,
+                                  isCorrectOption:
+                                      colorName == question['colorName'],
                                   showResult: gameState.showResult,
-                                  primaryColor: Colors.blue,
+                                  primaryColor: Colors.orange,
                                 ),
                               );
                             },
@@ -395,3 +324,4 @@ class NumbersGameScreen extends StatelessWidget {
     );
   }
 }
+

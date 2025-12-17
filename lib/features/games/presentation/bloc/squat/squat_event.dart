@@ -24,3 +24,4 @@ class Tick extends SquatEvent {
 }
 
 class ResetGame extends SquatEvent {}
+

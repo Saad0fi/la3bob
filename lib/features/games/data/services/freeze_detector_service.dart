@@ -9,10 +9,9 @@ class FreezeDetectorService implements FreezeRepository {
   double detectMovement(Pose pose) {
     if (_previousLandmarks == null) {
       _previousLandmarks = pose.landmarks;
-      return 0.0; // First frame, no movement detected yet
+      return 0.0; 
     }
 
-    // Calculate body height using nose and ankles (similar to Squat game)
     final nose = pose.landmarks[PoseLandmarkType.nose];
     final leftAnkle = pose.landmarks[PoseLandmarkType.leftAnkle];
     final rightAnkle = pose.landmarks[PoseLandmarkType.rightAnkle];
@@ -25,13 +24,11 @@ class FreezeDetectorService implements FreezeRepository {
       bodyHeight = (ankleY - nose.y).abs();
     }
 
-    // Avoid division by zero
     if (bodyHeight < 10.0) bodyHeight = 100.0;
 
     double totalDisplacement = 0.0;
     int pointsChecked = 0;
 
-    // Key points to track for movement (Hands, Shoulders, Hips)
     final typesToCheck = [
       PoseLandmarkType.leftWrist,
       PoseLandmarkType.rightWrist,
@@ -54,13 +51,11 @@ class FreezeDetectorService implements FreezeRepository {
       }
     }
 
-    // Update history
     _previousLandmarks = pose.landmarks;
 
     if (pointsChecked == 0) return 0.0;
 
-    // Average displacement per point normalized by body height
-    // Example: 10px move / 200px height = 0.05
+
     return (totalDisplacement / pointsChecked) / bodyHeight;
   }
 
@@ -69,3 +64,4 @@ class FreezeDetectorService implements FreezeRepository {
     _previousLandmarks = null;
   }
 }
+

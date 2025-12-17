@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
-import '../../../../core/mixins/camera_permission_mixin.dart';
-import '../../../../core/widgets/camera_denied_screen.dart';
-import '../../../../core/di/injection.dart';
-import '../../domain/usecases/detect_movement.dart';
-import '../bloc/freeze/freeze_bloc.dart';
-import '../bloc/freeze/freeze_event.dart';
-import '../bloc/freeze/freeze_state.dart';
-import '../widgets/camera_preview.dart';
+import '../../../../../core/mixins/camera_permission_mixin.dart';
+import '../../../../../core/widgets/camera_denied_screen.dart';
+import '../../../../../core/di/injection.dart';
+import '../../../domain/usecases/detect_movement.dart';
+import '../../bloc/freeze/freeze_bloc.dart';
+import '../../bloc/freeze/freeze_event.dart';
+import '../../bloc/freeze/freeze_state.dart';
+import '../../widgets/camera_preview.dart';
 
 class FreezeGamePage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -224,16 +224,6 @@ class _FreezeGamePageState extends State<FreezeGamePage>
             ),
           ),
         ),
-
-        // Debug Movement (Optional, helpful for tuning)
-        // Positioned(
-        //   bottom: 50,
-        //   left: 20,
-        //   child: Text(
-        //     "Movement: ${state.currentMovement.toStringAsFixed(1)}",
-        //     style: TextStyle(color: Colors.white, fontSize: 12),
-        //   ),
-        // ),
       ],
     );
   }
@@ -298,3 +288,4 @@ class _FreezeGamePageState extends State<FreezeGamePage>
     );
   }
 }
+

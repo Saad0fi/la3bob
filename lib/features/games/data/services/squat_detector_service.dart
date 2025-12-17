@@ -3,7 +3,7 @@ import '../../domain/repositories/squat_repository.dart';
 
 class SquatDetectorService implements SquatRepository {
   bool _wasDown = false;
-  static const double squatThreshold = 0.20; // 20% of body height
+  static const double squatThreshold = 0.20;
 
   @override
   bool? detectSquat(Pose pose) {
@@ -12,14 +12,13 @@ class SquatDetectorService implements SquatRepository {
     final landmarks = pose.landmarks;
     final bodyHeight = _calculateBodyHeight(landmarks);
 
-    // Avoid division by zero
     if (bodyHeight == 0) return null;
 
     final isSquatting = _isSquatting(landmarks, bodyHeight);
 
     if (isSquatting && !_wasDown) {
       _wasDown = true;
-      return true; // Squat detected
+      return true;
     } else if (!isSquatting) {
       _wasDown = false;
     }
@@ -32,7 +31,6 @@ class SquatDetectorService implements SquatRepository {
     _wasDown = false;
   }
 
-  // ---------- Helpers from original MovementDetector ----------
 
   double _calculateBodyHeight(Map<PoseLandmarkType, PoseLandmark> landmarks) {
     final nose = landmarks[PoseLandmarkType.nose];
@@ -40,7 +38,7 @@ class SquatDetectorService implements SquatRepository {
     final rightAnkle = landmarks[PoseLandmarkType.rightAnkle];
 
     if (nose == null || (leftAnkle == null && rightAnkle == null)) {
-      return 1.0; // Default to avoid division by zero
+      return 1.0; 
     }
 
     final ankleY = leftAnkle != null && rightAnkle != null
@@ -71,7 +69,7 @@ class SquatDetectorService implements SquatRepository {
 
     final hipKneeDistance = (kneeY - hipY).abs();
 
-    // Squatting if hips are close to knees (relative to body height)
     return (hipKneeDistance / bodyHeight) < squatThreshold;
   }
 }
+
