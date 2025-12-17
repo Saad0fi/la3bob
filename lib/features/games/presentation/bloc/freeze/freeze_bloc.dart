@@ -14,13 +14,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
   Timer? _phaseTimer;
   Timer? _voiceTimer;
 
-  // Thresholds
-  // If movement > this during Freeze phase -> Game Over
-  // 0.02 = 2% of body height.
-  // Let's try 0.04 (4%) to be a bit forgiving but still catch real movement.
   final double _freezeThreshold = 0.04;
-  // If movement > this during Dance phase -> Bonus points?
-  // final double _danceThreshold = 30.0;
 
   FreezeBloc(this._detectMovement) : super(const FreezeState()) {
     on<StartGame>(_onStartGame);
@@ -67,7 +61,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
 
   void _scheduleMakeFreeze() {
     _phaseTimer?.cancel();
-    // Dance for 3-6 seconds
+
     final duration = Duration(milliseconds: 3000 + _random.nextInt(3000));
     _phaseTimer = Timer(duration, () {
       if (!isClosed) add(SwitchPhase());
@@ -76,7 +70,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
 
   void _scheduleMakeDance() {
     _phaseTimer?.cancel();
-    // Freeze for 2-4 seconds
+
     final duration = Duration(milliseconds: 2000 + _random.nextInt(2000));
     _phaseTimer = Timer(duration, () {
       if (!isClosed) add(SwitchPhase());
@@ -87,7 +81,6 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
     if (state.phase == FreezePhase.gameOver) return;
 
     if (state.phase == FreezePhase.dancing) {
-      // Switch to Freeze
       _stopVoice();
       AudioHelper.playFreezeStop();
 
@@ -95,7 +88,7 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
         state.copyWith(
           phase: FreezePhase.freezing,
           message: "توقف! ",
-          isGracePeriod: true, // Enable grace period
+          isGracePeriod: true,
         ),
       );
       Timer(const Duration(seconds: 1), () {
@@ -104,8 +97,6 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
 
       _scheduleMakeDance();
     } else if (state.phase == FreezePhase.freezing) {
-      // Switch to Dance (Success survival)
-      // Award points for surviving the freeze
       emit(
         state.copyWith(
           phase: FreezePhase.dancing,
@@ -125,22 +116,15 @@ class FreezeBloc extends Bloc<FreezeEvent, FreezeState> {
 
     final movement = _detectMovement(event.pose);
 
-    // Update debug state
     emit(state.copyWith(currentMovement: movement));
 
     if (state.phase == FreezePhase.freezing) {
-      // If in grace period, ignore movement
       if (state.isGracePeriod) return;
 
-      // Check if moved
       if (movement > _freezeThreshold) {
         _gameOver(emit);
-      } else {
-        // Holding still... maybe add small trickle score?
-      }
-    } else {
-      // Dancing phase... typically loose active
-    }
+      } else {}
+    } else {}
   }
 
   void _gameOver(Emitter<FreezeState> emit) {

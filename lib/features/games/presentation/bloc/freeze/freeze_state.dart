@@ -10,7 +10,7 @@ class FreezeState {
   final int score;
   final int highScore;
   final String message;
-  final double currentMovement; // For debug/visual feedback
+  final double currentMovement;
   final bool isGracePeriod;
 
   const FreezeState({
