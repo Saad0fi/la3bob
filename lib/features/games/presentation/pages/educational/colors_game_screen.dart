@@ -64,7 +64,7 @@ class ColorsGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الألوان'),
-                  backgroundColor: Colors.orange.shade300,
+                  backgroundColor: Colors.green.shade400,
                 ),
                 body: const Center(child: CircularProgressIndicator()),
               );
@@ -78,14 +78,14 @@ class ColorsGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الألوان'),
-                  backgroundColor: Colors.orange.shade300,
+                  backgroundColor: Colors.green.shade400,
                 ),
                 body: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.orange.shade100, Colors.red.shade100],
+                      colors: [Color(0xFFE8F5E9), Color(0xFFC8E6C9)],
                     ),
                   ),
                   child: SafeArea(
@@ -97,7 +97,7 @@ class ColorsGameScreen extends StatelessWidget {
                             value: progress,
                             backgroundColor: Colors.white,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.orange.shade400,
+                              Colors.green.shade400,
                             ),
                             minHeight: 2.h,
                           ),
@@ -162,7 +162,7 @@ class ColorsGameScreen extends StatelessWidget {
                                 isCorrectOption:
                                     colorName == question['colorName'],
                                 showResult: true,
-                                primaryColor: Colors.orange,
+                                primaryColor: Colors.green,
                               );
                             },
                           ),
@@ -189,14 +189,14 @@ class ColorsGameScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('لعبة الألوان'),
-                backgroundColor: Colors.orange.shade300,
+                backgroundColor: Colors.green.shade400,
               ),
               body: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.orange.shade100, Colors.red.shade100],
+                    colors: [Color(0xFFE8F5E9), Color(0xFFC8E6C9)],
                   ),
                 ),
                 child: SafeArea(
@@ -208,7 +208,7 @@ class ColorsGameScreen extends StatelessWidget {
                           value: progress,
                           backgroundColor: Colors.white,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.orange.shade400,
+                            Colors.green.shade400,
                           ),
                           minHeight: 10,
                         ),
@@ -282,7 +282,7 @@ class ColorsGameScreen extends StatelessWidget {
                                   isCorrectOption:
                                       colorName == question['colorName'],
                                   showResult: gameState.showResult,
-                                  primaryColor: Colors.orange,
+                                  primaryColor: Colors.green,
                                 ),
                               );
                             },

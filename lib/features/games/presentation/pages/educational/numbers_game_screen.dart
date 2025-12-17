@@ -79,7 +79,7 @@ class NumbersGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الأرقام'),
-                  backgroundColor: Colors.blue.shade300,
+                  backgroundColor: Colors.teal.shade400,
                 ),
                 body: const Center(child: CircularProgressIndicator()),
               );
@@ -94,14 +94,14 @@ class NumbersGameScreen extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   title: const Text('لعبة الأرقام'),
-                  backgroundColor: Colors.blue.shade300,
+                  backgroundColor: Colors.teal.shade400,
                 ),
                 body: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.blue.shade100, Colors.cyan.shade100],
+                      colors: [Color(0xFFEBF6F0), Color(0xFFB2DFDB)],
                     ),
                   ),
                   child: SafeArea(
@@ -113,7 +113,7 @@ class NumbersGameScreen extends StatelessWidget {
                             value: progress,
                             backgroundColor: Colors.white,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.blue.shade400,
+                              Colors.teal.shade400,
                             ),
                             minHeight: 2.h,
                           ),
@@ -146,7 +146,7 @@ class NumbersGameScreen extends StatelessWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.blue.withValues(alpha: 0.3),
+                                  color: Colors.teal.withValues(alpha: 0.3),
                                   blurRadius: 5.w,
                                   spreadRadius: 1.w,
                                 ),
@@ -160,7 +160,7 @@ class NumbersGameScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 14.dp,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                    color: Colors.teal,
                                   ),
                                 ),
                                 SizedBox(height: 2.h),
@@ -207,7 +207,7 @@ class NumbersGameScreen extends StatelessWidget {
                                   isSelected: false,
                                   isCorrectOption: number == count,
                                   showResult: true,
-                                  primaryColor: Colors.blue,
+                                  primaryColor: Colors.teal,
                                 );
                               },
                             ),
@@ -235,14 +235,14 @@ class NumbersGameScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('لعبة الأرقام'),
-                backgroundColor: Colors.blue.shade300,
+                backgroundColor: Colors.teal.shade400,
               ),
               body: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.blue.shade100, Colors.cyan.shade100],
+                    colors: [Color(0xFFEBF6F0), Color(0xFFB2DFDB)],
                   ),
                 ),
                 child: SafeArea(
@@ -254,7 +254,7 @@ class NumbersGameScreen extends StatelessWidget {
                           value: progress,
                           backgroundColor: Colors.white,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.blue.shade400,
+                            Colors.teal.shade400,
                           ),
                           minHeight: 10,
                         ),
@@ -287,7 +287,7 @@ class NumbersGameScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.blue.withValues(alpha: 0.3),
+                                color: Colors.teal.withValues(alpha: 0.3),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               ),
@@ -353,7 +353,7 @@ class NumbersGameScreen extends StatelessWidget {
                                   isSelected: isSelected,
                                   isCorrectOption: number == count,
                                   showResult: gameState.showResult,
-                                  primaryColor: Colors.blue,
+                                  primaryColor: Colors.teal,
                                 ),
                               );
                             },

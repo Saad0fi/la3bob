@@ -180,7 +180,7 @@ class _EducationalGamesTab extends StatelessWidget {
         'title': 'لعبة الأرقام',
         'route': '/tabs/games/numbers',
         'image': 'assets/images/numbers.png',
-        'color': const Color(0xFFEBF6F0), // بنفسجي فاتح
+        'color': const Color(0xFFF7F1FF), // بنفسجي فاتح
       },
       {
         'title': 'لعبة الألوان',
